@@ -1,6 +1,6 @@
 Sequel.migration do
 
-  up do
+  change do
     create_table(:rules) do
       primary_key :id
       String :sphere, null: false
@@ -14,10 +14,6 @@ Sequel.migration do
       String :criteria
       String :content, null: false
     end
-  end
-
-  down do
-    drop_table(:rules)
   end
 
 end

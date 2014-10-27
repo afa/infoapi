@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'thin'
   spec.add_dependency 'sequel'
   spec.add_dependency 'pg'
+  spec.add_development_dependency "capistrano"
 end
