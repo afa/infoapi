@@ -26,4 +26,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'sequel'
   spec.add_dependency 'pg'
   spec.add_development_dependency "capistrano"
+  spec.add_development_dependency "capistrano-rvm"
+  spec.add_development_dependency "capistrano-bundler"
 end

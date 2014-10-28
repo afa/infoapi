@@ -5,9 +5,12 @@ set :deploy_to, "/home/#{fetch :deploy_user}/#{fetch :application}-#{fetch :stag
   #set :deploy_user, "www-ruby"  
   set :deploy_user, "rbdev"      
 
+  set :rvm_type, :user
+  set :rvm_ruby_version, '2.1.3'
+
   set :branch, "master"          
   #server "148.251.127.106", user: fetch(:deploy_user), roles: %w{web app db}, primary: true
-  server "5.9.141.34", user: fetch(:deploy_user), roles: %w{web app db}, primary: true
+  server "5.9.0.5", user: fetch(:deploy_user), roles: %w{web app db}, primary: true
     
   set :deploy_to, "/home/#{ fetch :deploy_user }/#{ fetch :application }-#{ fetch :stage }"
   set :tmp_dir, "/home/#{ fetch(:deploy_user) }/.tmp"

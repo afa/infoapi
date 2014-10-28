@@ -45,8 +45,8 @@ namespace :deploy do
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
       within release_path do
-        execute :bundle 'exec thin stop'
-        execute :bundle "exec thin start -d -E #{fetch :stage}"
+        execute :bundle, 'exec thin stop'
+        execute :bundle, "exec thin start -d -E #{fetch :stage}"
       end
     end
   end
