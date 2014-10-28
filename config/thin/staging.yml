@@ -1,12 +1,12 @@
 ---
 chdir: "/home/rbdev/info_api-staging/current"
 environment: staging
-socket: /home/rbdev/info_api-staging/shared/tmp/sockets/thin.sock  
+socket: '/home/rbdev/info_api-staging/shared/tmp/sockets/thin.sock'
 # address: 0.0.0.0
 # port: 3000
 timeout: 30
 log: "/home/rbdev/info_api-staging/shared/log/thin.log"
-pid: /home/rbdev/info_api-staging/shared/tmp/pids/thin.pid
+pid: '/home/rbdev/info_api-staging/shared/tmp/pids/thin.pid'
 max_conns: 1024
 max_persistent_conns: 100
 require: []

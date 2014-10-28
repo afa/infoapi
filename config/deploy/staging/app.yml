@@ -2,4 +2,4 @@ staging:
   db:
     host: 0.0.0.0
     user: rbdev
-    database: sentimeta_info_api  
+    database: sentimeta_simple_api  
