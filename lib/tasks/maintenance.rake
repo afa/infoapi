@@ -1,7 +1,7 @@
 require 'yaml'
 require 'json'
 require 'rails_helpers'
-namespace :maintennance do
+namespace :maintenance do
   namespace :db do
     require 'sequel'
     Sequel.extension :migration
