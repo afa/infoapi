@@ -39,14 +39,15 @@ set :ssh_options, {
   auth_methods: %w(publickey)
 }
 
+Rake::Task['deploy:restart'].clear_actions
 namespace :deploy do
 
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
       within release_path do
-        execute :bundle, 'exec thin stop'
-        execute :bundle, "exec thin start -d -E #{fetch :stage}"
+        execute :bundle, "exec thin stop -C #{File.join %w(config thin), fetch(:stage).to_s}.yml -e #{fetch :stage}"
+        execute :bundle, "exec thin start -d -C #{File.join %w(config thin), fetch(:stage).to_s}.yml -e #{fetch :stage}"
       end
     end
   end
@@ -98,6 +99,15 @@ namespace :db do
     on roles(:web), in: :parallel do
       within release_path do
         execute :bundle, "exec rake maintenance:db:drop"
+      end
+    end
+  end
+
+  desc "Database dump"
+  task :dump do
+    on roles(:web), in: :parallel do
+      within release_path do
+        execute :bundle, "exec rake maintenance:db:dump"
       end
     end
   end
