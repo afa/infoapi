@@ -47,14 +47,9 @@ namespace :deploy do
     on roles(:app), in: :sequence, wait: 5 do
       within release_path do
         pid = YAML.load_file(File.join(%w(config thin), "#{fetch(:stage)}.yml"))['pid']
-        if File.exist?(pid)
-          begin
-            Process.kill(0, File.open(pid){|f| f.read })
-            need_kill = true
-          rescue
-            need_kill = false
-          end
-          execute :bundle, "exec thin stop -C #{File.join %w(config thin), fetch(:stage).to_s}.yml -e #{fetch :stage}" if need_kill
+        if test "[ -f #{pid} ]"
+          execute :kill, "`cat #{pid}`"
+          # execute :bundle, "exec thin stop -C #{File.join %w(config thin), fetch(:stage).to_s}.yml -e #{fetch :stage}" if need_kill
         end
         execute :bundle, "exec thin start -d -C #{File.join %w(config thin), fetch(:stage).to_s}.yml -e #{fetch :stage}"
       end
