@@ -10,6 +10,7 @@ class SimpleApiTester < Sinatra::Base
     enable :logging
     set :config, YAML.load_file(File.join(File.dirname(__FILE__), %w(.. config app.yml))).try(:[], ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development')
     set :rules, SimpleApi::Rule.init(settings.config)
+    logger.info "Starting api server"
 
     # load rules
   end
@@ -24,7 +25,7 @@ class SimpleApiTester < Sinatra::Base
     rescue Exception => e
       error e.message, 500
     end
-    # logger.info "ru #{settings.rules.inspect}"
+    logger.info "processing #{p.inspect}"
     SimpleApi::Rule.process(settings.rules, p, sphere) || error(JSON.dump(status: "Page not found"), 404)
   end
 
