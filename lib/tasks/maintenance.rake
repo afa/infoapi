@@ -1,12 +1,13 @@
 require 'yaml'
 require 'json'
+require 'rails_helpers'
 namespace :maintennance do
   namespace :db do
     require 'sequel'
     Sequel.extension :migration
 
     task :config do
-      CONFIG = YAML.load_file(File.join(File.dirname(__FILE__), %w(.. .. config app.yml)))
+      CONFIG = YAML.load_file(File.join(File.dirname(__FILE__), %w(.. .. config app.yml))).try(:[], ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development')
     end
 
     task :connect => :config do

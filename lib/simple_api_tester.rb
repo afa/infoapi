@@ -3,30 +3,12 @@ require "simple_api_tester/version"
 require 'sequel'
 require 'tester'
 require 'simple_api_tester/rule'
-class Object
-  def try(*a, &b)
-    if a.empty? && block_given?
-      yield self
-    else
-      public_send(*a, &b) if respond_to?(a.first)
-    end
-  end
-end
-
-class String
-  def blank?
-    strip == ''
-  end
-
-  def present?
-    !blank?
-  end
-end
+require 'rails_helpers'
 
 class SimpleApiTester < Sinatra::Base
   configure :production, :development do
     enable :logging
-    set :config, YAML.load_file(File.join(File.dirname(__FILE__), %w(.. config app.yml)))
+    set :config, YAML.load_file(File.join(File.dirname(__FILE__), %w(.. config app.yml))).try(:[], ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development')
     set :rules, SimpleApi::Rule.init(settings.config)
 
     # load rules

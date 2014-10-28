@@ -1,4 +1,5 @@
-db:
-  host: 0.0.0.0
-  user: rbdev
-  database: sentimeta_info_api  
+staging:
+  db:
+    host: 0.0.0.0
+    user: rbdev
+    database: sentimeta_info_api  
