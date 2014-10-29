@@ -40,8 +40,8 @@ module SimpleApi
       located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(params.param, {}).fetch(params.lang, {})
       content = %w(main about).include?(params.param) ? located[params.design] : located.detect do |rule|
         # r = OpenStruct.new JSON.load(rule)
-        pairs = [[params.path, rule.path]]
-        pairs += [[params.criteria, rule.criteria], [params.stars, rule.stars]] if params.param == 'rating_annotation'
+        pairs = [[params.path || params.data['path'], rule.path]]
+        pairs += [[params.criteria || params.data['criteria'], rule.criteria], [params.stars || params.data['starts'], rule.stars]] if params.param == 'rating_annotation'
         pairs.inject(true){|rslt, a| rslt && Tester::test(*a) }
       end.try(:content)
     end
