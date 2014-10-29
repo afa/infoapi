@@ -25,7 +25,7 @@ class SimpleApiTester < Sinatra::Base
       error e.message, 500
     end
     logger.info "processing #{p.inspect}"
-    SimpleApi::Rule.process(settings.rules, p, sphere) || error(JSON.dump(status: "Page not found"), 404)
+    SimpleApi::Rule.process(settings.rules, p, sphere, logger) || error(JSON.dump(status: "Page not found"), 404)
   end
 
   get '/*' do

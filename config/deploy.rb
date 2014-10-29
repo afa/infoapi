@@ -48,7 +48,7 @@ namespace :deploy do
       within release_path do
         pid = YAML.load_file(File.join(%w(config thin), "#{fetch(:stage)}.yml"))['pid']
         if test "[ -f #{pid} ]"
-          execute :kill, "`cat #{pid}`;;rm #{pid}"
+          execute :kill, "`cat #{pid}`;rm #{pid}"
           # execute :bundle, "exec thin stop -C #{File.join %w(config thin), fetch(:stage).to_s}.yml -e #{fetch :stage}" if need_kill
         end
         execute :bundle, "exec thin start -d -C #{File.join %w(config thin), fetch(:stage).to_s}.yml -e #{fetch :stage}"

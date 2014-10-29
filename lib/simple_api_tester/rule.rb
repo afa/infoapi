@@ -36,7 +36,7 @@ module SimpleApi
       OpenStruct.new(JSON.load(params))
     end
 
-    def process(rules, params, sphere)
+    def process(rules, params, sphere, logger)
       located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(params.param, {}).fetch(params.lang, {})
       found = %w(main about).include?(params.param) ? located[params.design] : located.detect do |rule|
         # r = OpenStruct.new JSON.load(rule)
