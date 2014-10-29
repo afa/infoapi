@@ -6,7 +6,7 @@ module Tester
   def Tester::test o, rule
     o     = JSON.parse(o) rescue o
     rule  = JSON.parse(rule) rescue rule
-    puts "testing #{ o } against #{ rule }"
+    puts "testing #{ o.inspect } against #{ rule }"
 
     result = case rule
     when 'empty'
