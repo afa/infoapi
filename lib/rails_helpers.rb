@@ -17,3 +17,14 @@ class String
     !blank?
   end
 end
+class Array
+  def empty?
+    self == []
+  end
+
+  def present?
+    !empty?
+  end
+
+  
+end
