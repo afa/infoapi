@@ -45,7 +45,7 @@ module SimpleApi
         pairs.inject(true){|rslt, a| rslt && Tester::test(*a) }
       end
       logger.info "found #{found.inspect}"
-      content = found.try(:content)
+      content = %w(main about).include?(params.param) ? found : found.try(:content)
     end
 
     module_function :init, :process, :prepare_params
