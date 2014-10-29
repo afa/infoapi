@@ -10,7 +10,7 @@ class SimpleApiTester < Sinatra::Base
     enable :logging
     set :config, YAML.load_file(File.join(File.dirname(__FILE__), %w(.. config app.yml))).try(:[], ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development')
     set :rules, SimpleApi::Rule.init(settings.config)
-    logger.info "Starting api server"
+    # logger.info "Starting api server"
 
   end
 
