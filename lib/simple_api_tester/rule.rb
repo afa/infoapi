@@ -41,7 +41,7 @@ module SimpleApi
       found = %w(main about).include?(params.param) ? located[params.design] : located.detect do |rule|
         # r = OpenStruct.new JSON.load(rule)
         pairs = [[params.path || params.data['path'], rule.path]]
-        pairs += [[params.criteria || params.data['criteria'], rule.criteria], [params.stars || params.data['stars'], rule.stars]] if params.param == 'rating_annotation'
+        pairs += [[params.criteria || params.data['criteria'], rule.criteria], [params.stars || params.data['stars'], rule.stars]] if params.param == 'rating-annotation'
         pairs.inject(true){|rslt, a| rslt && Tester::test(*a) }
       end
       logger.info "found #{found.inspect}"
