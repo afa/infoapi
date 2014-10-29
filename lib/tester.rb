@@ -1,4 +1,5 @@
 require 'json'
+require 'rails_helpers'
 
 module Tester
 
