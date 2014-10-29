@@ -6,13 +6,12 @@ require 'simple_api_tester/rule'
 require 'rails_helpers'
 
 class SimpleApiTester < Sinatra::Base
-  configure :production, :development do
+  configure :staging, :production, :development do
     enable :logging
     set :config, YAML.load_file(File.join(File.dirname(__FILE__), %w(.. config app.yml))).try(:[], ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development')
     set :rules, SimpleApi::Rule.init(settings.config)
-    # logger.info "Starting api server"
+    logger.info "Starting api server"
 
-    # load rules
   end
 
   error do
@@ -26,6 +25,8 @@ class SimpleApiTester < Sinatra::Base
       error e.message, 500
     end
     logger.info "processing #{p.inspect}"
+    logger.info "rules #{settings.inspect}"
+    logger.info "rules #{settings.rules.inspect}"
     SimpleApi::Rule.process(settings.rules, p, sphere) || error(JSON.dump(status: "Page not found"), 404)
   end
 
