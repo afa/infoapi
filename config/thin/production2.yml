@@ -1,6 +1,6 @@
 ---
 chdir: "/home/rbdev/info_api/current"
-environment: staging
+environment: production
 socket: '/home/rbdev/info_api/shared/tmp/sockets/thin.sock'
 # address: 0.0.0.0
 # port: 3000
