@@ -6,6 +6,7 @@ gem "sinatra"
 gem "thin"
 gem "sequel"
 gem "pg"
+gem "json"
 
 group :development do
   gem "capistrano"

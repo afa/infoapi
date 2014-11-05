@@ -1,9 +1,4 @@
-require 'sinatra/base'
-require "simple_api_tester/version"
-require 'sequel'
-require 'tester'
-require 'simple_api/rule'
-require 'rails_helpers'
+Dir["./lib/**/*.rb"].each {|file| require file }
 require 'yaml'
 
 class SimpleApiTester < Sinatra::Base
