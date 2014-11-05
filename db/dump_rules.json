@@ -299,6 +299,14 @@
     "content": "{\"title\":\"Top rated hotels which have <% criterion %> rentals | TopRater\",\"h1\":\"Best hotels which have <% criterion %> rentals\",\"annotation\":\"The highest rated hotels which have <% criterion %> rentals. What if you want to have an active getaway and relaxation? Is it necessary to risk and feel uncomfortable when realize that the hotel you have chosed doesn`t have all necessary sport facilities? We have a great piece of news! TopRater gives you an oportunity to plan and provide an unforgettable holiday. How it works? We have gathered and analyzed a large number of reviews about hotels . You just choose in our catalogue the necessary criteria like “Scooter” or “Bikes” and get the best results! It`s that easy!\",\"meta-keywords\":\"best hotels which have <% criterion %> rentals, top 10 hotels which have <% criterion %> rentals, top rated hotels which have <% criterion %> rentals, hotels <% criterion %> rentals, <% criterion %> rentals in hotel\",\"meta-description\":\"Here you have a rating of the highest rated hotels which have <% criterion %> rentals.\"}"
   },
   {
+	"sphere": "movies",
+	"call": "infotext",
+	"param": "rating-annotation",
+	"lang": "en",
+	"genres": "[\"action\",\"adventure\",\"animation\",\"biography\",\"comedy\",\"crime\",\"documentary\",\"drama\",\"family\",\"fantasy\",\"film-noir\",\"history\",\"horror\",\"music\",\"musical\",\"mystery\",\"romance\",\"sci-fi\",\"sport\",\"thriller\",\"war\",\"western\"]",
+	"content": "{\"title\":\"Best <%genre%> movies | TopRater.com\",\"h1\":\"Top <%genre%> movies ever\",\"annotation\":\"What if you want to make a list of the Best <%genre%> films according to your own criteria and share it with friends. Now there is no need to rely on existing ratings when you don`t agree with them. With TopRater.com it became as easy as pie. Choose best films and create your ratings in seconds! Just select your film or genre criteria like <%criterion1%>, <%criterion2%> or <%criterion3%> in our catalogue and enjoy the result! \",\"meta-keywords\":\"TopRater.com, <%ratingKeywords%>, <%filmTitles%>\",\"meta-description\":\"Our rating \"Best <%genre%> movies\" is based on thousands of film fans reviews and present the best movies of all time. The team of Toprater.com has done a great piece of work to offer our users a really objective and unique rating.\"}"
+  },
+  {
     "id": 55,
     "sphere": "hotels",
     "call": "infotext",

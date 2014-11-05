@@ -3,10 +3,10 @@ require 'sequel'
 require 'pp'
 module SimpleApi
   class Rule
-    ATTRS = %w(sphere call param lang design path path.level stars criteria content).map(&:to_sym) # add genres etc
+    ATTRS = %w(sphere call param lang design path path.level stars criteria content genres).map(&:to_sym)
 
-    def self.from_param(param)
-      SimpleApi::PARAM_MAP[param]
+    def self.from_param(sphere, param)
+      SimpleApi::PARAM_MAP[sphere][param]
     end
 
     def initialize(hash)
@@ -26,7 +26,6 @@ module SimpleApi
 
     def mkdir_p(hash, path)
       #build hash-path.
-      # rule_path.inject(hash) do |rslt, lvl|
       path.inject(hash) do |rslt, lvl|
         unless rslt.has_key?(lvl)
           rslt[lvl] = {}
@@ -40,9 +39,26 @@ module SimpleApi
       place_at(hash)
     end
 
+    def self.find_rule(sphere, params, rules)
+      klass = from_param(sphere, params.param)
+      located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(params.param, {}).fetch(params.lang, {})
+      p "located", located, klass
+      klass.clarify(located, params)
+      # found = %w(main about).include?(params.param) ? located[params.design] : located.detect do |rule|
+      #   # r = OpenStruct.new JSON.load(rule)
+      #   pairs = [[params.data ? params.data['path'] : params.path, rule.path]]
+      #   pairs += [[params.data ? params.data['criteria'] : params.criteria, rule.criteria], [params.data ? params.data['stars'] : params.stars, rule.stars]] if params.param == 'rating-annotation'
+      #   pairs.inject(true){|rslt, a| rslt && Tester::test(*a) }
+      # end
+      # return found
+    end
   end
 
   class DesignRule < Rule
+    def self.clarify(located, params)
+      located[params.design]
+    end
+
     def rule_path
       super << design
     end
@@ -63,7 +79,13 @@ module SimpleApi
   class AboutRule < DesignRule
   end
 
-  class AnnotationRule < Rule
+  class HotelsRule < Rule
+  end
+
+  class MoviesRule < Rule
+  end
+
+  module AnnotationsRuleMethods
     def leaf_node
       []
     end
@@ -77,17 +99,57 @@ module SimpleApi
     end
   end
 
-  class RatingAnnotationRule < AnnotationRule
+  class AnnotationHotelsRule < HotelsRule
+    def self.clarify(located, params)
+      located.select do |rule|
+        Tester::test(params.data['path'], rule.path)
+      end
+    end
+
+    include AnnotationsRuleMethods
   end
 
-  class CatalogAnnotationRule < AnnotationRule
+  class HotelsRatingAnnotationRule < AnnotationHotelsRule
+    def self.clarify(located, params)
+      super.select do |rule|
+        Tester::test(params.data['criteria'], rule.criteria) && Tester::test(params.data['stars'], rule.stars)
+      end
+    end
+  end
+
+  class HotelsCatalogAnnotationRule < AnnotationHotelsRule
+  end
+
+  class AnnotationMoviesRule < MoviesRule
+    def self.clarify(located, params)
+      located.select do |rule|
+        Tester::test([params.data['genres']], rule.genres)
+      end
+    end
+
+    include AnnotationsRuleMethods
+  end
+
+  class MoviesRatingAnnotationRule < AnnotationMoviesRule
+  end
+
+  class MoviesCatalogAnnotationRule < AnnotationMoviesRule
   end
 
   PARAM_MAP = {
-    "catalog-annotation" => SimpleApi::CatalogAnnotationRule, #SimpleApi::CatalogAnnotationRule,
-    "rating-annotation" => SimpleApi::RatingAnnotationRule,
-    "about" => SimpleApi::AboutRule,
-    "main" => SimpleApi::MainRule
+    "hotels" => {
+      "catalog-annotation" => SimpleApi::HotelsCatalogAnnotationRule,
+      "rating-annotation" => SimpleApi::HotelsRatingAnnotationRule,
+      "about" => SimpleApi::AboutRule,
+      "main" => SimpleApi::MainRule
+    },
+    "movies" => {
+      "catalog-annotation" => SimpleApi::MoviesCatalogAnnotationRule,
+      "rating-annotation" => SimpleApi::MoviesRatingAnnotationRule,
+      "about" => SimpleApi::AboutRule,
+      "main" => SimpleApi::MainRule
+    }
+
   }
 
   class Rules
@@ -99,7 +161,7 @@ module SimpleApi
       def init(config)
         Sequel.postgres(config['db'].inject({}){|r, k| r.merge(k[0].to_sym => k[1]) }) do |db|
           @rules = {}
-          db[:rules].order(:id).all.each{|item| Rule.from_param(item[:param]).new(item).place_to(@rules) }
+          db[:rules].order(:id).all.each{|item| Rule.from_param(item[:sphere], item[:param]).new(item).place_to(@rules) }
           p 'rules', PP.pp(@rules)
         end
       end
@@ -109,15 +171,9 @@ module SimpleApi
       end
 
       def process(params, sphere, logger)
-        located = @rules.fetch(sphere, {}).fetch('infotext', {}).fetch(params.param, {}).fetch(params.lang, {})
-        found = %w(main about).include?(params.param) ? located[params.design] : located.detect do |rule|
-          # r = OpenStruct.new JSON.load(rule)
-          pairs = [[params.data ? params.data['path'] : params.path, rule.path]]
-          pairs += [[params.data ? params.data['criteria'] : params.criteria, rule.criteria], [params.data ? params.data['stars'] : params.stars, rule.stars]] if params.param == 'rating-annotation'
-          pairs.inject(true){|rslt, a| rslt && Tester::test(*a) }
-        end
+        found = Rule.find_rule(sphere, params, @rules)
         logger.info "found #{found.inspect}"
-        content = found.try(:content)
+        content = found.try(:first).try(:content)
       end
 
     end
