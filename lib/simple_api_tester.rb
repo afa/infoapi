@@ -2,6 +2,8 @@ Dir["./lib/**/*.rb"].each {|file| require file }
 require 'yaml'
 
 class SimpleApiTester < Sinatra::Base
+  register Sinatra::Namespace
+
   configure :staging, :production, :development do
     enable :logging
     # default_encoding "utf-8"
@@ -27,6 +29,13 @@ class SimpleApiTester < Sinatra::Base
     logger.info "processing #{p.inspect}"
     SimpleApi::Rules.process(p, sphere, logger) || error(JSON.dump(status: "Page not found"), 404)
   end
+
+
+  namespace '/sitemap' do
+    # get '/' do
+    # end
+  end
+
 
   get '/*' do
     content_type :json, charset: 'utf-8'
