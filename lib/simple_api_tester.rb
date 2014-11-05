@@ -4,6 +4,7 @@ require 'sequel'
 require 'tester'
 require 'simple_api/rule'
 require 'rails_helpers'
+require 'yaml'
 
 class SimpleApiTester < Sinatra::Base
   configure :staging, :production, :development do

@@ -1,5 +1,4 @@
 development:
   db:
     host: 0.0.0.0
-    user: afa
-    database: sentimeta_simple_api  
+    database: sentimeta_simple_api
