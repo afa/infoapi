@@ -5,8 +5,24 @@ module SimpleApi
   class Rule
     ATTRS = %w(sphere call param lang design path path.level stars criteria content genres).map(&:to_sym)
 
+    PARAM_MAP = {
+      "hotels" => {
+        "catalog-annotation" => SimpleApi::HotelsCatalogAnnotationRule,
+        "rating-annotation" => SimpleApi::HotelsRatingAnnotationRule,
+        "about" => SimpleApi::AboutRule,
+        "main" => SimpleApi::MainRule
+      },
+      "movies" => {
+        "catalog-annotation" => SimpleApi::MoviesCatalogAnnotationRule,
+        "rating-annotation" => SimpleApi::MoviesRatingAnnotationRule,
+        "about" => SimpleApi::AboutRule,
+        "main" => SimpleApi::MainRule
+      }
+
+    }
+
     def self.from_param(sphere, param)
-      SimpleApi::PARAM_MAP[sphere][param]
+      SimpleApi::Rule::PARAM_MAP[sphere][param]
     end
 
     def initialize(hash)
@@ -135,22 +151,6 @@ module SimpleApi
 
   class MoviesCatalogAnnotationRule < AnnotationMoviesRule
   end
-
-  PARAM_MAP = {
-    "hotels" => {
-      "catalog-annotation" => SimpleApi::HotelsCatalogAnnotationRule,
-      "rating-annotation" => SimpleApi::HotelsRatingAnnotationRule,
-      "about" => SimpleApi::AboutRule,
-      "main" => SimpleApi::MainRule
-    },
-    "movies" => {
-      "catalog-annotation" => SimpleApi::MoviesCatalogAnnotationRule,
-      "rating-annotation" => SimpleApi::MoviesRatingAnnotationRule,
-      "about" => SimpleApi::AboutRule,
-      "main" => SimpleApi::MainRule
-    }
-
-  }
 
   class Rules
     class << self
