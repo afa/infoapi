@@ -307,6 +307,30 @@
 	"content": "{\"title\":\"Best <%genre%> movies | TopRater.com\",\"h1\":\"Top <%genre%> movies ever\",\"annotation\":\"What if you want to make a list of the Best <%genre%> films according to your own criteria and share it with friends. Now there is no need to rely on existing ratings when you don`t agree with them. With TopRater.com it became as easy as pie. Choose best films and create your ratings in seconds! Just select your film or genre criteria like <%criterion1%>, <%criterion2%> or <%criterion3%> in our catalogue and enjoy the result! \",\"meta-keywords\":\"TopRater.com, <%ratingKeywords%>, <%filmTitles%>\",\"meta-description\":\"Our rating \"Best <%genre%> movies\" is based on thousands of film fans reviews and present the best movies of all time. The team of Toprater.com has done a great piece of work to offer our users a really objective and unique rating.\"}"
   },
   {
+   "call": "infotext",
+   "param": "rating-annotation",
+   "sphere": "hotels",
+   "lang": "en",
+   "path": "non-empty",
+   "stars": "any",
+   "criteria": "any",
+   "content": "{ \"indexing\" => false, \"title\" => \"Hotel ratings by criteria \"<% criterion %>\" in <% location %> | TopRater\", \"h1\" => \"Ratings of hotels by \"<% criterion %>\" in <% location %>\", \"annotation\" => \"When planning vacations choose the right hotel is pretty difficult. Searching hotels and reading reviews now are things of the past for jolly good reasons. We understand that your time matters and have already collected and analyzed millions of hotel reviews of Internet users from all over the world. Our unique technology permits us to give you the best results in seconds. Here`s why. In our catalogue you may choose hotel criteria like “beach quality” or “ pool quality”. Mark as many criteria as you wish and get a rating of the best hotels according to your criteria. Make your vacation ideas happen on TopRater!\", \"meta-keywords\" => \"<% criterion %>, <% location %>\", \"meta-description\" => \"Ratings of hotels by \"<% criterion %>\" in <% location %>\" }"
+ },
+ 
+
+ 
+  {
+   "call": "infotext",
+   "param": "rating-annotation",
+   "sphere": "hotels",
+   "lang": "en",
+   "path": "empty",
+   "stars": "any",
+   "criteria": "any",
+   "content": "{  \"indexing\" => false, \"title\" => \"Hotel ratings by criteria \"<% criterion %>\" | TopRater\", \"h1\" => \"Ratings of hotels by \"<% criterion %>\" \", \"annotation\" => \"When planning vacations choose the right hotel is pretty difficult. Searching hotels and reading reviews now are things of the past for jolly good reasons. We understand that your time matters and have already collected and analyzed millions of hotel reviews of Internet users from all over the world. Our unique technology permits us to give you the best results in seconds. Here`s why. In our catalogue you may choose hotel criteria like “beach quality” or “ pool quality”. Mark as many criteria as you wish and get a rating of the best hotels according to your criteria. Make your vacation ideas happen on TopRater!\", \"meta-keywords\" => \"<% criterion %>, hotel\", \"meta-description\" => \"Ratings of hotels by \"<% criterion %>\"\" }"
+ },
+ 
+  {
     "id": 55,
     "sphere": "hotels",
     "call": "infotext",
