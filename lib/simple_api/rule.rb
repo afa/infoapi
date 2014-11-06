@@ -1,6 +1,5 @@
-require 'tester'
-require 'sequel'
 require 'pp'
+
 module SimpleApi
   class Rule
     ATTRS = %w(sphere call param lang design path path.level stars criteria content genres).map(&:to_sym)
@@ -10,7 +9,6 @@ module SimpleApi
     end
 
     def initialize(hash)
-      # p "hash init #{hash.inspect}"
       @data = {}
       @data.merge! hash.is_a?(Hash) ? hash : Hash[hash]
     end
@@ -42,7 +40,6 @@ module SimpleApi
     def self.find_rule(sphere, params, rules)
       klass = from_param(sphere, params.param)
       located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(params.param, {}).fetch(params.lang, {})
-      p "located", located, klass
       klass.clarify(located, params)
     end
   end
@@ -150,7 +147,6 @@ module SimpleApi
         Sequel.postgres(config['db'].inject({}){|r, k| r.merge(k[0].to_sym => k[1]) }) do |db|
           @rules = {}
           db[:rules].order(:id).all.each{|item| Rule.from_param(item[:sphere], item[:param]).new(item).place_to(@rules) }
-          p 'rules', PP.pp(@rules)
         end
       end
 

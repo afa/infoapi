@@ -1,6 +1,3 @@
-require 'json'
-require 'rails_helpers'
-
 module Tester
 
   def Tester::test o, rule

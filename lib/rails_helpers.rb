@@ -17,6 +17,7 @@ class String
     !blank?
   end
 end
+
 class Array
   def empty?
     self == []
@@ -25,8 +26,6 @@ class Array
   def present?
     !empty?
   end
-
-  
 end
 
 class NilClass
