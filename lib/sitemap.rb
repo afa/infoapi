@@ -1,0 +1,51 @@
+require 'rails_helpers'
+require 'sentimeta'
+require 'pp'
+module Sitemap
+  def load_paged(what, params = {})
+    offset, total, fnd = 0, 0, true
+    result = []
+    while fnd && total >= offset
+      data = Sentimeta::Client.fetch(what, params.merge(offset: offset, fields: { limit_objects: 100, offset_objects: offset}, limit: 100))
+      if data.has_key?('total')
+        total = data["total"]
+      else
+        total += 100
+      end
+      fnd = false if data[what.to_s].size < 100
+      offset += 100
+      result << data
+    end
+    result
+  end
+
+  def init_rules
+    Rules.load_rules(config)
+  end
+
+  def config
+    @config ||= YAML.load_file(File.join(File.dirname(__FILE__), %w(.. config app.yml))).try(:[], ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development')
+  end
+
+  def load
+    Sentimeta.env = config['fapi_stage']
+    Sentimeta.lang = :en
+    spheres = Sentimeta::Client.spheres
+    spheres.each do |sphere|
+      Sentimeta.sphere = sphere["name"]
+      # PP.pp Sentimeta::Client.objects(limit: 100000)
+      # PP.pp Sentimeta::Client.fetch(:catalog, limit:10000, offset: 0, path:'zimbabwe,matabeleland-south,beitbridge')
+      PP.pp load_paged(:objects, path:'', stars: 5)
+      break
+    end
+
+  end
+
+  def prepare
+  end
+
+  def generate
+  end
+
+  module_function :prepare, :generate, :load, :config, :init_rules, :load_paged
+end
