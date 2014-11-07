@@ -160,8 +160,8 @@ module SimpleApi
 
       def process(params, sphere, logger)
         found = Rule.find_rule(sphere, params, @rules)
-        logger.info "found #{found.inspect}"
-        content = found.try(:first).try(:content)
+        # logger.info "found #{found.inspect}"
+        content = found.kind_of?(Array) ? found.try(:first).try(:content) : found.try(:content)
       end
     end
   end

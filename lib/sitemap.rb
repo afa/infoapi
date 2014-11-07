@@ -15,6 +15,7 @@ module Sitemap
       fnd = false if data[what.to_s].size < 100
       offset += 100
       result << data
+      $stderr.print '.'
     end
     result
   end
