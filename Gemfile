@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'sentimeta'
+
 gem "bundler", "~> 1.6"
 gem "rake", "~> 10.0"
 gem "sinatra"
@@ -13,4 +15,8 @@ group :development do
   gem "capistrano-bundler"
   gem "capistrano-thin"
 end
-gem "rspec", group: %i(development test)
+group *%i(development test) do
+  gem "rspec"
+  gem 'factory_girl'
+  gem 'fakeweb', require: 'fakeweb/safe'
+end

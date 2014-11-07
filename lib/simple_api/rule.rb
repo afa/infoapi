@@ -116,7 +116,7 @@ module SimpleApi
   class AnnotationMoviesRule < MoviesRule
     def self.clarify(located, params)
       located.select do |rule|
-        Tester::test([params.data['genres']], rule.genres)
+        Tester::test(params.data['path'], rule.path) && Tester::test([params.data['genres']], rule.genres)
       end
     end
 
@@ -147,10 +147,13 @@ module SimpleApi
   class Rules
     class << self
       def init(config)
+        @rules = {}
+        load_rules(config).each{|rule| rule.place_to(@rules) }
+      end
+
+      def load_rules(config)
         Sequel.postgres(config['db'].inject({}){|r, k| r.merge(k[0].to_sym => k[1]) }) do |db|
-          @rules = {}
-          db[:rules].order(:id).all.each{|item| Rule.from_param(item[:sphere], item[:param]).new(item).place_to(@rules) }
-          p 'rules', PP.pp(@rules)
+          db[:rules].order(:id).all.map{|item| Rule.from_param(item[:sphere], item[:param]).new(item) }
         end
       end
 

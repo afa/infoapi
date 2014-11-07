@@ -17,6 +17,7 @@ class String
     !blank?
   end
 end
+
 class Array
   def empty?
     self == []
@@ -25,8 +26,6 @@ class Array
   def present?
     !empty?
   end
-
-  
 end
 
 class NilClass
@@ -36,5 +35,15 @@ class NilClass
 
   def blank?
     true
+  end
+end
+
+class Hash
+  def symbolize_keys
+    self.inject({}){|rslt, (k, v)| rslt.merge(k.to_sym => v) }
+  end
+
+  def reverse_merge(hash)
+    hash.merge self
   end
 end

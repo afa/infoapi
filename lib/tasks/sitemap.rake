@@ -1,3 +1,4 @@
+require 'sitemap'
 namespace :sitemap do
   task :config do
     CONFIG = YAML.load_file(File.join(File.dirname(__FILE__), %w(.. .. config app.yml))).try(:[], ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development')
@@ -9,5 +10,8 @@ namespace :sitemap do
 
   desc "generate default map"
   task :generate => :connect do
+    Sitemap.load
+    # Sitemap.prepare
+    # Sitemap.generate
   end
 end
