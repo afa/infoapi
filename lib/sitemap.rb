@@ -34,6 +34,7 @@ module Sitemap
     spheres = Sentimeta::Client.spheres
     spheres.each do |sphere|
       Sentimeta.sphere = sphere["name"]
+      PP.pp Sentimeta::Client.criteria subcriteria: true
       # PP.pp Sentimeta::Client.objects(limit: 100000)
       # PP.pp Sentimeta::Client.fetch(:catalog, limit:10000, offset: 0, path:'zimbabwe,matabeleland-south,beitbridge')
       PP.pp load_paged(:objects, path:'', stars: 5)
