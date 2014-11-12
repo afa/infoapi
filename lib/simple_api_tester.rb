@@ -1,3 +1,4 @@
+require 'simple_api'
 Dir["./lib/**/*.rb"].each {|file| require file }
 require 'yaml'
 
@@ -6,13 +7,8 @@ class SimpleApiTester < Sinatra::Base
 
   configure :staging, :production, :development do
     enable :logging
-    # default_encoding "utf-8"
-    # add_charsets << 'application/json'
     set :config, YAML.load_file(File.join(File.dirname(__FILE__), %w(.. config app.yml))).try(:[], ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development')
     SimpleApi::Rules.init(settings.config)
-    # set :rules, SimpleApi::Rule.init(settings.config)
-    # logger.info "Starting api server"
-
   end
 
   error do
