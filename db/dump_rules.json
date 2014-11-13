@@ -1,6 +1,5 @@
 [
   {
-    "id": 32,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -8,12 +7,11 @@
     "design": null,
     "path": "non-empty",
     "path.level": null,
-    "stars": "5",
-    "criteria": "empty",
-    "content": "{\"title\":\"Top rated <% stars %>-star <% location %> hotels | TopRater.com\",\"h1\":\"Best <% stars %> star hotels in <% location %>\",\"annotation\":\"Highest rated luxury hotels in <% location %>. We know that you want to be on the safe side when travelling so we`ve analized millions of reviews meticulously from the most popular travel websites to create the rating list perfectly adapted to your target. We`ve focused this rating to important hotel criteria as \\\"clean beach\\\", \\\"food quality, \\\"friendly staff\\\" and many others. The top of hotels is based on the most current information and refresh automatically as new reviews about <% location %> hotels appear.\",\"meta-keywords\":\"best <% stars %> star hotels in <% location %>, top 10 <% stars %> star hotels in <% location %>, top rated <% stars %>-star hotels in <% location %>, luxury hotels in <% location %>\",\"meta-description\":\"Here you`ll find a rating of the best luxury hotels in <% location %>.\"}"
+    "content": "{\"title\":\"Top rated <% stars %>-star <% location %> hotels | TopRater.com\",\"h1\":\"Best <% stars %> star hotels in <% location %>\",\"annotation\":\"Highest rated luxury hotels in <% location %>. We know that you want to be on the safe side when travelling so we`ve analized millions of reviews meticulously from the most popular travel websites to create the rating list perfectly adapted to your target. We`ve focused this rating to important hotel criteria as \\\"clean beach\\\", \\\"food quality, \\\"friendly staff\\\" and many others. The top of hotels is based on the most current information and refresh automatically as new reviews about <% location %> hotels appear.\",\"meta-keywords\":\"best <% stars %> star hotels in <% location %>, top 10 <% stars %> star hotels in <% location %>, top rated <% stars %>-star hotels in <% location %>, luxury hotels in <% location %>\",\"meta-description\":\"Here you`ll find a rating of the best luxury hotels in <% location %>.\"}",
+    "filter": "{\"stars\":\"5\",\"criteria\":\"empty\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 33,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -21,12 +19,11 @@
     "design": null,
     "path": "non-empty",
     "path.level": null,
-    "stars": "4",
-    "criteria": "empty",
-    "content": "{\"title\":\"Top rated <% stars %>-star <% location %> hotels | TopRater.com\",\"h1\":\"Best <% stars %> star hotels in <% location %>\",\"annotation\":\"Here you have a top of the best <% stars %> star hotels in <% location %>. You don`t need to go further and look for reviews wasting hours and hours reading them. We eager to give you what you want. Toprater analyzes and generates ratings according to your needs whatever they are: \\\"Excellent Sleep\\\", \\\"Large Balcony\\\", \\\"Reasonable Prices\\\". Just search with us!\",\"meta-keywords\":\"best <% stars %> star hotels in <% location %>, top 10 <% stars %> star hotels in <% location %>, top rated <% stars %>-star hotels in <% location %>\",\"meta-description\":\"Here you have a top of the best <% stars %> star hotels in <% location %>.\"}"
+    "content": "{\"title\":\"Top rated <% stars %>-star <% location %> hotels | TopRater.com\",\"h1\":\"Best <% stars %> star hotels in <% location %>\",\"annotation\":\"Here you have a top of the best <% stars %> star hotels in <% location %>. You don`t need to go further and look for reviews wasting hours and hours reading them. We eager to give you what you want. Toprater analyzes and generates ratings according to your needs whatever they are: \\\"Excellent Sleep\\\", \\\"Large Balcony\\\", \\\"Reasonable Prices\\\". Just search with us!\",\"meta-keywords\":\"best <% stars %> star hotels in <% location %>, top 10 <% stars %> star hotels in <% location %>, top rated <% stars %>-star hotels in <% location %>\",\"meta-description\":\"Here you have a top of the best <% stars %> star hotels in <% location %>.\"}",
+    "filter": "{\"stars\":\"4\",\"criteria\":\"empty\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 34,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -34,12 +31,11 @@
     "design": null,
     "path": "non-empty",
     "path.level": null,
-    "stars": "3",
-    "criteria": "empty",
-    "content": "{\"title\":\"Top rated <% stars %>-star <% location %> hotels | TopRater.com\",\"h1\":\"Best <% stars %> star hotels in <% location %>\",\"annotation\":\"Here you have a top of the best <% stars %> star hotels in <% location %>. You don`t need to go further and look for reviews wasting hours and hours reading them. We eager to give you what you want. Toprater analyzes and generates ratings according to your needs whatever they are: \\\"Excellent Sleep\\\", \\\"Large Balcony\\\", \\\"Reasonable Prices\\\". Just search with us!\",\"meta-keywords\":\"best <% stars %> star hotels in <% location %>, top 10 <% stars %> star hotels in <% location %>, top rated <% stars %>-star hotels in <% location %>\",\"meta-description\":\"Here you have a top of the best <% stars %> star hotels in <% location %>.\"}"
+    "content": "{\"title\":\"Top rated <% stars %>-star <% location %> hotels | TopRater.com\",\"h1\":\"Best <% stars %> star hotels in <% location %>\",\"annotation\":\"Here you have a top of the best <% stars %> star hotels in <% location %>. You don`t need to go further and look for reviews wasting hours and hours reading them. We eager to give you what you want. Toprater analyzes and generates ratings according to your needs whatever they are: \\\"Excellent Sleep\\\", \\\"Large Balcony\\\", \\\"Reasonable Prices\\\". Just search with us!\",\"meta-keywords\":\"best <% stars %> star hotels in <% location %>, top 10 <% stars %> star hotels in <% location %>, top rated <% stars %>-star hotels in <% location %>\",\"meta-description\":\"Here you have a top of the best <% stars %> star hotels in <% location %>.\"}",
+    "filter": "{\"stars\":\"3\",\"criteria\":\"empty\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 35,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -47,12 +43,11 @@
     "design": null,
     "path": "non-empty",
     "path.level": null,
-    "stars": "2",
-    "criteria": "empty",
-    "content": "{\"title\":\"Top rated <% stars %>-star <% location %> hotels | TopRater.com\",\"h1\":\"Best <% stars %> star hotels in <% location %>\",\"annotation\":\"Here you have a top of the best <% stars %> star hotels in <% location %>. You don`t need to go further and look for reviews wasting hours and hours reading them. We eager to give you what you want. Toprater analyzes and generates ratings according to your needs whatever they are: \\\"Excellent Sleep\\\", \\\"Large Balcony\\\", \\\"Reasonable Prices\\\". Just search with us!\",\"meta-keywords\":\"best <% stars %> star hotels in <% location %>, top 10 <% stars %> star hotels in <% location %>, top rated <% stars %>-star hotels in <% location %>\",\"meta-description\":\"Here you have a top of the best <% stars %> star hotels in <% location %>.\"}"
+    "content": "{\"title\":\"Top rated <% stars %>-star <% location %> hotels | TopRater.com\",\"h1\":\"Best <% stars %> star hotels in <% location %>\",\"annotation\":\"Here you have a top of the best <% stars %> star hotels in <% location %>. You don`t need to go further and look for reviews wasting hours and hours reading them. We eager to give you what you want. Toprater analyzes and generates ratings according to your needs whatever they are: \\\"Excellent Sleep\\\", \\\"Large Balcony\\\", \\\"Reasonable Prices\\\". Just search with us!\",\"meta-keywords\":\"best <% stars %> star hotels in <% location %>, top 10 <% stars %> star hotels in <% location %>, top rated <% stars %>-star hotels in <% location %>\",\"meta-description\":\"Here you have a top of the best <% stars %> star hotels in <% location %>.\"}",
+    "filter": "{\"stars\":\"2\",\"criteria\":\"empty\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 36,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -60,12 +55,11 @@
     "design": null,
     "path": "non-empty",
     "path.level": null,
-    "stars": "1",
-    "criteria": "empty",
-    "content": "{\"title\":\"Top rated <% stars %>-star <% location %> hotels | TopRater.com\",\"h1\":\"Best <% stars %> star hotels in <% location %>\",\"annotation\":\"Here you have a top of the best <% stars %> star hotels in <% location %>. You don`t need to go further and look for reviews wasting hours and hours reading them. We eager to give you what you want. Toprater analyzes and generates ratings according to your needs whatever they are: \\\"Excellent Sleep\\\", \\\"Large Balcony\\\", \\\"Reasonable Prices\\\". Just search with us!\",\"meta-keywords\":\"best <% stars %> star hotels in <% location %>, top 10 <% stars %> star hotels in <% location %>, top rated <% stars %>-star hotels in <% location %>\",\"meta-description\":\"Here you have a top of the best <% stars %> star hotels in <% location %>.\"}"
+    "content": "{\"title\":\"Top rated <% stars %>-star <% location %> hotels | TopRater.com\",\"h1\":\"Best <% stars %> star hotels in <% location %>\",\"annotation\":\"Here you have a top of the best <% stars %> star hotels in <% location %>. You don`t need to go further and look for reviews wasting hours and hours reading them. We eager to give you what you want. Toprater analyzes and generates ratings according to your needs whatever they are: \\\"Excellent Sleep\\\", \\\"Large Balcony\\\", \\\"Reasonable Prices\\\". Just search with us!\",\"meta-keywords\":\"best <% stars %> star hotels in <% location %>, top 10 <% stars %> star hotels in <% location %>, top rated <% stars %>-star hotels in <% location %>\",\"meta-description\":\"Here you have a top of the best <% stars %> star hotels in <% location %>.\"}",
+    "filter": "{\"stars\":\"1\",\"criteria\":\"empty\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 37,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -73,12 +67,11 @@
     "design": null,
     "path": "non-empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"coral\",\"extra Bed\",\"indoor-pool\",\"jacuzz\",\"lake\",\"laundry\",\"mountains\",\"private-beach\",\"river\"]",
-    "content": "{\"title\":\"Top rated <% location %> hotels with <% criterion %> | TopRater\",\"h1\":\"Best <% location %> hotels with <% criterion %>\",\"annotation\":\"Top rated <% location %> hotels with <% criterion %>. Searching for a hotel that could offer you a high level of comfort: jacuzzi, indoor pool, extra bed and would be situated in a fantastic setting with heart-thumping views, you used to read dozens of reviews about dozens hotels to find the one that really suits you. Our rating system will do this hard work for you! Just choose criteria that are important to make your vacation really great!  A rating of the best hotels that this city or place has to offer,  will appear! Please feel free to search. Its so easy with TopRater! \",\"meta-keywords\":\"best <% location %> hotels with <% criterion %>, <% location %> hotels with <% criterion %>, hotels with <% criterion %> in <% location %>\",\"meta-description\":\"Here you have a rating of the best <% location %> hotels with <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated <% location %> hotels with <% criterion %> | TopRater\",\"h1\":\"Best <% location %> hotels with <% criterion %>\",\"annotation\":\"Top rated <% location %> hotels with <% criterion %>. Searching for a hotel that could offer you a high level of comfort: jacuzzi, indoor pool, extra bed and would be situated in a fantastic setting with heart-thumping views, you used to read dozens of reviews about dozens hotels to find the one that really suits you. Our rating system will do this hard work for you! Just choose criteria that are important to make your vacation really great!  A rating of the best hotels that this city or place has to offer,  will appear! Please feel free to search. Its so easy with TopRater! \",\"meta-keywords\":\"best <% location %> hotels with <% criterion %>, <% location %> hotels with <% criterion %>, hotels with <% criterion %> in <% location %>\",\"meta-description\":\"Here you have a rating of the best <% location %> hotels with <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"coral\\\",\\\"extra Bed\\\",\\\"indoor-pool\\\",\\\"jacuzz\\\",\\\"lake\\\",\\\"laundry\\\",\\\"mountains\\\",\\\"private-beach\\\",\\\"river\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 38,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -86,12 +79,11 @@
     "design": null,
     "path": "non-empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"aquapark\",\"elevator\",\"golf\",\"gym\",\"kids-club\",\"minibar\",\"pizza\",\"sauna\",\"toiletries\",\"сlubs\"]",
-    "content": "{\"title\":\"Top rated <% location %> hotels with <% criterion %> | TopRater\",\"h1\":\"Best <% location %> hotels with <% criterion %>\",\"annotation\":\"Best <% location %> hotels with <% criterion %>. We have gathered and analyzed millions of reviews to give you a top rated hotels ideal for your vacation. And if you travel with kids, they  will be happy with an aquapark, kids club and pizza. You  don`t need to read dozens of reviews about hotels to find a perfect one for your family, just choose criteria and be ready to get the result!\",\"meta-keywords\":\"best <% location %> hotels with <% criterion %>, <% location %> hotels with <% criterion %>, hotels with <% criterion %> in <% location %>\",\"meta-description\":\"Here you have a rating of the best <% location %> hotels with <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated <% location %> hotels with <% criterion %> | TopRater\",\"h1\":\"Best <% location %> hotels with <% criterion %>\",\"annotation\":\"Best <% location %> hotels with <% criterion %>. We have gathered and analyzed millions of reviews to give you a top rated hotels ideal for your vacation. And if you travel with kids, they  will be happy with an aquapark, kids club and pizza. You  don`t need to read dozens of reviews about hotels to find a perfect one for your family, just choose criteria and be ready to get the result!\",\"meta-keywords\":\"best <% location %> hotels with <% criterion %>, <% location %> hotels with <% criterion %>, hotels with <% criterion %> in <% location %>\",\"meta-description\":\"Here you have a rating of the best <% location %> hotels with <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"aquapark\\\",\\\"elevator\\\",\\\"golf\\\",\\\"gym\\\",\\\"kids-club\\\",\\\"minibar\\\",\\\"pizza\\\",\\\"sauna\\\",\\\"toiletries\\\",\\\"сlubs\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 39,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -99,12 +91,11 @@
     "design": null,
     "path": "non-empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"anniversary\",\"cats\",\"honeymoon\",\"sports\",\"wedding\"]",
-    "content": "{\"title\":\"Top rated <% location %> hotels for <% criterion %> | TopRater\",\"h1\":\"Best <% location %> hotels for <% criterion %>\",\"annotation\":\"The most exclusive <% location %> hotels for <% criterion %>. We have analyzed millions of <% criterion %> reviews to help you to find an ideal venue for your special day. In TopRater you just choose the criteria which are important to you and get a rating of the best hotels in London which have all needed amenities and facilities for <% criterion %> to offer. \",\"meta-keywords\":\"best <% location %> hotels for <% criterion %>, <% location %> hotels for <% criterion %>, hotels for <% criterion %> in <% location %>\",\"meta-description\":\"Here you have a rating of the best <% location %> hotels for <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated <% location %> hotels for <% criterion %> | TopRater\",\"h1\":\"Best <% location %> hotels for <% criterion %>\",\"annotation\":\"The most exclusive <% location %> hotels for <% criterion %>. We have analyzed millions of <% criterion %> reviews to help you to find an ideal venue for your special day. In TopRater you just choose the criteria which are important to you and get a rating of the best hotels in London which have all needed amenities and facilities for <% criterion %> to offer. \",\"meta-keywords\":\"best <% location %> hotels for <% criterion %>, <% location %> hotels for <% criterion %>, hotels for <% criterion %> in <% location %>\",\"meta-description\":\"Here you have a rating of the best <% location %> hotels for <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"anniversary\\\",\\\"cats\\\",\\\"honeymoon\\\",\\\"sports\\\",\\\"wedding\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 40,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -112,12 +103,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"big-resort\",\"boutique-hotel\",\"comfortable-hotel\",\"family-hotel\",\"luxurious-hotel\",\"quiet-hotel\"]",
-    "content": "{\"title\":\"Top rated family <% criterion %>s | TopRater\",\"h1\":\"Best <% criterion %>s\",\"annotation\":\"The highest rated <% criterion %>s. We have gathered and analyzed millions of reviews about thousands of <% criterion %>s to give you the best result. Just mark the criteria which are important to you such as “Quiet hotel”, “Luxurious hotel” or “Comfortable hotel” and get a list of the best hotels dedicated to your holidays. We hope you`ll have the oportunity to feel their professionalism, safety and friendly atmosphere.\",\"meta-keywords\":\"top rated <% criterion %>s, best <% criterion %>s, top 10 <% criterion %>s\",\"meta-description\":\"On this page you `ve got a rating of the highest rated family hotels.\"}"
+    "content": "{\"title\":\"Top rated family <% criterion %>s | TopRater\",\"h1\":\"Best <% criterion %>s\",\"annotation\":\"The highest rated <% criterion %>s. We have gathered and analyzed millions of reviews about thousands of <% criterion %>s to give you the best result. Just mark the criteria which are important to you such as “Quiet hotel”, “Luxurious hotel” or “Comfortable hotel” and get a list of the best hotels dedicated to your holidays. We hope you`ll have the oportunity to feel their professionalism, safety and friendly atmosphere.\",\"meta-keywords\":\"top rated <% criterion %>s, best <% criterion %>s, top 10 <% criterion %>s\",\"meta-description\":\"On this page you `ve got a rating of the highest rated family hotels.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"big-resort\\\",\\\"boutique-hotel\\\",\\\"comfortable-hotel\\\",\\\"family-hotel\\\",\\\"luxurious-hotel\\\",\\\"quiet-hotel\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 41,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -125,12 +115,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"bar-quality\",\"beach-quality\",\"pool-quality\",\"reasonably-priced-restaurant\",\"restaurant-quality\",\"shower-quality\"]",
-    "content": "{\"title\":\"Top rated <% criterion %> hotels  | TopRater\",\"h1\":\"Best <% criterion %> hotels\",\"annotation\":\"The highest rated <% criterion %> hotels. When we talk about trips a little planning never hurt. On TopRater we`ve gathered and analyzed millions of reviews which contain all the essential information about hotels. Now you have all tools to plan your great vacations. Just choose necessary criteria in our catalogue like “Shower quality”,  “Pool quality” or  “Beach quality” and get a rating of the best options for holiday for you and your family!\",\"meta-keywords\":\"On this page you `ve got a rating of the highest rated <% criterion %> hotels \",\"meta-description\":\"On this page you `ve got a rating of the highest rated <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated <% criterion %> hotels  | TopRater\",\"h1\":\"Best <% criterion %> hotels\",\"annotation\":\"The highest rated <% criterion %> hotels. When we talk about trips a little planning never hurt. On TopRater we`ve gathered and analyzed millions of reviews which contain all the essential information about hotels. Now you have all tools to plan your great vacations. Just choose necessary criteria in our catalogue like “Shower quality”,  “Pool quality” or  “Beach quality” and get a rating of the best options for holiday for you and your family!\",\"meta-keywords\":\"On this page you `ve got a rating of the highest rated <% criterion %> hotels \",\"meta-description\":\"On this page you `ve got a rating of the highest rated <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"bar-quality\\\",\\\"beach-quality\\\",\\\"pool-quality\\\",\\\"reasonably-priced-restaurant\\\",\\\"restaurant-quality\\\",\\\"shower-quality\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 42,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -138,12 +127,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"anniversary\",\"art-and-culture\",\"excellent-sleep\",\"hiking\",\"honeymoon\",\"night-life\",\"parties\",\"promenade\",\"wedding\"]",
-    "content": "{\"title\":\"Top rated hotels for <% criterion %> | TopRater\",\"h1\":\"Best hotels for <% criterion %>\",\"annotation\":\"The highest rated hotels for <% criterion %>. It`s really easy to find the best hotel for your purpose in some clickes!  We have already done a great piece of work gathering and analyzing millions of reviews. So you just use our catalogue and choose the criteria you need such as “Excellent sleep”, “Wedding”, “Night life” and in a  second you`ll get a rating of the best places to stay that London has to offer.\",\"meta-keywords\":\"top rated hotels for <% criterion %>, hotels for <% criterion %>, best hotels for <% criterion %>, hotels for <% criterion %>\",\"meta-description\":\"On this page you `ve got a rating of the highest rated hotels for <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated hotels for <% criterion %> | TopRater\",\"h1\":\"Best hotels for <% criterion %>\",\"annotation\":\"The highest rated hotels for <% criterion %>. It`s really easy to find the best hotel for your purpose in some clickes!  We have already done a great piece of work gathering and analyzing millions of reviews. So you just use our catalogue and choose the criteria you need such as “Excellent sleep”, “Wedding”, “Night life” and in a  second you`ll get a rating of the best places to stay that London has to offer.\",\"meta-keywords\":\"top rated hotels for <% criterion %>, hotels for <% criterion %>, best hotels for <% criterion %>, hotels for <% criterion %>\",\"meta-description\":\"On this page you `ve got a rating of the highest rated hotels for <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"anniversary\\\",\\\"art-and-culture\\\",\\\"excellent-sleep\\\",\\\"hiking\\\",\\\"honeymoon\\\",\\\"night-life\\\",\\\"parties\\\",\\\"promenade\\\",\\\"wedding\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 43,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -151,12 +139,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"bathroom-quality\",\"facilities-quality\",\"general-hotel-quality\",\"hotel-atmosphere\",\"hotel-atmosphere\"]",
-    "content": "{\"title\":\"Top rated hotels with great <% criterion %> | TopRater\",\"h1\":\"Top of hotels with the best <% criterion %>\",\"annotation\":\"Best options for great <% criterion %>. When planning vacations you don`t need to have any risk with the place to stay. We want you to be on the safe side. How it`s possible?  We`ve gathered and analyzed a great amount of reviews about hotels all over the world. So you just mark in our catalogue your standarts to a hotel and its location like “ Hotel atmosphere”, “Facilities quality”, “Bathroom quality” and get the result! Very easy!\",\"meta-keywords\":\"top rated hotels with great <% criterion %>, hotels with great <% criterion %>, best hotels with great <% criterion %>, great <% criterion %>\",\"meta-description\":\"Here you have a rating of the best options for great <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated hotels with great <% criterion %> | TopRater\",\"h1\":\"Top of hotels with the best <% criterion %>\",\"annotation\":\"Best options for great <% criterion %>. When planning vacations you don`t need to have any risk with the place to stay. We want you to be on the safe side. How it`s possible?  We`ve gathered and analyzed a great amount of reviews about hotels all over the world. So you just mark in our catalogue your standarts to a hotel and its location like “ Hotel atmosphere”, “Facilities quality”, “Bathroom quality” and get the result! Very easy!\",\"meta-keywords\":\"top rated hotels with great <% criterion %>, hotels with great <% criterion %>, best hotels with great <% criterion %>, great <% criterion %>\",\"meta-description\":\"Here you have a rating of the best options for great <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"bathroom-quality\\\",\\\"facilities-quality\\\",\\\"general-hotel-quality\\\",\\\"hotel-atmosphere\\\",\\\"hotel-atmosphere\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 44,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -164,12 +151,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"birds\",\"cats\"]",
-    "content": "{\"title\":\"Top rated hotels that allow <% criterion %> | TopRater\",\"h1\":\"Best hotels that allow <% criterion %>\",\"annotation\":\"The highest rated hotels that allow <% criterion %>. What if you want to travel with your beloved pet? Is it inevitably to risk and make your pet uncomfortable? We have a great piece of news! TopRater gives you an oportunity to plan and provide an unforgettable holiday. How it works? We have gathered and analyzed a large number of reviews about pet-friendly hotels. You just choose in our catalogue the necessary criteria like “Birds” or “cats” and get the best results! It`s that easy!\",\"meta-keywords\":\"top rated hotels that allow <% criterion %>, hotels that allow <% criterion %>, best hotels that allow <% criterion %>\",\"meta-description\":\"Here you have a rating of the highest rated hotels that allow <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated hotels that allow <% criterion %> | TopRater\",\"h1\":\"Best hotels that allow <% criterion %>\",\"annotation\":\"The highest rated hotels that allow <% criterion %>. What if you want to travel with your beloved pet? Is it inevitably to risk and make your pet uncomfortable? We have a great piece of news! TopRater gives you an oportunity to plan and provide an unforgettable holiday. How it works? We have gathered and analyzed a large number of reviews about pet-friendly hotels. You just choose in our catalogue the necessary criteria like “Birds” or “cats” and get the best results! It`s that easy!\",\"meta-keywords\":\"top rated hotels that allow <% criterion %>, hotels that allow <% criterion %>, best hotels that allow <% criterion %>\",\"meta-description\":\"Here you have a rating of the highest rated hotels that allow <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"birds\\\",\\\"cats\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 45,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -177,12 +163,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"alcoholic-beverages\",\"available-drinks\",\"beautiful-sunrise\",\"beautiful-sunsets\",\"big-beds\",\"blinds\",\"central-location\",\"cheap-bar\",\"clean-beach\",\"close-by-beach\",\"close-by-restaurants\",\"coffee\",\"dvd-player\",\"evening-meals\",\"fresh-food\",\"fresh-fruit\",\"friendly-guests\",\"good-parking-area\",\"great-exteriors\",\"great-lobby\",\"great-meat-dishes\",\"great-room-view\",\"great-sea-view\",\"great-seafood\",\"great-views\",\"green-territory\",\"ground-floor\",\"gym\",\"hair-dryer\",\"healthy-food\",\"heating\",\"high-quality-drinks\",\"high-quality-rooms\",\"high-quality-towels\",\"highly-rated-restaurant\",\"inexpensive-drinks\",\"inexpensive-food\",\"large-balcony\",\"large-pool\",\"library\",\"living-room\",\"national-cuisine\",\"new-beds\",\"nice-balconies\",\"non-chlorinated-pool\",\"non-crowded-pool\",\"nudist-beach\",\"number-of-bars\",\"peaceful-beach\",\"private-balcony\",\"private-beach\",\"public-beach\",\"quiet-location\",\"quiet-restaurants\",\"reasonable-prices\",\"refreshing-drinks\",\"rocky-beaches\",\"romantic-location\",\"safe-balcony\",\"safe-neighbourhoods\",\"sandy-beaches\",\"shaded-balcony\",\"spacious-bars\",\"tasty-food\",\"vast-beach\",\"water-side-bar\",\"water-side-restaurant\"]",
-    "content": "{\"title\":\"Top rated hotels with <% criterion %> | TopRater\",\"h1\":\"Best hotels with <% criterion %>\",\"annotation\":\"Top rated hotels with <% criterion %>. It`s really easy to find the best hotel for your purpose in some clickes! We have already done a great piece of work gathering and analyzing millions of reviews. So you just use our catalogue and choose the criteria you need such as “Toiletries”, “Multilingual Staff”, “Minibar” and in a second you`ll get a rating of the best places to stay that London has to offer. \",\"meta-keywords\":\"best hotels with <% criterion %>, hotels with <% criterion %>, top rated hotels with <% criterion %>, <% criterion %> in hotels\",\"meta-description\":\"On this page you `ve got a rating of the highest rated hotels with <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated hotels with <% criterion %> | TopRater\",\"h1\":\"Best hotels with <% criterion %>\",\"annotation\":\"Top rated hotels with <% criterion %>. It`s really easy to find the best hotel for your purpose in some clickes! We have already done a great piece of work gathering and analyzing millions of reviews. So you just use our catalogue and choose the criteria you need such as “Toiletries”, “Multilingual Staff”, “Minibar” and in a second you`ll get a rating of the best places to stay that London has to offer. \",\"meta-keywords\":\"best hotels with <% criterion %>, hotels with <% criterion %>, top rated hotels with <% criterion %>, <% criterion %> in hotels\",\"meta-description\":\"On this page you `ve got a rating of the highest rated hotels with <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"alcoholic-beverages\\\",\\\"available-drinks\\\",\\\"beautiful-sunrise\\\",\\\"beautiful-sunsets\\\",\\\"big-beds\\\",\\\"blinds\\\",\\\"central-location\\\",\\\"cheap-bar\\\",\\\"clean-beach\\\",\\\"close-by-beach\\\",\\\"close-by-restaurants\\\",\\\"coffee\\\",\\\"dvd-player\\\",\\\"evening-meals\\\",\\\"fresh-food\\\",\\\"fresh-fruit\\\",\\\"friendly-guests\\\",\\\"good-parking-area\\\",\\\"great-exteriors\\\",\\\"great-lobby\\\",\\\"great-meat-dishes\\\",\\\"great-room-view\\\",\\\"great-sea-view\\\",\\\"great-seafood\\\",\\\"great-views\\\",\\\"green-territory\\\",\\\"ground-floor\\\",\\\"gym\\\",\\\"hair-dryer\\\",\\\"healthy-food\\\",\\\"heating\\\",\\\"high-quality-drinks\\\",\\\"high-quality-rooms\\\",\\\"high-quality-towels\\\",\\\"highly-rated-restaurant\\\",\\\"inexpensive-drinks\\\",\\\"inexpensive-food\\\",\\\"large-balcony\\\",\\\"large-pool\\\",\\\"library\\\",\\\"living-room\\\",\\\"national-cuisine\\\",\\\"new-beds\\\",\\\"nice-balconies\\\",\\\"non-chlorinated-pool\\\",\\\"non-crowded-pool\\\",\\\"nudist-beach\\\",\\\"number-of-bars\\\",\\\"peaceful-beach\\\",\\\"private-balcony\\\",\\\"private-beach\\\",\\\"public-beach\\\",\\\"quiet-location\\\",\\\"quiet-restaurants\\\",\\\"reasonable-prices\\\",\\\"refreshing-drinks\\\",\\\"rocky-beaches\\\",\\\"romantic-location\\\",\\\"safe-balcony\\\",\\\"safe-neighbourhoods\\\",\\\"sandy-beaches\\\",\\\"shaded-balcony\\\",\\\"spacious-bars\\\",\\\"tasty-food\\\",\\\"vast-beach\\\",\\\"water-side-bar\\\",\\\"water-side-restaurant\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 46,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -190,12 +175,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"air-conditioned-rooms\",\"beautiful-courtyard\",\"boats-rental\",\"bus-service\",\"ceiling-fan\",\"clean-pool\",\"clean-rooms\",\"clean-toilet\",\"clean-towels\",\"comfortable-beds\",\"comfortable-rooms\",\"drinking-water\",\"elevator\",\"exquisite-spa\",\"extra-bed\",\"fountain\",\"friendly-staff\",\"great-animation-team\",\"great-location\",\"hospitable-staff\",\"indoor-pool\",\"jacuzzi\",\"kids-club\",\"kids-entertainment\",\"kids-pool\",\"laundry\",\"lifeguards\",\"outdoor-pool\",\"picturesque-garden\",\"pizza\",\"porch\",\"professional-restaurant-service\",\"quiet-rooms\",\"rooms-with-water-view\",\"safe-deposit-box\",\"seating-area\",\"slippers\",\"spacious-rooms\",\"stylish-rooms\",\"wi-fi\",\"wild-beach\"]",
-    "content": "{\"title\":\"Top rated hotels which have <% criterion %> | TopRater\",\"h1\":\"Best hotels which have <% criterion %>\",\"annotation\":\"Top rated hotels which have <% criterion %>. When we talk about trips a little planning never hurt. On TopRater we`ve gathered and analyzed millions of reviews which contain all the essential information about hotels. Now you have all tools to plan your great vacations. Just choose necessary criteria in our catalogue like “Kids Entertainment”, “Bus Service” or “Lifeguards” and get a rating of the best options for holiday for you and your family!\",\"meta-keywords\":\"best hotels which have <% criterion %>, hotels <% criterion %>, top 10 hotels <% criterion %>\",\"meta-description\":\"On this page you `ve got a list of top rated hotels which have <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated hotels which have <% criterion %> | TopRater\",\"h1\":\"Best hotels which have <% criterion %>\",\"annotation\":\"Top rated hotels which have <% criterion %>. When we talk about trips a little planning never hurt. On TopRater we`ve gathered and analyzed millions of reviews which contain all the essential information about hotels. Now you have all tools to plan your great vacations. Just choose necessary criteria in our catalogue like “Kids Entertainment”, “Bus Service” or “Lifeguards” and get a rating of the best options for holiday for you and your family!\",\"meta-keywords\":\"best hotels which have <% criterion %>, hotels <% criterion %>, top 10 hotels <% criterion %>\",\"meta-description\":\"On this page you `ve got a list of top rated hotels which have <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"air-conditioned-rooms\\\",\\\"beautiful-courtyard\\\",\\\"boats-rental\\\",\\\"bus-service\\\",\\\"ceiling-fan\\\",\\\"clean-pool\\\",\\\"clean-rooms\\\",\\\"clean-toilet\\\",\\\"clean-towels\\\",\\\"comfortable-beds\\\",\\\"comfortable-rooms\\\",\\\"drinking-water\\\",\\\"elevator\\\",\\\"exquisite-spa\\\",\\\"extra-bed\\\",\\\"fountain\\\",\\\"friendly-staff\\\",\\\"great-animation-team\\\",\\\"great-location\\\",\\\"hospitable-staff\\\",\\\"indoor-pool\\\",\\\"jacuzzi\\\",\\\"kids-club\\\",\\\"kids-entertainment\\\",\\\"kids-pool\\\",\\\"laundry\\\",\\\"lifeguards\\\",\\\"outdoor-pool\\\",\\\"picturesque-garden\\\",\\\"pizza\\\",\\\"porch\\\",\\\"professional-restaurant-service\\\",\\\"quiet-rooms\\\",\\\"rooms-with-water-view\\\",\\\"safe-deposit-box\\\",\\\"seating-area\\\",\\\"slippers\\\",\\\"spacious-rooms\\\",\\\"stylish-rooms\\\",\\\"wi-fi\\\",\\\"wild-beach\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 47,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -203,12 +187,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"comforter\",\"couch\",\"curtains\",\"eateries\",\"massage-place\",\"minibar\",\"mirror\",\"multilingual-staff\",\"oven\",\"reception\",\"sauna\",\"sinks\",\"sun-beds\",\"table-tennis\",\"tennis-courts\",\"toiletries\",\"umbrellas\"]",
-    "content": "{\"title\":\"Top rated hotels which have good <% criterion %> | TopRater\",\"h1\":\"Best hotels which have good <% criterion %>\",\"annotation\":\"The highest rated hotels which have good <% criterion %>. It`s really easy to find the best hotel for your purpose in some clickes! We have already done a great piece of work gathering and analyzing millions of reviews. So you just use our catalogue and choose the criteria you need such as “Toiletries”, “Multilingual Staff”, “Minibar” and in a second you`ll get a rating of the best places to stay that London has to offer. \",\"meta-keywords\":\"best hotels which have good <% criterion %>, top 10 hotels which have good <% criterion %>, top rated hotels which have good <% criterion %>, hotels good <% criterion %>, good <% criterion %> in hotels\",\"meta-description\":\"On this page you `ve got a rating of the highest rated hotels which have good <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated hotels which have good <% criterion %> | TopRater\",\"h1\":\"Best hotels which have good <% criterion %>\",\"annotation\":\"The highest rated hotels which have good <% criterion %>. It`s really easy to find the best hotel for your purpose in some clickes! We have already done a great piece of work gathering and analyzing millions of reviews. So you just use our catalogue and choose the criteria you need such as “Toiletries”, “Multilingual Staff”, “Minibar” and in a second you`ll get a rating of the best places to stay that London has to offer. \",\"meta-keywords\":\"best hotels which have good <% criterion %>, top 10 hotels which have good <% criterion %>, top rated hotels which have good <% criterion %>, hotels good <% criterion %>, good <% criterion %> in hotels\",\"meta-description\":\"On this page you `ve got a rating of the highest rated hotels which have good <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"comforter\\\",\\\"couch\\\",\\\"curtains\\\",\\\"eateries\\\",\\\"massage-place\\\",\\\"minibar\\\",\\\"mirror\\\",\\\"multilingual-staff\\\",\\\"oven\\\",\\\"reception\\\",\\\"sauna\\\",\\\"sinks\\\",\\\"sun-beds\\\",\\\"table-tennis\\\",\\\"tennis-courts\\\",\\\"toiletries\\\",\\\"umbrellas\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 48,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -216,12 +199,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"facilities-quality\",\"service-quality\"]",
-    "content": "{\"title\":\"Top rated <% criterion %> hotels | TopRater\",\"h1\":\"Best <% criterion %> hotels\",\"annotation\":\"Top rated <% criterion %> hotels. When planning vacations you don`t need to have any risk with the place to stay. We want you to be on the safe side. How it`s possible? We`ve gathered and analyzed a great amount of reviews about hotels all over the world. So you just mark in our catalogue your your parameters of hotel like “ Service Quality”, “Facilities quality” and get the result! Very easy!\",\"meta-keywords\":\"best <% criterion %> hotels, top rated <% criterion %> hotels, top 10 <% criterion %> hotels, <% criterion %> hotels\",\"meta-description\":\"Here you have a range of top rated <% criterion %> hotels.\"}"
+    "content": "{\"title\":\"Top rated <% criterion %> hotels | TopRater\",\"h1\":\"Best <% criterion %> hotels\",\"annotation\":\"Top rated <% criterion %> hotels. When planning vacations you don`t need to have any risk with the place to stay. We want you to be on the safe side. How it`s possible? We`ve gathered and analyzed a great amount of reviews about hotels all over the world. So you just mark in our catalogue your your parameters of hotel like “ Service Quality”, “Facilities quality” and get the result! Very easy!\",\"meta-keywords\":\"best <% criterion %> hotels, top rated <% criterion %> hotels, top 10 <% criterion %> hotels, <% criterion %> hotels\",\"meta-description\":\"Here you have a range of top rated <% criterion %> hotels.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"facilities-quality\\\",\\\"service-quality\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 49,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -229,12 +211,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"boat-trip\",\"diving\",\"football\",\"golf\",\"kayaking\",\"snorkeling\",\"sports\"]",
-    "content": "{\"title\":\"Top rated hotels with facilities for <% criterion %> | TopRater\",\"h1\":\"Best hotels with facilities for <% criterion %>\",\"annotation\":\"The highest rated hotels with facilities for <% criterion %>. What if you want to have an active getaway and relaxation?  Is it necessary to risk and feel uncomfortable when realize that the hotel you have chosed doesn`t have all necessary sport  facilities? We have a great piece of news! TopRater gives you an oportunity to plan and provide an unforgettable holiday. How it works? We have gathered and analyzed a large number of reviews about sport hotels . You just choose in our catalogue the necessary criteria like “Diving”, “Golf”  or “Kayaking” and get the best results! It`s that easy!\",\"meta-keywords\":\"best hotels with facilities for <% criterion %>, top rated hotels with facilities for <% criterion %>, <% criterion %>\",\"meta-description\":\"Here you have a rating of the highest rated hotels with facilities for <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated hotels with facilities for <% criterion %> | TopRater\",\"h1\":\"Best hotels with facilities for <% criterion %>\",\"annotation\":\"The highest rated hotels with facilities for <% criterion %>. What if you want to have an active getaway and relaxation?  Is it necessary to risk and feel uncomfortable when realize that the hotel you have chosed doesn`t have all necessary sport  facilities? We have a great piece of news! TopRater gives you an oportunity to plan and provide an unforgettable holiday. How it works? We have gathered and analyzed a large number of reviews about sport hotels . You just choose in our catalogue the necessary criteria like “Diving”, “Golf”  or “Kayaking” and get the best results! It`s that easy!\",\"meta-keywords\":\"best hotels with facilities for <% criterion %>, top rated hotels with facilities for <% criterion %>, <% criterion %>\",\"meta-description\":\"Here you have a rating of the highest rated hotels with facilities for <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"boat-trip\\\",\\\"diving\\\",\\\"football\\\",\\\"golf\\\",\\\"kayaking\\\",\\\"snorkeling\\\",\\\"sports\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 50,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -242,12 +223,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"accessible-transport\",\"airport\",\"beautiful-island\",\"church\",\"clubs\",\"elephants\",\"great-shops\",\"jungle\",\"lake\",\"mountains\",\"museums\",\"oasis\",\"river\",\"waterfall\"]",
-    "content": "{\"title\":\"Top rated hotels with <% criterion %> nearby | TopRater\",\"h1\":\"Best hotels with <% criterion %> nearby\",\"annotation\":\"The highest rated hotels with a <% criterion %> nearby. We have gathered and analyzed millions of reviews about thousands of hotels to give you the best result. Just mark the hotel criteria which are important to you such as “River”, “Jungle” or “Waterfall” and get a list of the best hotels that London has to offer. Here you`ll be able to choose the best location and bring your vacation ideas to life!\",\"meta-keywords\":\"best hotels with <% criterion %> near it, top rated hotels with <% criterion %> near it, top 10 hotels with <% criterion %> near it, hotels with <% criterion %> \",\"meta-description\":\"On this page you `ve got a rating of the highest rated hotels with a beautiful <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated hotels with <% criterion %> nearby | TopRater\",\"h1\":\"Best hotels with <% criterion %> nearby\",\"annotation\":\"The highest rated hotels with a <% criterion %> nearby. We have gathered and analyzed millions of reviews about thousands of hotels to give you the best result. Just mark the hotel criteria which are important to you such as “River”, “Jungle” or “Waterfall” and get a list of the best hotels that London has to offer. Here you`ll be able to choose the best location and bring your vacation ideas to life!\",\"meta-keywords\":\"best hotels with <% criterion %> near it, top rated hotels with <% criterion %> near it, top 10 hotels with <% criterion %> near it, hotels with <% criterion %> \",\"meta-description\":\"On this page you `ve got a rating of the highest rated hotels with a beautiful <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"accessible-transport\\\",\\\"airport\\\",\\\"beautiful-island\\\",\\\"church\\\",\\\"clubs\\\",\\\"elephants\\\",\\\"great-shops\\\",\\\"jungle\\\",\\\"lake\\\",\\\"mountains\\\",\\\"museums\\\",\\\"oasis\\\",\\\"river\\\",\\\"waterfall\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 51,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -255,12 +235,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"cheap-taxi\",\"delicacies\",\"deliscious-cuisine\",\"evening-entertainments\",\"good-music\",\"great-performances\",\"great-skiing\",\"interesting-tours\",\"outdoor-show\",\"variety-of-dishes\",\"vegeterian-food\"]",
-    "content": "{\"title\":\"Top rated hotels which offer <% criterion %> | TopRater\",\"h1\":\"Best hotels which offer <% criterion %>\",\"annotation\":\"Best options for  hotels which offer <% criterion %>. When planning vacations you don`t need to have any risk with the place to stay. We want you to be on the safe side. How it`s possible? We`ve gathered and analyzed a great amount of reviews about hotels all over the world. So you just mark in our catalogue your parameters of hotel and hotel amenities  like “ Deliscious Cuisine”, “Vegeterian Food”, “Evening Entertainments” and get the result! Very easy!\",\"meta-keywords\":\"best hotels which offer <% criterion %>, top hotels hotels which offer <% criterion %>, hotels which offer <% criterion %>, hotels <% criterion %>, top 10 hotels which offer <% criterion %>, hotels <% criterion %>\",\"meta-description\":\"Here you have a rating of the best options for  hotels which offer <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated hotels which offer <% criterion %> | TopRater\",\"h1\":\"Best hotels which offer <% criterion %>\",\"annotation\":\"Best options for  hotels which offer <% criterion %>. When planning vacations you don`t need to have any risk with the place to stay. We want you to be on the safe side. How it`s possible? We`ve gathered and analyzed a great amount of reviews about hotels all over the world. So you just mark in our catalogue your parameters of hotel and hotel amenities  like “ Deliscious Cuisine”, “Vegeterian Food”, “Evening Entertainments” and get the result! Very easy!\",\"meta-keywords\":\"best hotels which offer <% criterion %>, top hotels hotels which offer <% criterion %>, hotels which offer <% criterion %>, hotels <% criterion %>, top 10 hotels which offer <% criterion %>, hotels <% criterion %>\",\"meta-description\":\"Here you have a rating of the best options for  hotels which offer <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"cheap-taxi\\\",\\\"delicacies\\\",\\\"deliscious-cuisine\\\",\\\"evening-entertainments\\\",\\\"good-music\\\",\\\"great-performances\\\",\\\"great-skiing\\\",\\\"interesting-tours\\\",\\\"outdoor-show\\\",\\\"variety-of-dishes\\\",\\\"vegeterian-food\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 52,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -268,12 +247,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"aquapark\",\"playgrounds\",\"slides\",\"toys\"]",
-    "content": "{\"title\":\"Top rated hotels with <% criterion %> for children | TopRater\",\"h1\":\"Best hotels with <% criterion %> for children\",\"annotation\":\"The highest rated hotels with <% criterion %> for children. We have gathered and analyzed millions of reviews about thousands of family hotels with all the necessary amenities for children to give you the best result. Just mark the criteria which are important to your family such as “Aquapark”, “Playgrounds” or “Toys” and get a list of the best hotels dadicated to family holidays. We hope you`ll have the oportunity to feel their professionalism, safety and family-friendly atmosphere.\",\"meta-keywords\":\"best hotels with <% criterion %> for children, top rated hotels with <% criterion %> for children, top 10 hotels with <% criterion %> for children, hotels with <% criterion %> for children, hotels <% criterion %> for children\",\"meta-description\":\"On this page you `ve got a rating of the highest rated hotels with <% criterion %> for children.\"}"
+    "content": "{\"title\":\"Top rated hotels with <% criterion %> for children | TopRater\",\"h1\":\"Best hotels with <% criterion %> for children\",\"annotation\":\"The highest rated hotels with <% criterion %> for children. We have gathered and analyzed millions of reviews about thousands of family hotels with all the necessary amenities for children to give you the best result. Just mark the criteria which are important to your family such as “Aquapark”, “Playgrounds” or “Toys” and get a list of the best hotels dadicated to family holidays. We hope you`ll have the oportunity to feel their professionalism, safety and family-friendly atmosphere.\",\"meta-keywords\":\"best hotels with <% criterion %> for children, top rated hotels with <% criterion %> for children, top 10 hotels with <% criterion %> for children, hotels with <% criterion %> for children, hotels <% criterion %> for children\",\"meta-description\":\"On this page you `ve got a rating of the highest rated hotels with <% criterion %> for children.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"aquapark\\\",\\\"playgrounds\\\",\\\"slides\\\",\\\"toys\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 53,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -281,12 +259,11 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"city-center\",\"fishing-village\",\"harbour\"]",
-    "content": "{\"title\":\"Top rated hotels located in <% criterion %> | TopRater\",\"h1\":\"Best hotels located in <% criterion %>\",\"annotation\":\"The highest rated hotels  located in <% criterion %>. It`s really easy to find the best hotel for your purposes in some clickes! We have already done a great piece of work gathering and analyzing millions of reviews. So you just use our catalogue and choose the criteria you need such as “Fishing Village”, “Harbour”, “City Center” and in a second you`ll get a rating of the best places to stay that London has to offer. On TopRater you may search and choose the right hotel and its location personally and  professionally!\",\"meta-keywords\":\"best hotels located in <% criterion %>, top hotels located in <% criterion %>, top 10 hotels located in <% criterion %>, hotels <% criterion %>, <% criterion %> in hotels\",\"meta-description\":\"On this page you `ve got a rating of the highest rated hotels  located in <% criterion %>.\"}"
+    "content": "{\"title\":\"Top rated hotels located in <% criterion %> | TopRater\",\"h1\":\"Best hotels located in <% criterion %>\",\"annotation\":\"The highest rated hotels  located in <% criterion %>. It`s really easy to find the best hotel for your purposes in some clickes! We have already done a great piece of work gathering and analyzing millions of reviews. So you just use our catalogue and choose the criteria you need such as “Fishing Village”, “Harbour”, “City Center” and in a second you`ll get a rating of the best places to stay that London has to offer. On TopRater you may search and choose the right hotel and its location personally and  professionally!\",\"meta-keywords\":\"best hotels located in <% criterion %>, top hotels located in <% criterion %>, top 10 hotels located in <% criterion %>, hotels <% criterion %>, <% criterion %> in hotels\",\"meta-description\":\"On this page you `ve got a rating of the highest rated hotels  located in <% criterion %>.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"city-center\\\",\\\"fishing-village\\\",\\\"harbour\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 54,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -294,45 +271,47 @@
     "design": null,
     "path": "empty",
     "path.level": null,
-    "stars": "any",
-    "criteria": "[\"bikes\",\"scooter\"]",
-    "content": "{\"title\":\"Top rated hotels which have <% criterion %> rentals | TopRater\",\"h1\":\"Best hotels which have <% criterion %> rentals\",\"annotation\":\"The highest rated hotels which have <% criterion %> rentals. What if you want to have an active getaway and relaxation? Is it necessary to risk and feel uncomfortable when realize that the hotel you have chosed doesn`t have all necessary sport facilities? We have a great piece of news! TopRater gives you an oportunity to plan and provide an unforgettable holiday. How it works? We have gathered and analyzed a large number of reviews about hotels . You just choose in our catalogue the necessary criteria like “Scooter” or “Bikes” and get the best results! It`s that easy!\",\"meta-keywords\":\"best hotels which have <% criterion %> rentals, top 10 hotels which have <% criterion %> rentals, top rated hotels which have <% criterion %> rentals, hotels <% criterion %> rentals, <% criterion %> rentals in hotel\",\"meta-description\":\"Here you have a rating of the highest rated hotels which have <% criterion %> rentals.\"}"
+    "content": "{\"title\":\"Top rated hotels which have <% criterion %> rentals | TopRater\",\"h1\":\"Best hotels which have <% criterion %> rentals\",\"annotation\":\"The highest rated hotels which have <% criterion %> rentals. What if you want to have an active getaway and relaxation? Is it necessary to risk and feel uncomfortable when realize that the hotel you have chosed doesn`t have all necessary sport facilities? We have a great piece of news! TopRater gives you an oportunity to plan and provide an unforgettable holiday. How it works? We have gathered and analyzed a large number of reviews about hotels . You just choose in our catalogue the necessary criteria like “Scooter” or “Bikes” and get the best results! It`s that easy!\",\"meta-keywords\":\"best hotels which have <% criterion %> rentals, top 10 hotels which have <% criterion %> rentals, top rated hotels which have <% criterion %> rentals, hotels <% criterion %> rentals, <% criterion %> rentals in hotel\",\"meta-description\":\"Here you have a rating of the highest rated hotels which have <% criterion %> rentals.\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"[\\\"bikes\\\",\\\"scooter\\\"]\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-	"sphere": "movies",
-	"call": "infotext",
-	"param": "rating-annotation",
-	"lang": "en",
-         "path": "any",
-	"genres": "[\"action\",\"adventure\",\"animation\",\"biography\",\"comedy\",\"crime\",\"documentary\",\"drama\",\"family\",\"fantasy\",\"film-noir\",\"history\",\"horror\",\"music\",\"musical\",\"mystery\",\"romance\",\"sci-fi\",\"sport\",\"thriller\",\"war\",\"western\"]",
-	"content": "{\"title\":\"Best <%genre%> movies | TopRater.com\",\"h1\":\"Top <%genre%> movies ever\",\"annotation\":\"What if you want to make a list of the Best <%genre%> films according to your own criteria and share it with friends. Now there is no need to rely on existing ratings when you don`t agree with them. With TopRater.com it became as easy as pie. Choose best films and create your ratings in seconds! Just select your film or genre criteria like <%criterion1%>, <%criterion2%> or <%criterion3%> in our catalogue and enjoy the result! \",\"meta-keywords\":\"TopRater.com, <%ratingKeywords%>, <%filmTitles%>\",\"meta-description\":\"Our rating \\\"Best <%genre%> movies\\\" is based on thousands of film fans reviews and present the best movies of all time. The team of Toprater.com has done a great piece of work to offer our users a really objective and unique rating.\"}"
+    "sphere": "movies",
+    "call": "infotext",
+    "param": "rating-annotation",
+    "lang": "en",
+    "design": null,
+    "path": "any",
+    "path.level": null,
+    "content": "{\"title\":\"Best <%genre%> movies | TopRater.com\",\"h1\":\"Top <%genre%> movies ever\",\"annotation\":\"What if you want to make a list of the Best <%genre%> films according to your own criteria and share it with friends. Now there is no need to rely on existing ratings when you don`t agree with them. With TopRater.com it became as easy as pie. Choose best films and create your ratings in seconds! Just select your film or genre criteria like <%criterion1%>, <%criterion2%> or <%criterion3%> in our catalogue and enjoy the result! \",\"meta-keywords\":\"TopRater.com, <%ratingKeywords%>, <%filmTitles%>\",\"meta-description\":\"Our rating \\\"Best <%genre%> movies\\\" is based on thousands of film fans reviews and present the best movies of all time. The team of Toprater.com has done a great piece of work to offer our users a really objective and unique rating.\"}",
+    "filter": "{\"stars\":null,\"criteria\":null,\"genres\":\"[\\\"action\\\",\\\"adventure\\\",\\\"animation\\\",\\\"biography\\\",\\\"comedy\\\",\\\"crime\\\",\\\"documentary\\\",\\\"drama\\\",\\\"family\\\",\\\"fantasy\\\",\\\"film-noir\\\",\\\"history\\\",\\\"horror\\\",\\\"music\\\",\\\"musical\\\",\\\"mystery\\\",\\\"romance\\\",\\\"sci-fi\\\",\\\"sport\\\",\\\"thriller\\\",\\\"war\\\",\\\"western\\\"]\",\"years\":\"2000-2003\"}",
+    "extended_types": "{\"int\":[\"years\"]}"
   },
   {
-   "call": "infotext",
-   "param": "rating-annotation",
-   "sphere": "hotels",
-   "lang": "en",
-   "path": "non-empty",
-   "stars": "any",
-   "criteria": "any",
-   "content": "{ \"indexing\":false, \"title\":\"Hotel ratings by criteria “<% criterion %>” in <% location %> | TopRater\", \"h1\":\"Ratings of hotels by “<% criterion %>” in <% location %>\", \"annotation\":\"When planning vacations choose the right hotel is pretty difficult. Searching hotels and reading reviews now are things of the past for jolly good reasons. We understand that your time matters and have already collected and analyzed millions of hotel reviews of Internet users from all over the world. Our unique technology permits us to give you the best results in seconds. Here`s why. In our catalogue you may choose hotel criteria like “beach quality” or “ pool quality”. Mark as many criteria as you wish and get a rating of the best hotels according to your criteria. Make your vacation ideas happen on TopRater!\", \"meta-keywords\":\"<% criterion %>, <% location %>\", \"meta-description\":\"Ratings of hotels by “<% criterion %>” in <% location %>\" }"
- },
- 
-
- 
+    "sphere": "hotels",
+    "call": "infotext",
+    "param": "rating-annotation",
+    "lang": "en",
+    "design": null,
+    "path": "non-empty",
+    "path.level": null,
+    "content": "{ \"indexing\":false, \"title\":\"Hotel ratings by criteria “<% criterion %>” in <% location %> | TopRater\", \"h1\":\"Ratings of hotels by “<% criterion %>” in <% location %>\", \"annotation\":\"When planning vacations choose the right hotel is pretty difficult. Searching hotels and reading reviews now are things of the past for jolly good reasons. We understand that your time matters and have already collected and analyzed millions of hotel reviews of Internet users from all over the world. Our unique technology permits us to give you the best results in seconds. Here`s why. In our catalogue you may choose hotel criteria like “beach quality” or “ pool quality”. Mark as many criteria as you wish and get a rating of the best hotels according to your criteria. Make your vacation ideas happen on TopRater!\", \"meta-keywords\":\"<% criterion %>, <% location %>\", \"meta-description\":\"Ratings of hotels by “<% criterion %>” in <% location %>\" }",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"any\",\"genres\":null}",
+    "extended_types": "{}"
+  },
   {
-   "call": "infotext",
-   "param": "rating-annotation",
-   "sphere": "hotels",
-   "lang": "en",
-   "path": "empty",
-   "stars": "any",
-   "criteria": "any",
-   "content": "{  \"indexing\":false, \"title\":\"Hotel ratings by criteria “<% criterion %>” | TopRater\", \"h1\":\"Ratings of hotels by “<% criterion %>” \", \"annotation\":\"When planning vacations choose the right hotel is pretty difficult. Searching hotels and reading reviews now are things of the past for jolly good reasons. We understand that your time matters and have already collected and analyzed millions of hotel reviews of Internet users from all over the world. Our unique technology permits us to give you the best results in seconds. Here`s why. In our catalogue you may choose hotel criteria like “beach quality” or “ pool quality”. Mark as many criteria as you wish and get a rating of the best hotels according to your criteria. Make your vacation ideas happen on TopRater!\", \"meta-keywords\":\"<% criterion %>, hotel\", \"meta-description\":\"Ratings of hotels by “<% criterion %>”\" }"
- },
- 
+    "sphere": "hotels",
+    "call": "infotext",
+    "param": "rating-annotation",
+    "lang": "en",
+    "design": null,
+    "path": "empty",
+    "path.level": null,
+    "content": "{  \"indexing\":false, \"title\":\"Hotel ratings by criteria “<% criterion %>” | TopRater\", \"h1\":\"Ratings of hotels by “<% criterion %>” \", \"annotation\":\"When planning vacations choose the right hotel is pretty difficult. Searching hotels and reading reviews now are things of the past for jolly good reasons. We understand that your time matters and have already collected and analyzed millions of hotel reviews of Internet users from all over the world. Our unique technology permits us to give you the best results in seconds. Here`s why. In our catalogue you may choose hotel criteria like “beach quality” or “ pool quality”. Mark as many criteria as you wish and get a rating of the best hotels according to your criteria. Make your vacation ideas happen on TopRater!\", \"meta-keywords\":\"<% criterion %>, hotel\", \"meta-description\":\"Ratings of hotels by “<% criterion %>”\" }",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"any\",\"genres\":null}",
+    "extended_types": "{}"
+  },
   {
-    "id": 55,
     "sphere": "hotels",
     "call": "infotext",
     "param": "rating-annotation",
@@ -340,12 +319,11 @@
     "design": null,
     "path": "any",
     "path.level": null,
-    "stars": "any",
-    "criteria": "any",
-    "content": "{\"indexing\":false,\"title\":\"Rating hotels | TopRater.com\",\"h1\":\"Rating hotels\",\"annotation\":\"When planning vacations choose the right hotel is pretty difficult. Searching hotels and reading reviews now are things of the past for jolly good reasons. We understand that your time  matters and have already collected and analyzed millions of hotel reviews of Internet users from all over the world. Our unique technology permits us to give you the best results in seconds. Here`s why.  In our catalogue you may choose hotel criteria like “beach quality” or “ pool quality”.  Mark as many criteria as you wish and get a rating of the best hotels according to your criteria. Make your vacation ideas happen on TopRater!\",\"meta-keywords\":\"rating hotels\",\"meta-description\":\"Rating hotels\"}"
+    "content": "{\"indexing\":false,\"title\":\"Rating hotels | TopRater.com\",\"h1\":\"Rating hotels\",\"annotation\":\"When planning vacations choose the right hotel is pretty difficult. Searching hotels and reading reviews now are things of the past for jolly good reasons. We understand that your time  matters and have already collected and analyzed millions of hotel reviews of Internet users from all over the world. Our unique technology permits us to give you the best results in seconds. Here`s why.  In our catalogue you may choose hotel criteria like “beach quality” or “ pool quality”.  Mark as many criteria as you wish and get a rating of the best hotels according to your criteria. Make your vacation ideas happen on TopRater!\",\"meta-keywords\":\"rating hotels\",\"meta-description\":\"Rating hotels\"}",
+    "filter": "{\"stars\":\"any\",\"criteria\":\"any\",\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 56,
     "sphere": "hotels",
     "call": "infotext",
     "param": "about",
@@ -353,12 +331,11 @@
     "design": "std",
     "path": null,
     "path.level": null,
-    "stars": null,
-    "criteria": null,
-    "content": "{\"show\":true}"
+    "content": "{\"show\":true}",
+    "filter": "{\"stars\":null,\"criteria\":null,\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 57,
     "sphere": "hotels",
     "call": "infotext",
     "param": "about",
@@ -366,12 +343,11 @@
     "design": "std",
     "path": null,
     "path.level": null,
-    "stars": null,
-    "criteria": null,
-    "content": "{\"show\":true}"
+    "content": "{\"show\":true}",
+    "filter": "{\"stars\":null,\"criteria\":null,\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 58,
     "sphere": "hotels",
     "call": "infotext",
     "param": "main",
@@ -379,12 +355,11 @@
     "design": "std",
     "path": null,
     "path.level": null,
-    "stars": null,
-    "criteria": null,
-    "content": "{\"presetgroups\":[{\"label\":\"Популярные\",\"presets\":[{\"activity\":\"Экскурсионный\",\"criteria\":\"Удобные кровати\",\"filters\":\"Кипр\",\"url\":\"/ru/hotels/objects?criteria=%5B%22comfortable-beds%22%5D&filters={%22country%22:%22Cyprus%22}\",\"photo\":\"/i/presets/Tours/malta_bed.jpg\"},{\"activity\":\"Для пожилых людей\",\"criteria\":\"Тихий отель\",\"filters\":\"Германия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22country%22:%22Germany%22}\",\"photo\":\"/i/presets/Elders/germany_silence.jpg\"},{\"activity\":\"Городской\",\"criteria\":\"Увлекательные экскурсии\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22interesting-tours%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/City/france_tours.jpg\"},{\"activity\":\"Пляжный\",\"criteria\":\"Чистота пляжа\",\"filters\":\"Тайланд\",\"url\":\"/ru/hotels/objects?criteria=%5B%22clean-beach%22%5D&filters={%22country%22:%22Thailand%22}\",\"photo\":\"/i/presets/Beach/dominicana_clear_of_beach.jpg\"},{\"activity\":\"Горнолыжный\",\"criteria\":\"СПА-процедуры\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22exquisite-spa%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/Mountains/france_spa.jpg\"},{\"activity\":\"Для детей\",\"criteria\":\"Деткский клуб\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/Kids/france_fun.jpg\"}]},{\"label\":\"Пляжный\",\"presets\":[{\"activity\":\"Пляжный\",\"criteria\":\"Чистота пляжа\",\"filters\":\"Тайланд\",\"url\":\"/ru/hotels/objects?criteria=%5B%22clean-beach%22%5D&filters={%22country%22:%22Thailand%22}\",\"photo\":\"/i/presets/Beach/dominicana_clear_of_beach.jpg\"},{\"activity\":\"Пляжный\",\"criteria\":\"Бар у воды\",\"filters\":\"Греция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22water-side-bar%22%5D&filters={%22country%22:%22Greece%22}\",\"photo\":\"/i/presets/Beach/greece_bar.jpg\"},{\"activity\":\"Пляжный\",\"criteria\":\"Пляж рядом\",\"filters\":\"Мальдивы\",\"url\":\"/ru/hotels/objects?criteria=%5B%22close-by-beach%22%5D&filters={%22country%22:%22Maldives%22}\",\"photo\":\"/i/presets/Beach/maldives_hotel_proximity.jpg\"},{\"activity\":\"Пляжный\",\"criteria\":\"Бар у воды\",\"filters\":\"Мальдивы\",\"url\":\"/ru/hotels/objects?criteria=%5B%22water-side-bar%22%5D&filters={%22country%22:%22Maldives%22}\",\"photo\":\"/i/presets/Beach/seychelles_water_purity.jpg\"},{\"activity\":\"Пляжный\",\"criteria\":\"Общественный пляж\",\"filters\":\"Тайланд\",\"url\":\"/ru/hotels/objects?criteria=%5B%22public-beach%22%5D&filters={%22country%22:%22Thailand%22}\",\"photo\":\"/i/presets/Beach/mexico_comfort_sea.jpg\"},{\"activity\":\"Пляжный\",\"criteria\":\"Большой пляж\",\"filters\":\"Мальдивы\",\"url\":\"/ru/hotels/objects?criteria=%5B%22vast-beach%22%5D&filters={%22country%22:%22Maldives%22}\",\"photo\":\"/i/presets/Beach/cuba_beach.jpg\"}]},{\"label\":\"Городской\",\"presets\":[{\"activity\":\"Городской\",\"criteria\":\"Увлекательный экскурсии\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22interesting-tours%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/City/france_tours.jpg\"},{\"activity\":\"Городской\",\"criteria\":\"Рестораны в шаговой доступности\",\"filters\":\"Тайланд\",\"url\":\"/ru/hotels/objects?criteria=%5B%22close-by-restaurants%22%5D&filters={%22country%22:%22Thailand%22}\",\"photo\":\"/i/presets/City/asia_restaurants.jpg\"},{\"activity\":\"Городской\",\"criteria\":\"Магазины\",\"filters\":\"Эмираты\",\"url\":\"/ru/hotels/objects?criteria=%5B%22great-shops%22%5D&filters={%22country%22:%22United%20Arab%20Emirates%22}\",\"photo\":\"/i/presets/City/dubai_shoping.jpg\"},{\"activity\":\"Городской\",\"criteria\":\"Центр города\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22city-center%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/City/france_city_centre.jpg\"},{\"activity\":\"Городской\",\"criteria\":\"Wi-Fi\",\"filters\":\"Испания\",\"url\":\"/ru/hotels/objects?criteria=%5B%22wi-fi%22%5D&filters={%22country%22:%22Spain%22}\",\"photo\":\"/i/presets/City/usa_wifi.jpg\"},{\"activity\":\"Городской\",\"criteria\":\"Доступный общественный транспорт\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22accessible-transport%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/City/europe_transport.jpg\"}]},{\"label\":\"Для пожилых людей\",\"presets\":[{\"activity\":\"Для пожилых людей\",\"criteria\":\"Тихий отель\",\"filters\":\"Германия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22country%22:%22Germany%22}\",\"photo\":\"/i/presets/Elders/germany_silence.jpg\"},{\"activity\":\"Для пожилых людей\",\"criteria\":\"Доступный общественный транспорт\",\"filters\":\"Чехия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22accessible-transport%22%5D&filters={%22country%22:%22Czech%20Republic%22}\",\"photo\":\"/i/presets/Elders/czech_transport.jpg\"},{\"activity\":\"Для пожилых людей\",\"criteria\":\"Качество ресторана\",\"filters\":\"Греция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22restaurant-quality%22%5D&filters={%22country%22:%22Greece%22}\",\"photo\":\"/i/presets/Elders/greece_seafood.jpg\"},{\"activity\":\"Для пожилых людей\",\"criteria\":\"Гостеприимство персонала\",\"filters\":\"Чехия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22hospitable-staff%22%5D&filters={%22country%22:%22Czech%20Republic%22}\",\"photo\":\"/i/presets/Elders/europe_russian.jpg\"},{\"activity\":\"Для пожилых людей\",\"criteria\":\"СПА-процедуры\",\"filters\":\"Тайланд\",\"url\":\"/ru/hotels/objects?criteria=%5B%22exquisite-spa%22%5D&filters={%22country%22:%22Thailand%22}\",\"photo\":\"/i/presets/Elders/hungary_medical.jpg\"},{\"activity\":\"Для пожилых людей\",\"criteria\":\"Пляж рядом\",\"filters\":\"Тайланд\",\"url\":\"/ru/hotels/objects?criteria=%5B%22close-by-beach%22%5D&filters={%22country%22:%22Thailand%22}\",\"photo\":\"/i/presets/Elders/asia_water_step.jpg\"}]},{\"label\":\"Для детей\",\"presets\":[{\"activity\":\"Для детей\",\"criteria\":\"Детский клуб\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/Kids/france_fun.jpg\"},{\"activity\":\"Для детей\",\"criteria\":\"Детский бассейн\",\"filters\":\"Болгария\",\"url\":\"/ru/hotels/objects?criteria=%5B%22kids-pool%22%5D&filters={%22country%22:%22Bulgaria%22}\",\"photo\":\"/i/presets/Kids/russia_kids_sea.jpg\"},{\"activity\":\"Для детей\",\"criteria\":\"Детский клуб\",\"filters\":\"Италия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22country%22:%22Italy%22}\",\"photo\":\"/i/presets/Kids/usa_babysitter.jpg\"},{\"activity\":\"Для детей\",\"criteria\":\"Детский клуб\",\"filters\":\"Болгария\",\"url\":\"/ru/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22country%22:%22Bulgaria%22}\",\"photo\":\"/i/presets/Kids/bulgaria_animation.jpg\"},{\"activity\":\"Для детей\",\"criteria\":\"Детские горки\",\"filters\":\"Италия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22slides%22%5D&filters={%22country%22:%22Italy%22}\",\"photo\":\"/i/presets/Kids/italy_playground.jpg\"},{\"activity\":\"Для детей\",\"criteria\":\"Свежая еда\",\"filters\":\"Испания\",\"url\":\"/ru/hotels/objects?criteria=%5B%22fresh-food%22%5D&filters={%22country%22:%22Spain%22}\",\"photo\":\"/i/presets/Kids/turkey_kid_menu.jpg\"}]},{\"label\":\"Горный\",\"presets\":[{\"activity\":\"Горный\",\"criteria\":\"СПА-процедуры\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22exquisite-spa%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/Mountains/france_spa.jpg\"},{\"activity\":\"Горный\",\"criteria\":\"Гостеприимство персонала\",\"filters\":\"Австрия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22hospitable-staff%22%5D&filters={%22country%22:%22Austria%22}\",\"photo\":\"/i/presets/Mountains/austria_hospitality.jpg\"},{\"activity\":\"Горный\",\"criteria\":\"Высокое качество отеля\",\"filters\":\"Швейцария\",\"url\":\"/ru/hotels/objects?criteria=%5B%22general-hotel-quality%22%5D&filters={%22country%22:%22Switzerland%22}\",\"photo\":\"/i/presets/Mountains/switzerland_hotel_location.jpg\"},{\"activity\":\"Горный\",\"criteria\":\"Тихий отель\",\"filters\":\"Австрия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22country%22:%22Austria%22}\",\"photo\":\"/i/presets/Mountains/austria_silence.jpg\"},{\"activity\":\"Горный\",\"criteria\":\"Массажный салон\",\"filters\":\"Германия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22massage-place%22%5D&filters={%22country%22:%22Germany%22}\",\"photo\":\"/i/presets/Mountains/germany_massage.jpg\"},{\"activity\":\"Горный\",\"criteria\":\"Внешний вид\",\"filters\":\"Италия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22great-exteriors%22%5D&filters={%22country%22:%22Italy%22}\",\"photo\":\"/i/presets/Mountains/italy_appearance.jpg\"}]},{\"label\":\"Экскурсионный\",\"presets\":[{\"activity\":\"Экскурсионный\",\"criteria\":\"Удобные кровати\",\"filters\":\"Кипр\",\"url\":\"/ru/hotels/objects?criteria=%5B%22comfortable-beds%22%5D&filters={%22country%22:%22Cyprus%22}\",\"photo\":\"/i/presets/Tours/malta_bed.jpg\"},{\"activity\":\"Экскурсионный\",\"criteria\":\"Тихий отель\",\"filters\":\"Чехия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22country%22:%22Czech%20Republic%22}\",\"photo\":\"/i/presets/Tours/czech_elders.jpg\"},{\"activity\":\"Экскурсионный\",\"criteria\":\"Гостеприимство персонала\",\"filters\":\"Германия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22hospitable-staff%22%5D&filters={%22country%22:%22Germany%22}\",\"photo\":\"/i/presets/Tours/europe_russian.jpg\"},{\"activity\":\"Экскурсионный\",\"criteria\":\"Живописный вид\",\"filters\":\"Испания\",\"url\":\"/ru/hotels/objects?criteria=%5B%22great-views%22%5D&filters={%22country%22:%22Spain%22}\",\"photo\":\"/i/presets/Tours/europe_ecology.jpg\"},{\"activity\":\"Экскурсионный\",\"criteria\":\"Уютный отель\",\"filters\":\"Испания\",\"url\":\"/ru/hotels/objects?criteria=%5B%22comfortable-hotel%22%5D&filters={%22country%22:%22Germany%22}\",\"photo\":\"/i/presets/Tours/london_language.jpg\"},{\"activity\":\"Экскурсионный\",\"criteria\":\"Доступный общественный транспорт\",\"filters\":\"Италия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22accessible-transport%22%5D&filters={%22country%22:%22Italy%22}\",\"photo\":\"/i/presets/Tours/italy_transport.jpg\"}]}]}"
+    "content": "{\"presetgroups\":[{\"label\":\"Популярные\",\"presets\":[{\"activity\":\"Экскурсионный\",\"criteria\":\"Удобные кровати\",\"filters\":\"Кипр\",\"url\":\"/ru/hotels/objects?criteria=%5B%22comfortable-beds%22%5D&filters={%22country%22:%22Cyprus%22}\",\"photo\":\"/i/presets/Tours/malta_bed.jpg\"},{\"activity\":\"Для пожилых людей\",\"criteria\":\"Тихий отель\",\"filters\":\"Германия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22country%22:%22Germany%22}\",\"photo\":\"/i/presets/Elders/germany_silence.jpg\"},{\"activity\":\"Городской\",\"criteria\":\"Увлекательные экскурсии\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22interesting-tours%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/City/france_tours.jpg\"},{\"activity\":\"Пляжный\",\"criteria\":\"Чистота пляжа\",\"filters\":\"Тайланд\",\"url\":\"/ru/hotels/objects?criteria=%5B%22clean-beach%22%5D&filters={%22country%22:%22Thailand%22}\",\"photo\":\"/i/presets/Beach/dominicana_clear_of_beach.jpg\"},{\"activity\":\"Горнолыжный\",\"criteria\":\"СПА-процедуры\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22exquisite-spa%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/Mountains/france_spa.jpg\"},{\"activity\":\"Для детей\",\"criteria\":\"Деткский клуб\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/Kids/france_fun.jpg\"}]},{\"label\":\"Пляжный\",\"presets\":[{\"activity\":\"Пляжный\",\"criteria\":\"Чистота пляжа\",\"filters\":\"Тайланд\",\"url\":\"/ru/hotels/objects?criteria=%5B%22clean-beach%22%5D&filters={%22country%22:%22Thailand%22}\",\"photo\":\"/i/presets/Beach/dominicana_clear_of_beach.jpg\"},{\"activity\":\"Пляжный\",\"criteria\":\"Бар у воды\",\"filters\":\"Греция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22water-side-bar%22%5D&filters={%22country%22:%22Greece%22}\",\"photo\":\"/i/presets/Beach/greece_bar.jpg\"},{\"activity\":\"Пляжный\",\"criteria\":\"Пляж рядом\",\"filters\":\"Мальдивы\",\"url\":\"/ru/hotels/objects?criteria=%5B%22close-by-beach%22%5D&filters={%22country%22:%22Maldives%22}\",\"photo\":\"/i/presets/Beach/maldives_hotel_proximity.jpg\"},{\"activity\":\"Пляжный\",\"criteria\":\"Бар у воды\",\"filters\":\"Мальдивы\",\"url\":\"/ru/hotels/objects?criteria=%5B%22water-side-bar%22%5D&filters={%22country%22:%22Maldives%22}\",\"photo\":\"/i/presets/Beach/seychelles_water_purity.jpg\"},{\"activity\":\"Пляжный\",\"criteria\":\"Общественный пляж\",\"filters\":\"Тайланд\",\"url\":\"/ru/hotels/objects?criteria=%5B%22public-beach%22%5D&filters={%22country%22:%22Thailand%22}\",\"photo\":\"/i/presets/Beach/mexico_comfort_sea.jpg\"},{\"activity\":\"Пляжный\",\"criteria\":\"Большой пляж\",\"filters\":\"Мальдивы\",\"url\":\"/ru/hotels/objects?criteria=%5B%22vast-beach%22%5D&filters={%22country%22:%22Maldives%22}\",\"photo\":\"/i/presets/Beach/cuba_beach.jpg\"}]},{\"label\":\"Городской\",\"presets\":[{\"activity\":\"Городской\",\"criteria\":\"Увлекательный экскурсии\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22interesting-tours%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/City/france_tours.jpg\"},{\"activity\":\"Городской\",\"criteria\":\"Рестораны в шаговой доступности\",\"filters\":\"Тайланд\",\"url\":\"/ru/hotels/objects?criteria=%5B%22close-by-restaurants%22%5D&filters={%22country%22:%22Thailand%22}\",\"photo\":\"/i/presets/City/asia_restaurants.jpg\"},{\"activity\":\"Городской\",\"criteria\":\"Магазины\",\"filters\":\"Эмираты\",\"url\":\"/ru/hotels/objects?criteria=%5B%22great-shops%22%5D&filters={%22country%22:%22United%20Arab%20Emirates%22}\",\"photo\":\"/i/presets/City/dubai_shoping.jpg\"},{\"activity\":\"Городской\",\"criteria\":\"Центр города\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22city-center%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/City/france_city_centre.jpg\"},{\"activity\":\"Городской\",\"criteria\":\"Wi-Fi\",\"filters\":\"Испания\",\"url\":\"/ru/hotels/objects?criteria=%5B%22wi-fi%22%5D&filters={%22country%22:%22Spain%22}\",\"photo\":\"/i/presets/City/usa_wifi.jpg\"},{\"activity\":\"Городской\",\"criteria\":\"Доступный общественный транспорт\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22accessible-transport%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/City/europe_transport.jpg\"}]},{\"label\":\"Для пожилых людей\",\"presets\":[{\"activity\":\"Для пожилых людей\",\"criteria\":\"Тихий отель\",\"filters\":\"Германия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22country%22:%22Germany%22}\",\"photo\":\"/i/presets/Elders/germany_silence.jpg\"},{\"activity\":\"Для пожилых людей\",\"criteria\":\"Доступный общественный транспорт\",\"filters\":\"Чехия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22accessible-transport%22%5D&filters={%22country%22:%22Czech%20Republic%22}\",\"photo\":\"/i/presets/Elders/czech_transport.jpg\"},{\"activity\":\"Для пожилых людей\",\"criteria\":\"Качество ресторана\",\"filters\":\"Греция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22restaurant-quality%22%5D&filters={%22country%22:%22Greece%22}\",\"photo\":\"/i/presets/Elders/greece_seafood.jpg\"},{\"activity\":\"Для пожилых людей\",\"criteria\":\"Гостеприимство персонала\",\"filters\":\"Чехия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22hospitable-staff%22%5D&filters={%22country%22:%22Czech%20Republic%22}\",\"photo\":\"/i/presets/Elders/europe_russian.jpg\"},{\"activity\":\"Для пожилых людей\",\"criteria\":\"СПА-процедуры\",\"filters\":\"Тайланд\",\"url\":\"/ru/hotels/objects?criteria=%5B%22exquisite-spa%22%5D&filters={%22country%22:%22Thailand%22}\",\"photo\":\"/i/presets/Elders/hungary_medical.jpg\"},{\"activity\":\"Для пожилых людей\",\"criteria\":\"Пляж рядом\",\"filters\":\"Тайланд\",\"url\":\"/ru/hotels/objects?criteria=%5B%22close-by-beach%22%5D&filters={%22country%22:%22Thailand%22}\",\"photo\":\"/i/presets/Elders/asia_water_step.jpg\"}]},{\"label\":\"Для детей\",\"presets\":[{\"activity\":\"Для детей\",\"criteria\":\"Детский клуб\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/Kids/france_fun.jpg\"},{\"activity\":\"Для детей\",\"criteria\":\"Детский бассейн\",\"filters\":\"Болгария\",\"url\":\"/ru/hotels/objects?criteria=%5B%22kids-pool%22%5D&filters={%22country%22:%22Bulgaria%22}\",\"photo\":\"/i/presets/Kids/russia_kids_sea.jpg\"},{\"activity\":\"Для детей\",\"criteria\":\"Детский клуб\",\"filters\":\"Италия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22country%22:%22Italy%22}\",\"photo\":\"/i/presets/Kids/usa_babysitter.jpg\"},{\"activity\":\"Для детей\",\"criteria\":\"Детский клуб\",\"filters\":\"Болгария\",\"url\":\"/ru/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22country%22:%22Bulgaria%22}\",\"photo\":\"/i/presets/Kids/bulgaria_animation.jpg\"},{\"activity\":\"Для детей\",\"criteria\":\"Детские горки\",\"filters\":\"Италия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22slides%22%5D&filters={%22country%22:%22Italy%22}\",\"photo\":\"/i/presets/Kids/italy_playground.jpg\"},{\"activity\":\"Для детей\",\"criteria\":\"Свежая еда\",\"filters\":\"Испания\",\"url\":\"/ru/hotels/objects?criteria=%5B%22fresh-food%22%5D&filters={%22country%22:%22Spain%22}\",\"photo\":\"/i/presets/Kids/turkey_kid_menu.jpg\"}]},{\"label\":\"Горный\",\"presets\":[{\"activity\":\"Горный\",\"criteria\":\"СПА-процедуры\",\"filters\":\"Франция\",\"url\":\"/ru/hotels/objects?criteria=%5B%22exquisite-spa%22%5D&filters={%22country%22:%22France%22}\",\"photo\":\"/i/presets/Mountains/france_spa.jpg\"},{\"activity\":\"Горный\",\"criteria\":\"Гостеприимство персонала\",\"filters\":\"Австрия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22hospitable-staff%22%5D&filters={%22country%22:%22Austria%22}\",\"photo\":\"/i/presets/Mountains/austria_hospitality.jpg\"},{\"activity\":\"Горный\",\"criteria\":\"Высокое качество отеля\",\"filters\":\"Швейцария\",\"url\":\"/ru/hotels/objects?criteria=%5B%22general-hotel-quality%22%5D&filters={%22country%22:%22Switzerland%22}\",\"photo\":\"/i/presets/Mountains/switzerland_hotel_location.jpg\"},{\"activity\":\"Горный\",\"criteria\":\"Тихий отель\",\"filters\":\"Австрия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22country%22:%22Austria%22}\",\"photo\":\"/i/presets/Mountains/austria_silence.jpg\"},{\"activity\":\"Горный\",\"criteria\":\"Массажный салон\",\"filters\":\"Германия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22massage-place%22%5D&filters={%22country%22:%22Germany%22}\",\"photo\":\"/i/presets/Mountains/germany_massage.jpg\"},{\"activity\":\"Горный\",\"criteria\":\"Внешний вид\",\"filters\":\"Италия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22great-exteriors%22%5D&filters={%22country%22:%22Italy%22}\",\"photo\":\"/i/presets/Mountains/italy_appearance.jpg\"}]},{\"label\":\"Экскурсионный\",\"presets\":[{\"activity\":\"Экскурсионный\",\"criteria\":\"Удобные кровати\",\"filters\":\"Кипр\",\"url\":\"/ru/hotels/objects?criteria=%5B%22comfortable-beds%22%5D&filters={%22country%22:%22Cyprus%22}\",\"photo\":\"/i/presets/Tours/malta_bed.jpg\"},{\"activity\":\"Экскурсионный\",\"criteria\":\"Тихий отель\",\"filters\":\"Чехия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22country%22:%22Czech%20Republic%22}\",\"photo\":\"/i/presets/Tours/czech_elders.jpg\"},{\"activity\":\"Экскурсионный\",\"criteria\":\"Гостеприимство персонала\",\"filters\":\"Германия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22hospitable-staff%22%5D&filters={%22country%22:%22Germany%22}\",\"photo\":\"/i/presets/Tours/europe_russian.jpg\"},{\"activity\":\"Экскурсионный\",\"criteria\":\"Живописный вид\",\"filters\":\"Испания\",\"url\":\"/ru/hotels/objects?criteria=%5B%22great-views%22%5D&filters={%22country%22:%22Spain%22}\",\"photo\":\"/i/presets/Tours/europe_ecology.jpg\"},{\"activity\":\"Экскурсионный\",\"criteria\":\"Уютный отель\",\"filters\":\"Испания\",\"url\":\"/ru/hotels/objects?criteria=%5B%22comfortable-hotel%22%5D&filters={%22country%22:%22Germany%22}\",\"photo\":\"/i/presets/Tours/london_language.jpg\"},{\"activity\":\"Экскурсионный\",\"criteria\":\"Доступный общественный транспорт\",\"filters\":\"Италия\",\"url\":\"/ru/hotels/objects?criteria=%5B%22accessible-transport%22%5D&filters={%22country%22:%22Italy%22}\",\"photo\":\"/i/presets/Tours/italy_transport.jpg\"}]}]}",
+    "filter": "{\"stars\":null,\"criteria\":null,\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 59,
     "sphere": "hotels",
     "call": "infotext",
     "param": "main",
@@ -392,12 +367,11 @@
     "design": "std",
     "path": null,
     "path.level": null,
-    "stars": null,
-    "criteria": null,
-    "content": "{\"presetgroups\":[{\"label\":\"Popular\",\"presets\":[{\"activity\":\"Tours\",\"criteria\":\"Comfortable beds\",\"filters\":\"Cyprus\",\"url\":\"/en/hotels/objects?criteria=%5B%22comfortable-beds%22%5D&filters={%22catalog%22:[%22cyprus%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/malta_bed.jpg\"},{\"activity\":\"Elders\",\"criteria\":\"Quiet Hotel\",\"filters\":\"Germany\",\"url\":\"/en/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22catalog%22:[%22germany%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/germany_silence.jpg\"},{\"activity\":\"City\",\"criteria\":\"Interesting Tours\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22interesting-tours%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/france_tours.jpg\"},{\"activity\":\"Beach\",\"criteria\":\"Clean Beach\",\"filters\":\"Thailand\",\"url\":\"/en/hotels/objects?criteria=%5B%22clean-beach%22%5D&filters={%22catalog%22:[%22thailand%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/dominicana_clear_of_beach.jpg\"},{\"activity\":\"Mountains\",\"criteria\":\"Exquisite Spa\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22exquisite-spa%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/france_spa.jpg\"},{\"activity\":\"Kids\",\"criteria\":\"Kids Club\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/france_fun.jpg\"}]},{\"label\":\"Beach\",\"presets\":[{\"activity\":\"Beach\",\"criteria\":\"Clean Beach\",\"filters\":\"Thailand\",\"url\":\"/en/hotels/objects?criteria=%5B%22clean-beach%22%5D&filters={%22catalog%22:[%22thailand%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/dominicana_clear_of_beach.jpg\"},{\"activity\":\"Beach\",\"criteria\":\"Water-side Bar\",\"filters\":\"Greece\",\"url\":\"/en/hotels/objects?criteria=%5B%22water-side-bar%22%5D&filters={%22catalog%22:[%22greece%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/greece_bar.jpg\"},{\"activity\":\"Beach\",\"criteria\":\"Close-by Beach\",\"filters\":\"Maldives\",\"url\":\"/en/hotels/objects?criteria=%5B%22close-by-beach%22%5D&filters={%22catalog%22:[%22maldives%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/maldives_hotel_proximity.jpg\"},{\"activity\":\"Beach\",\"criteria\":\"Water-side Bar\",\"filters\":\"Maldives\",\"url\":\"/en/hotels/objects?criteria=%5B%22water-side-bar%22%5D&filters={%22catalog%22:[%22maldives%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/seychelles_water_purity.jpg\"},{\"activity\":\"Beach\",\"criteria\":\"Public Beach\",\"filters\":\"Thailand\",\"url\":\"/en/hotels/objects?criteria=%5B%22public-beach%22%5D&filters={%22catalog%22:[%22thailand%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/mexico_comfort_sea.jpg\"},{\"activity\":\"Beach\",\"criteria\":\"Vast Beach\",\"filters\":\"Maldives\",\"url\":\"/en/hotels/objects?criteria=%5B%22vast-beach%22%5D&filters={%22catalog%22:[%22maldives%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/cuba_beach.jpg\"}]},{\"label\":\"City\",\"presets\":[{\"activity\":\"City\",\"criteria\":\"Interesting Tours\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22interesting-tours%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/france_tours.jpg\"},{\"activity\":\"City\",\"criteria\":\"Close-by Restaurants\",\"filters\":\"Thailand\",\"url\":\"/en/hotels/objects?criteria=%5B%22close-by-restaurants%22%5D&filters={%22catalog%22:[%22thailand%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/asia_restaurants.jpg\"},{\"activity\":\"City\",\"criteria\":\"Great Shops\",\"filters\":\"Emirates\",\"url\":\"/en/hotels/objects?criteria=%5B%22great-shops%22%5D&filters={%22country%22:%22United%20Arab%20Emirates%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/dubai_shoping.jpg\"},{\"activity\":\"City\",\"criteria\":\"City Center\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22city-center%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/france_city_centre.jpg\"},{\"activity\":\"City\",\"criteria\":\"Wi-Fi\",\"filters\":\"Spain\",\"url\":\"/en/hotels/objects?criteria=%5B%22wi-fi%22%5D&filters={%22catalog%22:[%22spain%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/usa_wifi.jpg\"},{\"activity\":\"City\",\"criteria\":\"Accessible Transport\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22accessible-transport%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/europe_transport.jpg\"}]},{\"label\":\"Elders\",\"presets\":[{\"activity\":\"Elders\",\"criteria\":\"Quiet Hotel\",\"filters\":\"Germany\",\"url\":\"/en/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22catalog%22:[%22germany%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/germany_silence.jpg\"},{\"activity\":\"Elders\",\"criteria\":\"Accessible Transport\",\"filters\":\"Czech Republic\",\"url\":\"/en/hotels/objects?criteria=%5B%22accessible-transport%22%5D&filters={%22catalog%22:[%22czech-republic%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/czech_transport.jpg\"},{\"activity\":\"Elders\",\"criteria\":\"Restaurant Quality\",\"filters\":\"Greece\",\"url\":\"/en/hotels/objects?criteria=%5B%22restaurant-quality%22%5D&filters={%22catalog%22:[%22greece%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/greece_seafood.jpg\"},{\"activity\":\"Elders\",\"criteria\":\"Hospitable Staff\",\"filters\":\"Czech Republic\",\"url\":\"/en/hotels/objects?criteria=%5B%22hospitable-staff%22%5D&filters={%22catalog%22:[%22czech-republic%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/europe_russian.jpg\"},{\"activity\":\"Elders\",\"criteria\":\"Exquisite Spa\",\"filters\":\"Thailand\",\"url\":\"/en/hotels/objects?criteria=%5B%22exquisite-spa%22%5D&filters={%22catalog%22:[%22thailand%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/hungary_medical.jpg\"},{\"activity\":\"Elders\",\"criteria\":\"Close-by Beach\",\"filters\":\"Thailand\",\"url\":\"/en/hotels/objects?criteria=%5B%22close-by-beach%22%5D&filters={%22catalog%22:[%22thailand%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/asia_water_step.jpg\"}]},{\"label\":\"Kids\",\"presets\":[{\"activity\":\"Kids\",\"criteria\":\"Kids Club\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/france_fun.jpg\"},{\"activity\":\"Kids\",\"criteria\":\"Kids Pool\",\"filters\":\"Bulgaria\",\"url\":\"/en/hotels/objects?criteria=%5B%22kids-pool%22%5D&filters={%22catalog%22:[%22bulgaria%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/russia_kids_sea.jpg\"},{\"activity\":\"Kids\",\"criteria\":\"Kids Club\",\"filters\":\"Italy\",\"url\":\"/en/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22catalog%22:[%22italy%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/usa_babysitter.jpg\"},{\"activity\":\"Kids\",\"criteria\":\"Kids Club\",\"filters\":\"Bulgaria\",\"url\":\"/en/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22catalog%22:[%22bulgaria%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/bulgaria_animation.jpg\"},{\"activity\":\"Kids\",\"criteria\":\"Slides\",\"filters\":\"Italy\",\"url\":\"/en/hotels/objects?criteria=%5B%22slides%22%5D&filters={%22catalog%22:[%22italy%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/italy_playground.jpg\"},{\"activity\":\"Kids\",\"criteria\":\"Fresh Food\",\"filters\":\"Spain\",\"url\":\"/en/hotels/objects?criteria=%5B%22fresh-food%22%5D&filters={%22catalog%22:[%22spain%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/turkey_kid_menu.jpg\"}]},{\"label\":\"Mountains\",\"presets\":[{\"activity\":\"Mountains\",\"criteria\":\"Exquisite Spa\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22exquisite-spa%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/france_spa.jpg\"},{\"activity\":\"Mountains\",\"criteria\":\"Hospitable Staff\",\"filters\":\"Austria\",\"url\":\"/en/hotels/objects?criteria=%5B%22hospitable-staff%22%5D&filters={%22catalog%22:[%22austria%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/austria_hospitality.jpg\"},{\"activity\":\"Mountains\",\"criteria\":\"General Hotel Quality\",\"filters\":\"Switzerland\",\"url\":\"/en/hotels/objects?criteria=%5B%22general-hotel-quality%22%5D&filters={%22catalog%22:[%22switzerland%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/switzerland_hotel_location.jpg\"},{\"activity\":\"Mountains\",\"criteria\":\"Quiet Hotel\",\"filters\":\"Austria\",\"url\":\"/en/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22catalog%22:[%22austria%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/austria_silence.jpg\"},{\"activity\":\"Mountains\",\"criteria\":\"Massage Place\",\"filters\":\"Germany\",\"url\":\"/en/hotels/objects?criteria=%5B%22massage-place%22%5D&filters={%22catalog%22:[%22germany%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/germany_massage.jpg\"},{\"activity\":\"Mountains\",\"criteria\":\"Great Exteriors\",\"filters\":\"Italy\",\"url\":\"/en/hotels/objects?criteria=%5B%22great-exteriors%22%5D&filters={%22catalog%22:[%22italy%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/italy_appearance.jpg\"}]},{\"label\":\"Tours\",\"presets\":[{\"activity\":\"Tours\",\"criteria\":\"Comfortable Beds\",\"filters\":\"Кипр\",\"url\":\"/en/hotels/objects?criteria=%5B%22comfortable-beds%22%5D&filters={%22catalog%22:[%22cyprus%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/malta_bed.jpg\"},{\"activity\":\"Tours\",\"criteria\":\"Quiet Hotel\",\"filters\":\"Czech Republic\",\"url\":\"/en/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22catalog%22:[%22czech-republic%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/czech_elders.jpg\"},{\"activity\":\"Tours\",\"criteria\":\"Hospitable Staff\",\"filters\":\"Germany\",\"url\":\"/en/hotels/objects?criteria=%5B%22hospitable-staff%22%5D&filters={%22catalog%22:[%22germany%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/europe_russian.jpg\"},{\"activity\":\"Tours\",\"criteria\":\"Great Views\",\"filters\":\"Spain\",\"url\":\"/en/hotels/objects?criteria=%5B%22great-views%22%5D&filters={%22catalog%22:[%22spain%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/europe_ecology.jpg\"},{\"activity\":\"Tours\",\"criteria\":\"Comfortable Hotel\",\"filters\":\"Spain\",\"url\":\"/en/hotels/objects?criteria=%5B%22comfortable-hotel%22%5D&filters={%22catalog%22:[%22germany%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/london_language.jpg\"},{\"activity\":\"Tours\",\"criteria\":\"Accessible Transport\",\"filters\":\"Italy\",\"url\":\"/en/hotels/objects?criteria=%5B%22accessible-transport%22%5D&filters={%22catalog%22:[%22italy%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/italy_transport.jpg\"}]}]}"
+    "content": "{\"presetgroups\":[{\"label\":\"Popular\",\"presets\":[{\"activity\":\"Tours\",\"criteria\":\"Comfortable beds\",\"filters\":\"Cyprus\",\"url\":\"/en/hotels/objects?criteria=%5B%22comfortable-beds%22%5D&filters={%22catalog%22:[%22cyprus%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/malta_bed.jpg\"},{\"activity\":\"Elders\",\"criteria\":\"Quiet Hotel\",\"filters\":\"Germany\",\"url\":\"/en/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22catalog%22:[%22germany%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/germany_silence.jpg\"},{\"activity\":\"City\",\"criteria\":\"Interesting Tours\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22interesting-tours%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/france_tours.jpg\"},{\"activity\":\"Beach\",\"criteria\":\"Clean Beach\",\"filters\":\"Thailand\",\"url\":\"/en/hotels/objects?criteria=%5B%22clean-beach%22%5D&filters={%22catalog%22:[%22thailand%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/dominicana_clear_of_beach.jpg\"},{\"activity\":\"Mountains\",\"criteria\":\"Exquisite Spa\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22exquisite-spa%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/france_spa.jpg\"},{\"activity\":\"Kids\",\"criteria\":\"Kids Club\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/france_fun.jpg\"}]},{\"label\":\"Beach\",\"presets\":[{\"activity\":\"Beach\",\"criteria\":\"Clean Beach\",\"filters\":\"Thailand\",\"url\":\"/en/hotels/objects?criteria=%5B%22clean-beach%22%5D&filters={%22catalog%22:[%22thailand%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/dominicana_clear_of_beach.jpg\"},{\"activity\":\"Beach\",\"criteria\":\"Water-side Bar\",\"filters\":\"Greece\",\"url\":\"/en/hotels/objects?criteria=%5B%22water-side-bar%22%5D&filters={%22catalog%22:[%22greece%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/greece_bar.jpg\"},{\"activity\":\"Beach\",\"criteria\":\"Close-by Beach\",\"filters\":\"Maldives\",\"url\":\"/en/hotels/objects?criteria=%5B%22close-by-beach%22%5D&filters={%22catalog%22:[%22maldives%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/maldives_hotel_proximity.jpg\"},{\"activity\":\"Beach\",\"criteria\":\"Water-side Bar\",\"filters\":\"Maldives\",\"url\":\"/en/hotels/objects?criteria=%5B%22water-side-bar%22%5D&filters={%22catalog%22:[%22maldives%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/seychelles_water_purity.jpg\"},{\"activity\":\"Beach\",\"criteria\":\"Public Beach\",\"filters\":\"Thailand\",\"url\":\"/en/hotels/objects?criteria=%5B%22public-beach%22%5D&filters={%22catalog%22:[%22thailand%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/mexico_comfort_sea.jpg\"},{\"activity\":\"Beach\",\"criteria\":\"Vast Beach\",\"filters\":\"Maldives\",\"url\":\"/en/hotels/objects?criteria=%5B%22vast-beach%22%5D&filters={%22catalog%22:[%22maldives%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Beach/cuba_beach.jpg\"}]},{\"label\":\"City\",\"presets\":[{\"activity\":\"City\",\"criteria\":\"Interesting Tours\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22interesting-tours%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/france_tours.jpg\"},{\"activity\":\"City\",\"criteria\":\"Close-by Restaurants\",\"filters\":\"Thailand\",\"url\":\"/en/hotels/objects?criteria=%5B%22close-by-restaurants%22%5D&filters={%22catalog%22:[%22thailand%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/asia_restaurants.jpg\"},{\"activity\":\"City\",\"criteria\":\"Great Shops\",\"filters\":\"Emirates\",\"url\":\"/en/hotels/objects?criteria=%5B%22great-shops%22%5D&filters={%22country%22:%22United%20Arab%20Emirates%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/dubai_shoping.jpg\"},{\"activity\":\"City\",\"criteria\":\"City Center\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22city-center%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/france_city_centre.jpg\"},{\"activity\":\"City\",\"criteria\":\"Wi-Fi\",\"filters\":\"Spain\",\"url\":\"/en/hotels/objects?criteria=%5B%22wi-fi%22%5D&filters={%22catalog%22:[%22spain%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/usa_wifi.jpg\"},{\"activity\":\"City\",\"criteria\":\"Accessible Transport\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22accessible-transport%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/City/europe_transport.jpg\"}]},{\"label\":\"Elders\",\"presets\":[{\"activity\":\"Elders\",\"criteria\":\"Quiet Hotel\",\"filters\":\"Germany\",\"url\":\"/en/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22catalog%22:[%22germany%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/germany_silence.jpg\"},{\"activity\":\"Elders\",\"criteria\":\"Accessible Transport\",\"filters\":\"Czech Republic\",\"url\":\"/en/hotels/objects?criteria=%5B%22accessible-transport%22%5D&filters={%22catalog%22:[%22czech-republic%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/czech_transport.jpg\"},{\"activity\":\"Elders\",\"criteria\":\"Restaurant Quality\",\"filters\":\"Greece\",\"url\":\"/en/hotels/objects?criteria=%5B%22restaurant-quality%22%5D&filters={%22catalog%22:[%22greece%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/greece_seafood.jpg\"},{\"activity\":\"Elders\",\"criteria\":\"Hospitable Staff\",\"filters\":\"Czech Republic\",\"url\":\"/en/hotels/objects?criteria=%5B%22hospitable-staff%22%5D&filters={%22catalog%22:[%22czech-republic%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/europe_russian.jpg\"},{\"activity\":\"Elders\",\"criteria\":\"Exquisite Spa\",\"filters\":\"Thailand\",\"url\":\"/en/hotels/objects?criteria=%5B%22exquisite-spa%22%5D&filters={%22catalog%22:[%22thailand%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/hungary_medical.jpg\"},{\"activity\":\"Elders\",\"criteria\":\"Close-by Beach\",\"filters\":\"Thailand\",\"url\":\"/en/hotels/objects?criteria=%5B%22close-by-beach%22%5D&filters={%22catalog%22:[%22thailand%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Elders/asia_water_step.jpg\"}]},{\"label\":\"Kids\",\"presets\":[{\"activity\":\"Kids\",\"criteria\":\"Kids Club\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/france_fun.jpg\"},{\"activity\":\"Kids\",\"criteria\":\"Kids Pool\",\"filters\":\"Bulgaria\",\"url\":\"/en/hotels/objects?criteria=%5B%22kids-pool%22%5D&filters={%22catalog%22:[%22bulgaria%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/russia_kids_sea.jpg\"},{\"activity\":\"Kids\",\"criteria\":\"Kids Club\",\"filters\":\"Italy\",\"url\":\"/en/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22catalog%22:[%22italy%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/usa_babysitter.jpg\"},{\"activity\":\"Kids\",\"criteria\":\"Kids Club\",\"filters\":\"Bulgaria\",\"url\":\"/en/hotels/objects?criteria=%5B%22kids-club%22%5D&filters={%22catalog%22:[%22bulgaria%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/bulgaria_animation.jpg\"},{\"activity\":\"Kids\",\"criteria\":\"Slides\",\"filters\":\"Italy\",\"url\":\"/en/hotels/objects?criteria=%5B%22slides%22%5D&filters={%22catalog%22:[%22italy%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/italy_playground.jpg\"},{\"activity\":\"Kids\",\"criteria\":\"Fresh Food\",\"filters\":\"Spain\",\"url\":\"/en/hotels/objects?criteria=%5B%22fresh-food%22%5D&filters={%22catalog%22:[%22spain%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Kids/turkey_kid_menu.jpg\"}]},{\"label\":\"Mountains\",\"presets\":[{\"activity\":\"Mountains\",\"criteria\":\"Exquisite Spa\",\"filters\":\"France\",\"url\":\"/en/hotels/objects?criteria=%5B%22exquisite-spa%22%5D&filters={%22catalog%22:[%22france%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/france_spa.jpg\"},{\"activity\":\"Mountains\",\"criteria\":\"Hospitable Staff\",\"filters\":\"Austria\",\"url\":\"/en/hotels/objects?criteria=%5B%22hospitable-staff%22%5D&filters={%22catalog%22:[%22austria%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/austria_hospitality.jpg\"},{\"activity\":\"Mountains\",\"criteria\":\"General Hotel Quality\",\"filters\":\"Switzerland\",\"url\":\"/en/hotels/objects?criteria=%5B%22general-hotel-quality%22%5D&filters={%22catalog%22:[%22switzerland%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/switzerland_hotel_location.jpg\"},{\"activity\":\"Mountains\",\"criteria\":\"Quiet Hotel\",\"filters\":\"Austria\",\"url\":\"/en/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22catalog%22:[%22austria%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/austria_silence.jpg\"},{\"activity\":\"Mountains\",\"criteria\":\"Massage Place\",\"filters\":\"Germany\",\"url\":\"/en/hotels/objects?criteria=%5B%22massage-place%22%5D&filters={%22catalog%22:[%22germany%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/germany_massage.jpg\"},{\"activity\":\"Mountains\",\"criteria\":\"Great Exteriors\",\"filters\":\"Italy\",\"url\":\"/en/hotels/objects?criteria=%5B%22great-exteriors%22%5D&filters={%22catalog%22:[%22italy%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Mountains/italy_appearance.jpg\"}]},{\"label\":\"Tours\",\"presets\":[{\"activity\":\"Tours\",\"criteria\":\"Comfortable Beds\",\"filters\":\"Кипр\",\"url\":\"/en/hotels/objects?criteria=%5B%22comfortable-beds%22%5D&filters={%22catalog%22:[%22cyprus%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/malta_bed.jpg\"},{\"activity\":\"Tours\",\"criteria\":\"Quiet Hotel\",\"filters\":\"Czech Republic\",\"url\":\"/en/hotels/objects?criteria=%5B%22quiet-hotel%22%5D&filters={%22catalog%22:[%22czech-republic%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/czech_elders.jpg\"},{\"activity\":\"Tours\",\"criteria\":\"Hospitable Staff\",\"filters\":\"Germany\",\"url\":\"/en/hotels/objects?criteria=%5B%22hospitable-staff%22%5D&filters={%22catalog%22:[%22germany%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/europe_russian.jpg\"},{\"activity\":\"Tours\",\"criteria\":\"Great Views\",\"filters\":\"Spain\",\"url\":\"/en/hotels/objects?criteria=%5B%22great-views%22%5D&filters={%22catalog%22:[%22spain%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/europe_ecology.jpg\"},{\"activity\":\"Tours\",\"criteria\":\"Comfortable Hotel\",\"filters\":\"Spain\",\"url\":\"/en/hotels/objects?criteria=%5B%22comfortable-hotel%22%5D&filters={%22catalog%22:[%22germany%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/london_language.jpg\"},{\"activity\":\"Tours\",\"criteria\":\"Accessible Transport\",\"filters\":\"Italy\",\"url\":\"/en/hotels/objects?criteria=%5B%22accessible-transport%22%5D&filters={%22catalog%22:[%22italy%22,%22%22,%22%22]}\",\"photo\":\"/i/presets/Tours/italy_transport.jpg\"}]}]}",
+    "filter": "{\"stars\":null,\"criteria\":null,\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 60,
     "sphere": "hotels",
     "call": "infotext",
     "param": "catalog-annotation",
@@ -405,12 +379,11 @@
     "design": null,
     "path": "france,paris",
     "path.level": "3",
-    "stars": null,
-    "criteria": null,
-    "content": "{\"rule\":\"france\"}"
+    "content": "{\"rule\":\"france\"}",
+    "filter": "{\"stars\":null,\"criteria\":null,\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 61,
     "sphere": "hotels",
     "call": "infotext",
     "param": "catalog-annotation",
@@ -418,12 +391,11 @@
     "design": null,
     "path": null,
     "path.level": null,
-    "stars": null,
-    "criteria": null,
-    "content": "{\"rule\":\"default-en\"}"
+    "content": "{\"rule\":\"default-en\"}",
+    "filter": "{\"stars\":null,\"criteria\":null,\"genres\":null}",
+    "extended_types": "{}"
   },
   {
-    "id": 62,
     "sphere": "hotels",
     "call": "infotext",
     "param": "catalog-annotation",
@@ -431,8 +403,8 @@
     "design": null,
     "path": "any",
     "path.level": null,
-    "stars": null,
-    "criteria": null,
-    "content": "{\"rule\":\"default-ru\"}"
+    "content": "{\"rule\":\"default-ru\"}",
+    "filter": "{\"stars\":null,\"criteria\":null,\"genres\":null}",
+    "extended_types": "{}"
   }
 ]
