@@ -4,8 +4,8 @@ Sequel.migration do
       add_column :position, Integer, unique: true
     end
 
-    Rule.set_dataset :rules
-    Rule.order(:id).each_with_index do |rule, index|
+    SimpleApi::Rule.set_dataset :rules
+    SimpleApi::Rule.order(:id).each_with_index do |rule, index|
       rule.update position: index + 1
     end
 

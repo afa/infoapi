@@ -14,11 +14,9 @@ module SimpleApi
     def after_initialize
       super
       deserialize
-      p "load", id
     end
 
     def before_validation
-      puts 'valida'
       self.serialize
     end
 
@@ -68,18 +66,13 @@ module SimpleApi
     end
 
     def deserialize
-      p SERIALIZED.map{|i| [i, send(i)]}
       self.filters = JSON.load(self.filter || "{}")
       (SERIALIZED).each{|attr| send("#{attr.to_s}=".to_sym, self.filters.try(:[], attr.to_s)) if self.filters.try(:[], attr.to_s) }
       self.extended = JSON.load(extended_types)
-      p 'ds et e f fs', extended_types, extended, filter, filters
-      p SERIALIZED.map{|i| [i, send(i)]}
     end
 
     def serialize
-      p SERIALIZED.map{|i| [i, send(i)]}
-      (SERIALIZED).each{|attr| p "sdata", attr, self.send(attr), self.filters; self.filters[attr.to_s] = send(attr) }
-      p SERIALIZED.map{|i| [i, send(i)]}
+      (SERIALIZED).each{|attr| self.filters[attr.to_s] = send(attr) }
       self.extended_types = JSON.dump(self.extended)
       self.filter = JSON.dump(self.filters)
       self
@@ -88,13 +81,6 @@ module SimpleApi
     def rule_path
       [self.sphere, 'infotext', self.param, self.lang]
     end
-
-    # ATTRS.each do |meth|
-    #   data ||= {}
-    #   p data, meth
-    #   define_method(meth){ data[meth.to_sym] }
-    #   define_method(meth.to_s + '='){|val| data[meth.to_sym] = val }
-    # end
 
     def mkdir_p(hash, path)
       #build hash-path.

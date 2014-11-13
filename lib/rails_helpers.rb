@@ -28,6 +28,16 @@ class Array
   end
 end
 
+class Fixnum
+  def present?
+    true
+  end
+
+  def blank?
+    false
+  end
+end
+
 class NilClass
   def present?
     false
