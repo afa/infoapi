@@ -68,7 +68,7 @@ namespace :maintenance do
 
     desc 'rollback rules table'
     task :rollback => :connect do |task, args|
-      Sequel::Migrator.apply(DB, "db/migrate", 2)
+      Sequel::Migrator.apply(DB, "db/migrate", 0)
     end
 
     desc 'seed defaults'
@@ -78,10 +78,20 @@ namespace :maintenance do
       rules.each{|rule| DB[:rules].insert rule.delete_if{|k, v| k == :id || k == 'id' } }
     end
 
+    desc 'convert rules to filter format'
+    task :convert_rules => :connect do
+      SimpleApi::Rule.order(:id).all.each do |rule|
+        r = SimpleApi::Rule.from_param(rule.values[:sphere], rule.values[:param])[rule.id]
+        r.extended_types = {}.to_json
+        r.filter = %i(design path stars criteria genres).inject({}){|rslt, attr| rslt.merge(attr.to_s => r.send(attr)) }.to_json
+        r.save
+      end
+    end
+
     desc 'dump db'
     task dump: :connect do
       require "pp"
-      rules = DB[:rules].order(:id).all
+      rules = DB[:rules].order(:id).all.map{|r| r.to_hash.delete_if{|k, v| %i(id stars genres criteria).include?(k) } }
       File.open(File.join(File.dirname(__FILE__), %w(.. .. db dump_rules.json)), 'w'){|f| f.write(JSON.pretty_generate(rules)) }
 
 

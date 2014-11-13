@@ -4,7 +4,7 @@ module SimpleApi
       located.select do |rule|
         Tester::test(params.data['path'], rule.path)
       end.select do |rule|
-        rule.filter['ext'].inject(true) do |ext|
+        rule.extended.inject(true) do |ext|
           mod = SimpleApi::RuleDefs.from_name(ext)
           r_data = mod.load_rule(rule)
           p = mod.parse_params(params)

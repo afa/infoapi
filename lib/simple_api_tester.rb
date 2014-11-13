@@ -1,3 +1,7 @@
+    CONFIG = YAML.load_file(File.join(File.dirname(__FILE__), %w(.. config app.yml))).try(:[], ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development')
+        DB = Sequel.postgres(CONFIG['db'].inject({}){|r, (k, v)| r.merge(k.to_sym => v) })
+    Sequel::Model.db = DB
+
 require 'simple_api'
 Dir["./lib/**/*.rb"].each {|file| require file }
 require 'yaml'
@@ -7,7 +11,7 @@ class SimpleApiTester < Sinatra::Base
 
   configure :staging, :production, :development do
     enable :logging
-    set :config, YAML.load_file(File.join(File.dirname(__FILE__), %w(.. config app.yml))).try(:[], ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development')
+    set :config, CONFIG
     SimpleApi::Rules.init(settings.config)
   end
 

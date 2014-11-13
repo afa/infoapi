@@ -1,27 +1,25 @@
 require 'simple_api'
+# require 'sequel_simple_callbacks'
+# Sequel::Model.plugin(SequelSimpleCallbacks)
 module SimpleApi
   class Rule < Sequel::Model
-    # plugin :single_table_inheritance, :type, model_map: SimpleApi::PARAM_MAP
-    # EXTERNAL_ATTRS = %w(sphere call param lang content filter extended_types).map(&:to_sym)
+    plugin :after_initialize
     SERIALIZED = %w(stars criteria genres).map(&:to_sym)
-    # ATTRS = %w(sphere call param lang design path stars criteria content genres extended extended_types).map(&:to_sym) #restore when need path.level
-    attr_accessor *SERIALIZED
+    # attr_accessor *SERIALIZED
     attr :filter
     attr :extended
     attr :filters
-    # attr :data
+    attr :extended_types
 
-    # def data
-    #   @data
-    # end
-
-    # def data=(hsh)
-    #   @data = hsh
-    # end
-
-    def after_load
+    def after_initialize
       super
       deserialize
+      p "load", id
+    end
+
+    def before_validation
+      puts 'valida'
+      self.serialize
     end
 
     def extract_series
@@ -44,11 +42,19 @@ module SimpleApi
     end
 
     def extended
-      @extended
+      @extended || {}
     end
 
     def extended=(hsh)
-      @extended = hsh
+      @extended = hsh || {}
+    end
+
+    def extended_types
+      values[:extended_types] || {}
+    end
+
+    def extended_types=(hsh)
+      values[:extended_types] = hsh || {}
     end
 
     def self.from_param(sphere, param)
@@ -58,25 +64,21 @@ module SimpleApi
     def initialize(hash)
       hash.delete_if{|k, v| k == :id }
       super
-      p hash
-      # self.data = {}
-      # self.data.merge! hash.is_a?(Hash) ? hash : Hash[hash]
-      # p self.data
-      deserialize
+      # deserialize
     end
 
     def deserialize
       p SERIALIZED.map{|i| [i, send(i)]}
-      p SERIALIZED.map{|i| [i, send(i)]}
       self.filters = JSON.load(self.filter || "{}")
-      (SERIALIZED).each{|attr| send("#{attr.to_s}=".to_sym, self.filters.try(:[], attr)) if self.filters.try(:[], attr) }
+      (SERIALIZED).each{|attr| send("#{attr.to_s}=".to_sym, self.filters.try(:[], attr.to_s)) if self.filters.try(:[], attr.to_s) }
       self.extended = JSON.load(extended_types)
       p 'ds et e f fs', extended_types, extended, filter, filters
+      p SERIALIZED.map{|i| [i, send(i)]}
     end
 
     def serialize
       p SERIALIZED.map{|i| [i, send(i)]}
-      (SERIALIZED).each{|attr| p "sdata", attr, self.send(attr), self.filters; self.filters[attr] = send(attr) }
+      (SERIALIZED).each{|attr| p "sdata", attr, self.send(attr), self.filters; self.filters[attr.to_s] = send(attr) }
       p SERIALIZED.map{|i| [i, send(i)]}
       self.extended_types = JSON.dump(self.extended)
       self.filter = JSON.dump(self.filters)

@@ -14,6 +14,7 @@ Sequel.migration do
       String :criteria
       String :content, null: false
     end
+    SimpleApi::Rule.set_dataset :rules
   end
 
 end

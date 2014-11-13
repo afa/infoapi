@@ -29,5 +29,4 @@ module SimpleApi
       "main" => MainRule
     }
   }
-  puts 'sa'
 end
