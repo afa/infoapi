@@ -285,7 +285,7 @@
     "path.level": null,
     "content": "{\"title\":\"Best <%genre%> movies | TopRater.com\",\"h1\":\"Top <%genre%> movies ever\",\"annotation\":\"What if you want to make a list of the Best <%genre%> films according to your own criteria and share it with friends. Now there is no need to rely on existing ratings when you don`t agree with them. With TopRater.com it became as easy as pie. Choose best films and create your ratings in seconds! Just select your film or genre criteria like <%criterion1%>, <%criterion2%> or <%criterion3%> in our catalogue and enjoy the result! \",\"meta-keywords\":\"TopRater.com, <%ratingKeywords%>, <%filmTitles%>\",\"meta-description\":\"Our rating \\\"Best <%genre%> movies\\\" is based on thousands of film fans reviews and present the best movies of all time. The team of Toprater.com has done a great piece of work to offer our users a really objective and unique rating.\"}",
     "filter": "{\"stars\":null,\"criteria\":null,\"genres\":\"[\\\"action\\\",\\\"adventure\\\",\\\"animation\\\",\\\"biography\\\",\\\"comedy\\\",\\\"crime\\\",\\\"documentary\\\",\\\"drama\\\",\\\"family\\\",\\\"fantasy\\\",\\\"film-noir\\\",\\\"history\\\",\\\"horror\\\",\\\"music\\\",\\\"musical\\\",\\\"mystery\\\",\\\"romance\\\",\\\"sci-fi\\\",\\\"sport\\\",\\\"thriller\\\",\\\"war\\\",\\\"western\\\"]\",\"years\":\"2000-2003\"}",
-    "extended_types": "{\"year\":[\"years\"]}"
+    "extended_types": "{\"int\":[\"years\"]}"
   },
   {
     "sphere": "hotels",

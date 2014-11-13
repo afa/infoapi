@@ -1,11 +1,11 @@
 module SimpleApi
 module RuleDefs
-  require 'simple_api/rule_defs/year'
+  # require 'simple_api/rule_defs/year'
   require 'simple_api/rule_defs/numeric'
 
   DEFS = {
-    'year' => SimpleApi::RuleDefs::Year,
-    'numeric' => SimpleApi::RuleDefs::Numeric
+    # 'year' => SimpleApi::RuleDefs::Year,
+    'int' => SimpleApi::RuleDefs::Numeric
   }
 
   def from_name(name)
