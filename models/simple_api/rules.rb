@@ -10,7 +10,7 @@ module SimpleApi
       def load_rules(config)
         # connect_db 
         # Sequel.postgres(config['db'].inject({}){|r, (k, v)| r.merge(k.to_sym => v) }) do |db|
-        Rule.order(:id).all.map{|item| Rule.from_param(item.sphere, item.param)[item.id] } #.new(item.to_hash) }
+        Rule.order(:position).all.map{|item| Rule.from_param(item.sphere, item.param)[item.id] } #.new(item.to_hash) }
         # end
       end
 

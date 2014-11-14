@@ -81,7 +81,7 @@ namespace :maintenance do
 
     desc 'convert rules to filter format'
     task :convert_rules => :connect do
-      SimpleApi::Rule.order(:id).all.each do |rule|
+      SimpleApi::Rule.order(:position).all.each do |rule|
         r = SimpleApi::Rule.from_param(rule.values[:sphere], rule.values[:param])[rule.id]
         r.extended_types = {}.to_json
         r.filter = %i(design path stars criteria genres).inject({}){|rslt, attr| rslt.merge(attr.to_s => r.send(attr)) }.to_json
@@ -92,7 +92,7 @@ namespace :maintenance do
     desc 'dump db'
     task dump: :connect do
       require "pp"
-      rules = DB[:rules].order(:id).all.map{|r| r.to_hash.delete_if{|k, v| %i(id stars genres criteria).include?(k) } }
+      rules = DB[:rules].order(:position).all.map{|r| r.to_hash.delete_if{|k, v| %i(id stars genres criteria).include?(k) } }
       File.open(File.join(File.dirname(__FILE__), %w(.. .. db dump_rules.json)), 'w'){|f| f.write(JSON.pretty_generate(rules)) }
 
 
