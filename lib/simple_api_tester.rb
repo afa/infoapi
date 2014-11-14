@@ -19,25 +19,27 @@ class SimpleApiTester < Sinatra::Base
     env['sinatra.error'].name
   end
 
-  get '/api/v1/:sphere/infotext' do |sphere|
-    content_type :json, charset: 'utf-8'
-    begin
-      p = SimpleApi::Rules.prepare_params(params[:p])
-    rescue Exception => e
-      error JSON.dump(status: e.message), 500
-    end
-    logger.info "processing #{p.inspect}"
-    SimpleApi::Rules.process(p, sphere, logger) || JSON.dump([]) || error(JSON.dump(status: "Page not found"), 404)
-  end
+  namespace '/api/v1' do
+    namespace '/:sphere/infoapi' do
+      get '/' do
+      end
 
-  namespace '/infoapi' do
-    get '/' do
-    end
+      post '/reload' do
+        if params[:token].strip.present? && params[:token].strip == settings.config['token']
+          SimpleApi::Rules.init(settings.config)
+          'Ok'
+        end
+      end
 
-    post '/reload' do
-      if params[:token].strip.present? && params[:token].strip == settings.config['token']
-        SimpleApi::Rules.init(settings.config)
-        'Ok'
+      get '/:sphere/infotext' do |sphere|
+        content_type :json, charset: 'utf-8'
+        begin
+          p = SimpleApi::Rules.prepare_params(params[:p])
+        rescue Exception => e
+          error JSON.dump(status: e.message), 500
+        end
+        logger.info "processing #{p.inspect}"
+        SimpleApi::Rules.process(p, sphere, logger) || JSON.dump([]) || error(JSON.dump(status: "Page not found"), 404)
       end
     end
 
