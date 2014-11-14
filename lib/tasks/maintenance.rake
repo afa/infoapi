@@ -3,50 +3,51 @@ require 'json'
 require 'rails_helpers'
 namespace :maintenance do
   require 'sequel'
+  require 'init_db'
   namespace :db do
     Sequel.extension :migration
 
     task :config do
-      CONFIG = YAML.load_file(File.join(File.dirname(__FILE__), %w(.. .. config app.yml))).try(:[], ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development')
+      # CONFIG = YAML.load_file(File.join(File.dirname(__FILE__), %w(.. .. config app.yml))).try(:[], ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development')
     end
 
     task :connect => :config do
       require 'sequel'
-      load 'simple_api.rb'
+      require 'simple_api'
 
-      DB = Sequel.postgres(CONFIG['db'].inject({}){|r, k| r.merge(k[0].to_sym => k[1]) })
-      Sequel::Model.db = DB
+      # DB = Sequel.postgres(CONFIG['db'].inject({}){|r, k| r.merge(k[0].to_sym => k[1]) })
+      # Sequel::Model.db = DB
 
-  load 'simple_api/rule.rb'
-  load 'simple_api/design_rule.rb'
-  load 'simple_api/hotels_rule.rb'
-  load 'simple_api/annotations_rule_methods.rb'
-  load 'simple_api/annotation_hotels_rule.rb'
-  load 'simple_api/hotels_catalog_annotation_rule.rb'
-  load 'simple_api/hotels_rating_annotation_rule.rb'
-  load 'simple_api/main_rule.rb'
-  load 'simple_api/about_rule.rb'
-  load 'simple_api/movies_rule.rb'
-  load 'simple_api/annotation_movies_rule.rb'
-  load 'simple_api/movies_catalog_annotation_rule.rb'
-  load 'simple_api/movies_rating_annotation_rule.rb'
-  load 'simple_api/rules.rb'
-  load 'simple_api/rule_defs.rb'
-  SimpleApi::PARAM_MAP = {
-    "hotels" => {
-      "about" => SimpleApi::AboutRule,
-      "catalog-annotation" => SimpleApi::HotelsCatalogAnnotationRule,
-      "rating-annotation" => SimpleApi::HotelsRatingAnnotationRule,
-      "main" => SimpleApi::MainRule
-    },
-    "movies" => {
-      "catalog-annotation" => SimpleApi::MoviesCatalogAnnotationRule,
-      "rating-annotation" => SimpleApi::MoviesRatingAnnotationRule,
-      "about" => SimpleApi::AboutRule,
-      "main" => SimpleApi::MainRule
-    }
-  }
-      require 'simple_api/rule'
+  # load 'simple_api/rule.rb'
+  # load 'simple_api/design_rule.rb'
+  # load 'simple_api/hotels_rule.rb'
+  # load 'simple_api/annotations_rule_methods.rb'
+  # load 'simple_api/annotation_hotels_rule.rb'
+  # load 'simple_api/hotels_catalog_annotation_rule.rb'
+  # load 'simple_api/hotels_rating_annotation_rule.rb'
+  # load 'simple_api/main_rule.rb'
+  # load 'simple_api/about_rule.rb'
+  # load 'simple_api/movies_rule.rb'
+  # load 'simple_api/annotation_movies_rule.rb'
+  # load 'simple_api/movies_catalog_annotation_rule.rb'
+  # load 'simple_api/movies_rating_annotation_rule.rb'
+  # load 'simple_api/rules.rb'
+  # load 'simple_api/rule_defs.rb'
+  # SimpleApi::PARAM_MAP = {
+  #   "hotels" => {
+  #     "about" => SimpleApi::AboutRule,
+  #     "catalog-annotation" => SimpleApi::HotelsCatalogAnnotationRule,
+  #     "rating-annotation" => SimpleApi::HotelsRatingAnnotationRule,
+  #     "main" => SimpleApi::MainRule
+  #   },
+  #   "movies" => {
+  #     "catalog-annotation" => SimpleApi::MoviesCatalogAnnotationRule,
+  #     "rating-annotation" => SimpleApi::MoviesRatingAnnotationRule,
+  #     "about" => SimpleApi::AboutRule,
+  #     "main" => SimpleApi::MainRule
+  #   }
+  # }
+      # require 'simple_api/rule'
     end
 
     desc "create db"

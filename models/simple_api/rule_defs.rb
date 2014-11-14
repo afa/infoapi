@@ -1,6 +1,6 @@
 module SimpleApi
 module RuleDefs
-  # require 'simple_api/rule_defs/year'
+  require 'simple_api/rule_defs/default'
   require 'simple_api/rule_defs/numeric'
 
   DEFS = {
@@ -9,7 +9,7 @@ module RuleDefs
   }
 
   def from_name(name)
-    DEFS[name]
+    DEFS[name] || SimpleApi::RuleDefs::Default
   end
 
   module_function :from_name

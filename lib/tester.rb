@@ -6,6 +6,8 @@ module Tester
     puts "testing #{ o.inspect } against #{ rule }"
 
     result = case rule
+    when nil
+      true # eq to 'any'
     when 'empty'
       !o.present?
     when 'non-empty'
