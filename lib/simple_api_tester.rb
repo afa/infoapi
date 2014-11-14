@@ -18,36 +18,37 @@ class SimpleApiTester < Sinatra::Base
 
   namespace '/api/v1' do
     namespace '/:sphere/infoapi' do
-      get '/' do
-      end
-
       post '/reload' do
         if params[:token].strip.present? && params[:token].strip == settings.config['token']
           SimpleApi::Rules.init(settings.config)
           'Ok'
         end
       end
-
-      get '/:sphere/infotext' do |sphere|
-        content_type :json, charset: 'utf-8'
-        begin
-          p = SimpleApi::Rules.prepare_params(params[:p])
-        rescue Exception => e
-          error JSON.dump(status: e.message), 500
-        end
-        logger.info "processing #{p.inspect}"
-        SimpleApi::Rules.process(p, sphere, logger) || JSON.dump([]) || error(JSON.dump(status: "Page not found"), 404)
-      end
     end
 
-    namespace '/dump' do
+    get '/:sphere/infotext' do |sphere|
+      content_type :json, charset: 'utf-8'
+      begin
+        p = SimpleApi::Rules.prepare_params(params[:p])
+      rescue Exception => e
+        error JSON.dump(status: e.message), 500
+      end
+      logger.info "processing #{p.inspect}"
+      SimpleApi::Rules.process(p, sphere, logger) || JSON.dump([]) || error(JSON.dump(status: "Page not found"), 404)
+    end
+
+    get '/' do
+    end
+
+  end
+
+  namespace '/dump' do
     get '/load' do
       send_file('db/dump_rules.json', disposition: 'attachment', type: 'application/json', filename: 'dump_rules.json')
     end
 
     put '/build' do
 
-    end
     end
   end
 
