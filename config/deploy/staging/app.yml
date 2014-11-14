@@ -3,3 +3,5 @@ staging:
     host: 0.0.0.0
     user: rbdev
     database: sentimeta_simple_api  
+  fapi_stage: staging  
+  token: 'b0bd2295366d192a087942b5fa5d0117'    

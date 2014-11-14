@@ -30,6 +30,27 @@ class SimpleApiTester < Sinatra::Base
     SimpleApi::Rules.process(p, sphere, logger) || JSON.dump([]) || error(JSON.dump(status: "Page not found"), 404)
   end
 
+  namespace '/infoapi' do
+    get '/' do
+    end
+
+    post '/reload' do
+      if params[:token].strip.present? && params[:token].strip == settings.config['token']
+        SimpleApi::Rules.init(settings.config)
+        'Ok'
+      end
+    end
+
+    namespace '/dump' do
+    get '/load' do
+      send_file('db/dump_rules.json', disposition: 'attachment', type: 'application/json', filename: 'dump_rules.json')
+    end
+
+    put '/build' do
+
+    end
+    end
+  end
 
   namespace '/sitemap' do
     # get '/' do
