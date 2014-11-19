@@ -3,6 +3,7 @@ Bundler.setup
 Bundler.require(:default)
 
 $LOAD_PATH.unshift('./models') unless $LOAD_PATH.include?('./models')
+ENV['RACK_ENV'] = 'test'
 require 'init_db'
 require 'simple_api_tester' # and any other gems you need
 require 'simple_api'

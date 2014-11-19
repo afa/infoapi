@@ -1,37 +1,52 @@
 module SimpleApi
   module RuleDefs
+    class NumericRuleItem < ExtendedRuleItem
+      attr_accessor :from, :to, :range
+      def initialize(rule, flt)
+        super
+        self.from = definition['min'] if definition['min']
+        self.to = definition['max'] if definition['max']
+        parse_config
+      end
+
+      def valid_range(first, last)
+        first ||= from
+        first = from if first.to_i < from
+        last ||= to
+        last = to if last.to_i > to
+        self.range = first.to_i..last.to_i
+      end
+
+      def parse_config
+        if config.kind_of? ::Numeric
+          valid_range(config, config)
+          return
+        end
+        if %w(any non-empty empty).include?(config.strip)
+          self.range = 1..-1
+        else
+          ary = (' ' + config + ' ').split('-').map{|item| item.blank? ? nil : item.strip }
+          valid_range(ary.first, ary.last)
+        end
+      end
+
+      def check(param)
+        return true if super
+        val = JSON.load(param.data[filter]) rescue param.data[filter]
+        return false if val.nil?
+        (val >= from && val <= to && (range.include? val || val == config)).tap{|x| p "check result", x}
+      end
+    end
     module Numeric
-      def parse_params(param, hsh_rule)
-        hsh_rule.keys.inject({}){|rslt, name| rslt.merge(name => param.data[name].to_i) }
+
+      def load_rule(rule, flt)
+        tester = SimpleApi::RuleDefs::NumericRuleItem.new(rule, flt)
       end
 
-      def load_rule(rule)
-        names = rule.extended['int']
-        names.inject({}){|rslt, name| rslt.merge( name => convert(rule.filters[name]) ) }
+      def like?(param, tester)
+        return tester.check(param)
       end
-
-      def convert(str)
-        return str.strip if %w(any non-empty empty).include?(str.strip)
-        rslt = (' ' + str + ' ').split('-').map{|item| item.blank? ? nil : item.strip.to_i }
-        rslt.first.present? && rslt.last.present? ? Range.new(rslt.first, rslt.last).to_a : (rslt.first.present? ? {from: rslt.first} : {}).merge(rslt.last.present? ? {to: rslt.last} : {})
-      end
-
-      def like?(param, rule)
-        p "like", param, rule
-        if rule.kind_of?(String)
-          return true if rule == 'any'
-          return true if param.blank? && rule == 'empty'
-          return true if !param.blank? && rule == 'non-empty'
-          return false
-        end
-        if rule.kind_of?(Hash)
-          return rule.has_key?(:from) ? param >= rule[:from] : true && rule.has_key?(:to) ? param <= rule[:to] : true
-        end
-        if rule.kind_of?(Array)
-          return param.is_a?(Array) ? (param & rule).present? : rule.include?(param)
-        end
-      end
-      module_function :parse_params, :load_rule, :convert, :like?
+      module_function :load_rule, :like?
     end
   end
 end

@@ -8,16 +8,10 @@ module SimpleApi
       end
 
       def load_rules(config)
-        # connect_db 
-        # Sequel.postgres(config['db'].inject({}){|r, (k, v)| r.merge(k.to_sym => v) }) do |db|
-        Rule.order(:position).all.map{|item| Rule.from_param(item.sphere, item.param)[item.id] } #.new(item.to_hash) }
-        # end
+        Rule.order(:position).all.map{|item| Rule.from_param(item.sphere, item.param)[item.id] }
       end
 
       def connect_db(config)
-        # DB = Sequel.postgres(config['db'].inject({}){|r, (k, v)| r.merge(k.to_sym => v) })
-        # Sequel::Model.db = DB
-        # p Sequel::Model.db
       end
 
       def prepare_params(params)

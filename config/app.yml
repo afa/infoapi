@@ -4,3 +4,9 @@ development:
     database: sentimeta_simple_api
   fapi_stage: staging  
   token: '123'  
+test:
+  db:
+    host: 0.0.0.0
+    database: sentimeta_simple_api_test
+  fapi_stage: staging  
+  token: '123'  

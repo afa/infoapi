@@ -1,6 +1,4 @@
 require 'simple_api'
-# require 'sequel_simple_callbacks'
-# Sequel::Model.plugin(SequelSimpleCallbacks)
 module SimpleApi
   class Rule < Sequel::Model
     plugin :after_initialize
@@ -68,6 +66,8 @@ module SimpleApi
     def deserialize
       self.filters = JSON.load(self.filter || "{}")
       (SERIALIZED).each{|attr| send("#{attr.to_s}=".to_sym, self.filters.try(:[], attr.to_s)) if self.filters.try(:[], attr.to_s) }
+      self.filters.merge!(Hash[self.filters.map{|k, v| [k, v.nil? ? 'any' : v] }])
+      p "loaded rule", filters
       self.extended = JSON.load(extended_types)
     end
 

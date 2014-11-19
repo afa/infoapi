@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "kind": "string",
+    "list": "criteria"
+  },
+  "stars": {
+    "kind": "int",
+    "min": 0,
+    "max": 5
+  },
+  "price_range": {
+    "kind": "int",
+    "min": 1,
+    "max": 4
+  },
+  "genres": {
+    "kind": "string",
+    "list": "genres",
+    "fetch_list": "attributes",
+    "parameter": "s=genres"
+  },
+  "years": {
+    "kind": "int",
+    "min": 1895,
+    "max": 2015
+  },
+  "actors": {
+    "kind": "string"
+  }
+}
