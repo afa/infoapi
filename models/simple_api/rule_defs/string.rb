@@ -7,6 +7,10 @@ module SimpleApi
         parse_config
       end
 
+      def fetch_list
+        array.empty? ? [string] : array
+      end
+
       def parse_config
         if config.kind_of? ::Array
           self.array = config
@@ -20,6 +24,7 @@ module SimpleApi
         return true if super
         val = JSON.load(param.data[filter]) rescue param.data[filter]
         return false if val.nil?
+        return true if val.kind_of?(::Array) && ((array & val == val) || (array.include?(val)))
         array.include? val || val == string
       end
     end

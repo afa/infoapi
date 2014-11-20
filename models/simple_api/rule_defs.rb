@@ -14,7 +14,6 @@ module SimpleApi
     }
 
     def from_name(name)
-      p name
       DEFS[TYPES[name]['kind']] || SimpleApi::RuleDefs::Default
     end
 

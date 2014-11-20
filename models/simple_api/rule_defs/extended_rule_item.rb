@@ -9,12 +9,17 @@ module SimpleApi
       end
 
       def check(param)
-        return true if config === 'empty' && param.data[filter].blank?
-        return true if config === 'non-empty' && param.data[filter].present?
-        return true if config === 'any'
+        if config.is_a?(::String)
+          return true if config == 'empty' && param.data[filter].blank?
+          return true if config == 'non-empty' && param.data[filter].present?
+          return true if config == 'any'
+        end
         false
       end
 
+      def fetch_list
+        []
+      end
 
     end
   end

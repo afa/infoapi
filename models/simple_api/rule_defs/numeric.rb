@@ -30,17 +30,21 @@ module SimpleApi
         end
       end
 
+      def fetch_list
+        range.to_a
+      end
+
       def check(param)
         return true if super
         val = JSON.load(param.data[filter]) rescue param.data[filter]
         return false if val.nil?
-        (val >= from && val <= to && (range.include? val || val == config)).tap{|x| p "check result", x}
+        (val >= from && val <= to && (range.include? val || val == config))
       end
     end
     module Numeric
 
       def load_rule(rule, flt)
-        tester = SimpleApi::RuleDefs::NumericRuleItem.new(rule, flt)
+        SimpleApi::RuleDefs::NumericRuleItem.new(rule, flt)
       end
 
       def like?(param, tester)

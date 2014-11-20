@@ -5,9 +5,9 @@ module SimpleApi
     SERIALIZED = %w(stars criteria genres).map(&:to_sym)
     # attr_accessor *SERIALIZED
     attr :filter
-    attr :extended
+    # attr :extended
     attr :filters
-    attr :extended_types
+    # attr :extended_types
 
     def after_initialize
       super
@@ -37,21 +37,21 @@ module SimpleApi
       values[:filter] = hsh
     end
 
-    def extended
-      @extended || {}
-    end
+    # def extended
+    #   @extended || {}
+    # end
 
-    def extended=(hsh)
-      @extended = hsh || {}
-    end
+    # def extended=(hsh)
+    #   @extended = hsh || {}
+    # end
 
-    def extended_types
-      values[:extended_types] || {}
-    end
+    # def extended_types
+    #   values[:extended_types] || {}
+    # end
 
-    def extended_types=(hsh)
-      values[:extended_types] = hsh || {}
-    end
+    # def extended_types=(hsh)
+    #   values[:extended_types] = hsh || {}
+    # end
 
     def self.from_param(sphere, param)
       SimpleApi::PARAM_MAP[sphere][param]
@@ -67,13 +67,12 @@ module SimpleApi
       self.filters = JSON.load(self.filter || "{}")
       (SERIALIZED).each{|attr| send("#{attr.to_s}=".to_sym, self.filters.try(:[], attr.to_s)) if self.filters.try(:[], attr.to_s) }
       self.filters.merge!(Hash[self.filters.map{|k, v| [k, v.nil? ? 'any' : v] }])
-      p "loaded rule", filters
-      self.extended = JSON.load(extended_types)
+      # self.extended = JSON.load(extended_types)
     end
 
     def serialize
       (SERIALIZED).each{|attr| self.filters[attr.to_s] = send(attr) }
-      self.extended_types = JSON.dump(self.extended)
+      # self.extended_types = JSON.dump(self.extended)
       self.filter = JSON.dump(self.filters)
       self
     end
@@ -101,6 +100,13 @@ module SimpleApi
       klass = from_param(sphere, params.param)
       located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(params.param, {}).fetch(params.lang, {})
       klass.clarify(located, params)
+    end
+
+    def generate
+      ((JSON.load(order_traversal) rescue []) || []).inject([self]) do |rslt, flt|
+        rdef = SimpleApi::RuleDefs.from_name(flt).load_rule(self, flt)
+        rslt.product(rdef.fetch_list).map(&:flatten)
+      end
     end
   end
 end

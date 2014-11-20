@@ -4,10 +4,10 @@ module SimpleApi
     class << self
       def init(config)
         @rules = {}
-        load_rules(config).each{|rule| rule.place_to(@rules) }
+        load_rules.each{|rule| rule.place_to(@rules) }
       end
 
-      def load_rules(config)
+      def load_rules
         Rule.order(:position).all.map{|item| Rule.from_param(item.sphere, item.param)[item.id] }
       end
 
@@ -21,6 +21,13 @@ module SimpleApi
       def process(params, sphere, logger)
         found = Rule.find_rule(sphere, params, @rules)
         content = found.kind_of?(Array) ? found.try(:first).try(:content) : found.try(:content)
+      end
+
+      def generate
+        Rule.where('order_traversal is not null').order(:position).all.map{|item| Rule.from_param(item.sphere, item.param)[item.id] }.each do |rule|
+          next if rule.order_traversal.blank?
+          rule.generate
+        end
       end
     end
   end
