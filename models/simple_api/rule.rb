@@ -103,7 +103,7 @@ module SimpleApi
     end
 
     def generate
-      ((JSON.load(order_traversal) rescue []) || []).inject([self]) do |rslt, flt|
+      ((JSON.load(traversal_order) rescue []) || []).inject([self]) do |rslt, flt|
         rdef = SimpleApi::RuleDefs.from_name(flt).load_rule(self, flt)
         rslt.product(rdef.fetch_list).map(&:flatten)
       end

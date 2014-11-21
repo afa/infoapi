@@ -24,8 +24,8 @@ module SimpleApi
       end
 
       def generate
-        Rule.where('order_traversal is not null').order(:position).all.map{|item| Rule.from_param(item.sphere, item.param)[item.id] }.each do |rule|
-          next if rule.order_traversal.blank?
+        Rule.where('traversal_order is not null').order(:position).all.map{|item| Rule.from_param(item.sphere, item.param)[item.id] }.each do |rule|
+          next if rule.traversal_order.blank?
           rule.generate
         end
       end
