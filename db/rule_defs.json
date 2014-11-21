@@ -1,4 +1,7 @@
 {
+  "path": {
+    "kind": "string"
+  },
   "criteria": {
     "kind": "string",
     "list": "criteria"

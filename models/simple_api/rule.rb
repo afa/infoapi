@@ -2,7 +2,7 @@ require 'simple_api'
 module SimpleApi
   class Rule < Sequel::Model
     plugin :after_initialize
-    SERIALIZED = %w(stars criteria genres).map(&:to_sym)
+    SERIALIZED = %w(stars criteria genres path).map(&:to_sym)
     # attr_accessor *SERIALIZED
     attr :filter
     # attr :extended
@@ -81,9 +81,9 @@ module SimpleApi
       [self.sphere, 'infotext', self.param, self.lang]
     end
 
-    def mkdir_p(hash, path)
+    def mkdir_p(hash, path_a)
       #build hash-path.
-      path.inject(hash) do |rslt, lvl|
+      path_a.inject(hash) do |rslt, lvl|
         unless rslt.has_key?(lvl)
           rslt[lvl] = {}
         end

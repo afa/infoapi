@@ -72,6 +72,22 @@ namespace :maintenance do
       Sequel::Migrator.apply(DB, "db/migrate", 0)
     end
 
+    desc 'fix path'
+    task :path_fix => :connect do
+      SimpleApi::Rule.all.each do |rule|
+        unless rule.filters['criteria'].blank?
+          p rule.id, rule.path
+          # cr = JSON.load(rule.criteria) rescue rule.criteria
+          # p cr
+          rule.filters["path"] = rule.path
+          rule.save
+          p JSON.load(SimpleApi::Rule[rule.id].filter)
+        end
+
+
+      end
+    end
+
     desc 'fix criteria'
     task :criteria_fix => :connect do
       SimpleApi::Rule.all.each do |rule|
