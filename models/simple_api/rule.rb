@@ -99,7 +99,7 @@ module SimpleApi
     def self.find_rule(sphere, params, rules)
       klass = from_param(sphere, params.param)
       located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(params.param, {}).fetch(params.lang, {})
-      klass.clarify(located, params)
+      klass.clarify(located, params).tap{|x| p "clarifyed rule", x.first.id }
     end
 
     def generate
