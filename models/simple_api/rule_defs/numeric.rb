@@ -19,7 +19,7 @@ module SimpleApi
 
       def parse_config
         if config.kind_of? ::Numeric
-          valid_range(config, config)
+          self.range = valid_range(config, config)
           return
         end
         if %w(any non-empty empty).include?(config.strip)
