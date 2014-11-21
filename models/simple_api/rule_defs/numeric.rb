@@ -14,7 +14,7 @@ module SimpleApi
         first = from if first.to_i < from
         last ||= to
         last = to if last.to_i > to
-        self.range = first.to_i..last.to_i
+        first.to_i..last.to_i
       end
 
       def parse_config
@@ -25,9 +25,13 @@ module SimpleApi
         if %w(any non-empty empty).include?(config.strip)
           self.range = 1..-1
         else
-          ary = (' ' + config + ' ').split('-').map{|item| item.blank? ? nil : item.strip }
-          valid_range(ary.first, ary.last)
+          self.range = range_from_string(config) 
         end
+      end
+
+      def range_from_string(config)
+        ary = (' ' + config + ' ').split('-').map{|item| item.blank? ? nil : item.strip }
+        valid_range(ary.first, ary.last)
       end
 
       def fetch_list
@@ -38,6 +42,7 @@ module SimpleApi
         return true if super
         val = JSON.load(param.data[filter]) rescue param.data[filter]
         return false if val.nil?
+        return (range_from_string(val).to_a & range.to_a) if val.is_a?(::String)
         (val >= from && val <= to && (range.include? val || val == config))
       end
     end

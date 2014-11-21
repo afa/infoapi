@@ -42,6 +42,9 @@ class String
 end
 
 class Array
+  def blank?
+    empty?
+  end
   def empty?
     self == []
   end

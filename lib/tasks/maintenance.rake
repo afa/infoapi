@@ -72,6 +72,22 @@ namespace :maintenance do
       Sequel::Migrator.apply(DB, "db/migrate", 0)
     end
 
+    desc 'fix criteria'
+    task :criteria_fix => :connect do
+      SimpleApi::Rule.all.each do |rule|
+        unless rule.filters['criteria'].blank?
+          p rule.id, rule.criteria
+          cr = JSON.load(rule.criteria) rescue rule.criteria
+          p cr
+          rule.criteria = cr
+          rule.save
+          p JSON.load(SimpleApi::Rule[rule.id].filter)
+        end
+
+
+      end
+    end
+
     desc 'seed defaults'
     task :seed => :connect do
       rules = File.open(File.join(File.dirname(__FILE__), %w(.. .. db dump_rules.json)), 'r'){|f| JSON.parse(f.read) }
