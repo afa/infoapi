@@ -7,6 +7,7 @@ module SimpleApi
 
     DEFS = {
       'string' => SimpleApi::RuleDefs::String,
+      'default' => SimpleApi::RuleDefs::Default,
       'int' => SimpleApi::RuleDefs::Numeric
     }
 
@@ -14,7 +15,7 @@ module SimpleApi
     }
 
     def from_name(name)
-      DEFS[TYPES[name]['kind']] || SimpleApi::RuleDefs::Default
+      DEFS[TYPES[name]['kind'] || 'default'] || SimpleApi::RuleDefs::Default
     end
 
     def load_definitions(stream)

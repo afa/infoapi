@@ -26,5 +26,8 @@
   },
   "actors": {
     "kind": "string"
+  },
+  "default": {
+    "kind": "default"
   }
 }
