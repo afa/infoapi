@@ -11,9 +11,9 @@ module SimpleApi
 
       def valid_range(first, last)
         first ||= from
-        first = from if first.to_i < from
+        first = from if first.to_i < from.to_i
         last ||= to
-        last = to if last.to_i > to
+        last = to if last.to_i > to.to_i
         first.to_i..last.to_i
       end
 
@@ -43,7 +43,7 @@ module SimpleApi
         val = JSON.load(param.data[filter]) rescue param.data[filter]
         return false if val.nil?
         return (range_from_string(val).to_a & range.to_a) if val.is_a?(::String)
-        (val >= from && val <= to && (range.include? val || val == config))
+        (val >= from.to_i && val <= to.to_i && (range.include? val || val == config.to_i))
       end
     end
     module Numeric
