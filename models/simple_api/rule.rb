@@ -37,42 +37,23 @@ module SimpleApi
       values[:filter] = hsh
     end
 
-    # def extended
-    #   @extended || {}
-    # end
-
-    # def extended=(hsh)
-    #   @extended = hsh || {}
-    # end
-
-    # def extended_types
-    #   values[:extended_types] || {}
-    # end
-
-    # def extended_types=(hsh)
-    #   values[:extended_types] = hsh || {}
-    # end
-
     def self.from_param(sphere, param)
-      SimpleApi::PARAM_MAP[sphere][param]
+      SimpleApi::PARAM_MAP[sphere].try(:[], param)
     end
 
     def initialize(hash)
       hash.delete_if{|k, v| k == :id }
       super
-      # deserialize
     end
 
     def deserialize
       self.filters = JSON.load(self.filter || "{}")
       (SERIALIZED).each{|attr| send("#{attr.to_s}=".to_sym, self.filters.try(:[], attr.to_s)) if self.filters.try(:[], attr.to_s) }
       self.filters.merge!(Hash[self.filters.map{|k, v| [k, v.nil? ? 'any' : v] }])
-      # self.extended = JSON.load(extended_types)
     end
 
     def serialize
       (SERIALIZED).each{|attr| self.filters[attr.to_s] = send(attr) }
-      # self.extended_types = JSON.dump(self.extended)
       self.filter = JSON.dump(self.filters)
       self
     end
@@ -82,7 +63,6 @@ module SimpleApi
     end
 
     def mkdir_p(hash, path_a)
-      #build hash-path.
       path_a.inject(hash) do |rslt, lvl|
         unless rslt.has_key?(lvl)
           rslt[lvl] = {}

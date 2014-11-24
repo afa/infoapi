@@ -124,7 +124,7 @@ namespace :maintenance do
     desc 'dump db'
     task dump: :connect do
       require "pp"
-      rules = DB[:rules].order(:position).all.map{|r| r.to_hash.delete_if{|k, v| %i(id stars genres criteria).include?(k) } }
+      rules = DB[:rules].order(:position).all.map{|r| r.to_hash.delete_if{|k, v| %i(id stars genres criteria order_traversal).include?(k) } }
       File.open(File.join(File.dirname(__FILE__), %w(.. .. db dump_rules.json)), 'w'){|f| f.write(JSON.pretty_generate(rules)) }
 
 

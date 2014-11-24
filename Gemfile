@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'sentimeta'
+gem 'sentimeta', "~> 0.0.2"
 
 gem "bundler", "~> 1.6"
 gem "rake", "~> 10.0"

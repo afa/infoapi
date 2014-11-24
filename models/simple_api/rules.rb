@@ -20,6 +20,7 @@ module SimpleApi
 
       def process(params, sphere, logger)
         found = Rule.find_rule(sphere, params, @rules)
+        logger.info "for sphere #{sphere} with params #{params.inspect} selected rule #{found.first.id} #{found.first.name}."
         content = found.kind_of?(Array) ? found.try(:first).try(:content) : found.try(:content)
       end
 
