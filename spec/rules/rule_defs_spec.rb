@@ -1,16 +1,16 @@
 require 'spec_helper'
 require 'simple_api'
 describe SimpleApi::RuleDefs do
+  before do
+    @template = {
+      sphere: "movies",
+      call: "infotext",
+      param: "rating-annotation",
+      lang: "en",
+      content: "{\"title\":\"Best <%genre%> movies | TopRater.com\"}",
+    }
+  end
   context "when checking for" do
-    before do
-      @template = {
-        sphere: "movies",
-        call: "infotext",
-        param: "rating-annotation",
-        lang: "en",
-        content: "{\"title\":\"Best <%genre%> movies | TopRater.com\"}",
-      }
-    end
     context "string def" do
       before(:example) do
         @rule_arr = SimpleApi::MoviesRatingAnnotationRule.new(@template.merge(filter: JSON.dump({"actors"=>["dike", "mike"]}), name: 'acts'))
@@ -116,5 +116,18 @@ describe SimpleApi::RuleDefs do
     end
   end
   context "when generating" do
+    before(:example) do
+      @rule = SimpleApi::MoviesRatingAnnotationRule.new(@template.merge(filter: JSON.dump('actors' => 'any')))
+      allow(SimpleApi::RuleDefs::TYPES).to receive(:[]).with("actors").and_return({"kind" => "string", 'fetch_list' => 'attributes'})
+    end
+    context "when any rule" do
+      before do
+        @gen = SimpleApi::RuleDefs.from_name('actors')
+      end
+      it 'should load list' do
+        r = @gen.load_rule(@rule, 'actors')
+        p r.fetch_list
+      end
+    end
   end
 end

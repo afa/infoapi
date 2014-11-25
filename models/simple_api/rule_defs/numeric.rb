@@ -35,7 +35,9 @@ module SimpleApi
       end
 
       def fetch_list
-        range.to_a
+        s = super
+        return s unless s.blank?
+        range.to_a.map{|i| {filter => i} }
       end
 
       def check(param)

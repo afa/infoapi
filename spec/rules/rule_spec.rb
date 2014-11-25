@@ -45,7 +45,7 @@ describe SimpleApi::Rule do
       expect{@year_rule.generate}.to_not raise_error
       expect(@year_rule.generate).to be_kind_of(Array)
       expect(@year_rule.generate.size).to be_eql(8)
-      expect(@year_rule.generate.size).to be_eql(8)
+      # expect(@year_rule.generate.size).to be_eql(8)
     end
   end
 

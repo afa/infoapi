@@ -8,7 +8,10 @@ module SimpleApi
       end
 
       def fetch_list
-        array.empty? ? [string] : array
+        s = super
+        p s
+        return s unless s.blank?
+        (array.empty? ? [string] : array).map{|i| {filter => i} }
       end
 
       def parse_config
