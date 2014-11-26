@@ -19,5 +19,8 @@ group :development do
 end
 group *%i(development test) do
   gem "rspec"
+end
+
+group :test do
   gem 'fakeweb', require: 'fakeweb/safe'
 end

@@ -1,6 +1,7 @@
 require 'simple_api'
 require 'json'
 require 'sequel'
+require 'simple_api_router'
 module SimpleApi
   class Rule < Sequel::Model
   # @@param_map = {
@@ -132,12 +133,14 @@ module SimpleApi
         rdef = SimpleApi::RuleDefs.from_name(flt).load_rule(self, flt)
         rslt.product(rdef.fetch_list).map(&:flatten)
       end
+      route = SimpleApiRouter.new(rule.lang, rule.sphere)
       prod.each do |movement|
         # p movement[1..-1].sort_by{|item| item.keys.first }.map{|item| [item.keys.first, item.values.first].join('/') }.join('/')
         refs.insert(
           rule_id: id,
           json: JSON.dump({rule: movement.first.id}.merge(movement[1..-1].inject({}){|rslt, k| rslt.merge(k) } )),
-          url: movement[1..-1].sort_by{|item| item.keys.first }.map{|item| [item.keys.first, item.values.first].join('/') }.join('/'),
+          url: route.route_to('rating', movement[1..-1].inject({}){|rslt, item| rslt.merge(item.keys.first => item.values.first) }),
+          # url: movement[1..-1].sort_by{|item| item.keys.first }.map{|item| [item.keys.first, item.values.first].join('/') }.join('/'),
           sitemap_session_id: sitemap ? sitemap.to_i : nil
         )
       end
