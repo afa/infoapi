@@ -133,7 +133,7 @@ module SimpleApi
         rdef = SimpleApi::RuleDefs.from_name(flt).load_rule(self, flt)
         rslt.product(rdef.fetch_list).map(&:flatten)
       end
-      route = SimpleApiRouter.new(rule.lang, rule.sphere)
+      route = SimpleApiRouter.new(lang, sphere)
       prod.each do |movement|
         # p movement[1..-1].sort_by{|item| item.keys.first }.map{|item| [item.keys.first, item.values.first].join('/') }.join('/')
         refs.insert(
