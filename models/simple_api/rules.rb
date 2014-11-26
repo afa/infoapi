@@ -17,7 +17,21 @@ module SimpleApi
       end
 
       def prepare_params(params)
-        OpenStruct.new(JSON.load(params))
+        prm = OpenStruct.new(JSON.load(params))
+        if prm.data.nil?
+          prm.data = prm.filters
+        end
+        if prm.filters.nil?
+          prm.filters = prm.data
+        end
+        if prm.filters["path"] && prm.filters["catalog"].nil?
+          prm.filters["catalog"] = prm.filters["path"]
+        end
+        if prm.filters["catalog"] && prm.filters["path"].nil?
+          prm.filters["path"] = prm.filters["catalog"]
+        end
+        p prm
+        prm
       end
 
       def process(params, sphere, logger)

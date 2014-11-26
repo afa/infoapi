@@ -118,7 +118,6 @@ describe SimpleApi::RuleDefs do
   context "when generating" do
     before(:example) do
       @rule = SimpleApi::MoviesRatingAnnotationRule.create(@template.merge(filter: JSON.dump('actors' => 'any')))
-      p @rule
       allow(SimpleApi::RuleDefs::TYPES).to receive(:[]).with("actors").and_return({"kind" => "string", 'fetch_list' => 'attributes'})
     end
     context "when any rule" do

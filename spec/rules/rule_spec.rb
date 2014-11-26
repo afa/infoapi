@@ -9,7 +9,7 @@ describe SimpleApi::Rule do
         param: "rating-annotation",
         lang: "en",
         design: nil,
-        path: "any",
+        # path: "any",
         # path.level": null,
         content: "{\"title\":\"Best <%genre%> movies | TopRater.com\"}",
         # "filter": "{\"stars\":null,\"criteria\":null,\"genres\":\"[\\\"action\\\",\\\"adventure\\\",\\\"animation\\\",\\\"biography\\\",\\\"comedy\\\",\\\"crime\\\",\\\"documentary\\\",\\\"drama\\\",\\\"family\\\",\\\"fantasy\\\",\\\"film-noir\\\",\\\"history\\\",\\\"horror\\\",\\\"music\\\",\\\"musical\\\",\\\"mystery\\\",\\\"romance\\\",\\\"sci-fi\\\",\\\"sport\\\",\\\"thriller\\\",\\\"war\\\",\\\"western\\\"]\",\"years\":\"2000-2003\"}",
@@ -34,6 +34,22 @@ describe SimpleApi::Rule do
       end
     end
   end
+
+  describe "when testing for path trw-596" do
+    before(:example) do
+      @path_rule = SimpleApi::HotelsRatingAnnotationRule.new(@template.merge sphere: 'hotels', filter: "{\"stars\":\"5\"}", name: 'pathrul')
+      @path2_rule = SimpleApi::HotelsRatingAnnotationRule.new(@template.merge sphere: 'hotels', filter: "{\"stars\":\"5\", \"path\":\"non-empty\"}", name: 'pathrul2')
+      @located = [@path2_rule, @path_rule]
+    end
+    context "when testing for empty path" do
+      it "should return pathrul2" do
+        expect(SimpleApi::HotelsRatingAnnotationRule.clarify(@located, OpenStruct.new(lang: 'en', param: 'rating', data: {"stars" => "5"}))).to be_an(Array)
+        expect(SimpleApi::HotelsRatingAnnotationRule.clarify(@located, OpenStruct.new(lang: 'en', param: 'rating', data: {"stars" => "5"})).first).to be_an(SimpleApi::HotelsRatingAnnotationRule)
+        expect(SimpleApi::HotelsRatingAnnotationRule.clarify(@located, OpenStruct.new(lang: 'en', param: 'rating', data: {"stars" => "5"})).first.name).to eql('pathrul')
+      end
+    end
+  end
+
   describe "when generating rating refs" do
     before(:example) do
       @year_rule = SimpleApi::MoviesRatingAnnotationRule.create(@template.merge filter: "{\"years\":\"2000-2003\", \"genres\":[\"action\",\"fantasy\"]}", name: 'yearrul', traversal_order: '["years", "genres"]')
