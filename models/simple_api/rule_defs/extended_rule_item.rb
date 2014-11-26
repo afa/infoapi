@@ -21,17 +21,15 @@ module SimpleApi
 
       def load_list(list)
         fapi_prefix = CONFIG["fapi_prefix"]
-        p fapi_prefix
-        uri = URI.parse([fapi_prefix].tap do |bb|
+        uri = [fapi_prefix].tap do |bb|
           bb << current_rule.sphere
           bb << list
           bb << filter
-        end.join('/'))
-        p uri
-        # data = JSON.load(uri.open)['attributes'] rescue []
-        data = JSON.load(uri.open) rescue []
-        p data
-        data
+        end.join('/')
+        parm = URI.encode('p={"limit_values": "1000"}')
+        data = JSON.load(URI.parse([uri, parm].join('?')).open) rescue {}
+        return [] if data.empty?
+        data["values"].map{|hsh| hsh["name"] }.map{|i| {filter => i} }
       end
 
       def load_from_master

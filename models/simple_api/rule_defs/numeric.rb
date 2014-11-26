@@ -37,6 +37,9 @@ module SimpleApi
       def fetch_list
         s = super
         return s unless s.blank?
+        if %w(any non-empty).include?(config)
+          return (range.to_a.empty? ? from..to : range).to_a.map{|i| {filter => i} }
+        end
         range.to_a.map{|i| {filter => i} }
       end
 

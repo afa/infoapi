@@ -1,5 +1,7 @@
 require 'pp'
 module SimpleApi
+# require 'simple_api'
+# require 'simple_api/rule'
   class Rules
     class << self
       def init(config)
@@ -8,7 +10,7 @@ module SimpleApi
       end
 
       def load_rules
-        Rule.order(:position).all.map{|item| Rule.from_param(item.sphere, item.param)[item.id] }
+        Rule.order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }
       end
 
       def connect_db(config)
@@ -24,10 +26,10 @@ module SimpleApi
         content = found.kind_of?(Array) ? found.try(:first).try(:content) : found.try(:content)
       end
 
-      def generate
-        Rule.where('traversal_order is not null').order(:position).all.map{|item| Rule.from_param(item.sphere, item.param)[item.id] }.each do |rule|
+      def generate(sitemap = nil)
+        SimpleApi::Rule.where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.each do |rule|
           next if rule.traversal_order.blank?
-          rule.generate
+          rule.generate(sitemap)
         end
       end
     end

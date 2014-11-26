@@ -1,6 +1,34 @@
 require 'simple_api'
+require 'json'
+require 'sequel'
 module SimpleApi
   class Rule < Sequel::Model
+  # @@param_map = {
+  #   "test-rule" => {
+  #     "about" => SimpleApi::AboutRule,
+  #     "catalog-annotation" => ::SimpleApi::HotelsCatalogAnnotationRule,
+  #     "catalog" => ::SimpleApi::HotelsCatalogAnnotationRule,
+  #     "rating-annotation" => ::SimpleApi::HotelsRatingAnnotationRule,
+  #     "rating" => ::SimpleApi::HotelsRatingAnnotationRule,
+  #     "main" => ::SimpleApi::MainRule
+  #   },
+  #   "hotels" => {
+  #     "about" => SimpleApi::AboutRule,
+  #     "catalog-annotation" => ::SimpleApi::HotelsCatalogAnnotationRule,
+  #     "catalog" => ::SimpleApi::HotelsCatalogAnnotationRule,
+  #     "rating-annotation" => ::SimpleApi::HotelsRatingAnnotationRule,
+  #     "rating" => ::SimpleApi::HotelsRatingAnnotationRule,
+  #     "main" => ::SimpleApi::MainRule
+  #   },
+  #   "movies" => {
+  #     "catalog-annotation" => ::SimpleApi::MoviesCatalogAnnotationRule,
+  #     "rating-annotation" => ::SimpleApi::MoviesRatingAnnotationRule,
+  #     "catalog" => ::SimpleApi::MoviesCatalogAnnotationRule,
+  #     "rating" => ::SimpleApi::MoviesRatingAnnotationRule,
+  #     "about" => ::SimpleApi::AboutRule,
+  #     "main" => ::SimpleApi::MainRule
+  #   }
+  # }
     plugin :after_initialize
     SERIALIZED = %w(stars criteria genres path).map(&:to_sym)
     # attr_accessor *SERIALIZED
@@ -38,7 +66,7 @@ module SimpleApi
     end
 
     def self.from_param(sphere, param)
-      SimpleApi::PARAM_MAP[sphere].try(:[], param)
+      @@param_map[sphere].try(:[], param)
     end
 
     def initialize(hash)
@@ -76,16 +104,42 @@ module SimpleApi
       place_at(hash)
     end
 
+    def self.init_spheres
+      File.open(File.join(File.dirname(__FILE__), %w(.. .. db sphere_defs.json))) do |file|
+        JSON.load(file).each do |rcrd|
+          unless class_variable_defined? :@@param_map
+            class_variable_set :@@param_map, {}
+          end
+            # rcrd.map{|r| r['sphere'] }.compact.uniq.each{|s| @@param_map[s] = {} }
+              class_variable_get(:@@param_map).merge!(rcrd['sphere'] => {}) unless class_variable_get(:@@param_map)[rcrd['sphere']]
+              class_variable_get(:@@param_map)[rcrd['sphere']][rcrd['param']] ||= rcrd['klass'].constantize
+            # end
+
+            # rcrd.compact.uniq.each{|a| @@param_map[a['sphere']][a['param']] = a['klass'].constantize }
+        end
+      end
+    end
+
     def self.find_rule(sphere, params, rules)
       klass = from_param(sphere, params.param)
       located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(params.param, {}).fetch(params.lang, {})
       klass.clarify(located, params)
     end
 
-    def generate
-      ((JSON.load(traversal_order) rescue []) || []).inject([self]) do |rslt, flt|
+    def generate(sitemap = nil)
+      refs = DB[:refs]
+      prod = ((JSON.load(traversal_order) rescue []) || []).inject([self]) do |rslt, flt|
         rdef = SimpleApi::RuleDefs.from_name(flt).load_rule(self, flt)
         rslt.product(rdef.fetch_list).map(&:flatten)
+      end
+      prod.each do |movement|
+        # p movement[1..-1].sort_by{|item| item.keys.first }.map{|item| [item.keys.first, item.values.first].join('/') }.join('/')
+        refs.insert(
+          rule_id: id,
+          json: JSON.dump({rule: movement.first.id}.merge(movement[1..-1].inject({}){|rslt, k| rslt.merge(k) } )),
+          url: movement[1..-1].sort_by{|item| item.keys.first }.map{|item| [item.keys.first, item.values.first].join('/') }.join('/'),
+          sitemap_session_id: sitemap ? sitemap.to_i : nil
+        )
       end
     end
   end

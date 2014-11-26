@@ -36,15 +36,16 @@ describe SimpleApi::Rule do
   end
   describe "when generating rating refs" do
     before(:example) do
-      @year_rule = SimpleApi::MoviesRatingAnnotationRule.new(@template.merge filter: "{\"years\":\"2000-2003\", \"genres\":[\"action\",\"fantasy\"]}", name: 'yearrul', traversal_order: '["years", "genres"]')
+      @year_rule = SimpleApi::MoviesRatingAnnotationRule.create(@template.merge filter: "{\"years\":\"2000-2003\", \"genres\":[\"action\",\"fantasy\"]}", name: 'yearrul', traversal_order: '["years", "genres"]')
       @any_stars_rule = SimpleApi::MoviesRatingAnnotationRule.new(@template.merge filter: "{\"stars\":null}", name: 'defstrul')
       @two_stars_rule = SimpleApi::MoviesRatingAnnotationRule.new(@template.merge filter: "{\"stars\":2}", name: 'strul') 
       @located = [@two_stars_rule, @year_rule, @any_stars_rule]
     end
     it "must generate product of metarules" do
-      expect{@year_rule.generate}.to_not raise_error
-      expect(@year_rule.generate).to be_kind_of(Array)
-      expect(@year_rule.generate.size).to be_eql(8)
+      rul = nil
+      expect{rul = @year_rule.generate}.to_not raise_error
+      expect(rul).to be_kind_of(Array)
+      expect(rul.size).to be_eql(8)
       # expect(@year_rule.generate.size).to be_eql(8)
     end
   end

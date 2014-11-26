@@ -15,22 +15,5 @@ module SimpleApi
   require 'simple_api/rules'
   require 'simple_api/rule_defs'
 
-  PARAM_MAP = {
-    "hotels" => {
-      "about" => AboutRule,
-      "catalog-annotation" => HotelsCatalogAnnotationRule,
-      "catalog" => HotelsCatalogAnnotationRule,
-      "rating-annotation" => HotelsRatingAnnotationRule,
-      "rating" => HotelsRatingAnnotationRule,
-      "main" => MainRule
-    },
-    "movies" => {
-      "catalog-annotation" => MoviesCatalogAnnotationRule,
-      "rating-annotation" => MoviesRatingAnnotationRule,
-      "catalog" => MoviesCatalogAnnotationRule,
-      "rating" => MoviesRatingAnnotationRule,
-      "about" => AboutRule,
-      "main" => MainRule
-    }
-  }
 end
+

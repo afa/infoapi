@@ -117,7 +117,8 @@ describe SimpleApi::RuleDefs do
   end
   context "when generating" do
     before(:example) do
-      @rule = SimpleApi::MoviesRatingAnnotationRule.new(@template.merge(filter: JSON.dump('actors' => 'any')))
+      @rule = SimpleApi::MoviesRatingAnnotationRule.create(@template.merge(filter: JSON.dump('actors' => 'any')))
+      p @rule
       allow(SimpleApi::RuleDefs::TYPES).to receive(:[]).with("actors").and_return({"kind" => "string", 'fetch_list' => 'attributes'})
     end
     context "when any rule" do
@@ -125,8 +126,11 @@ describe SimpleApi::RuleDefs do
         @gen = SimpleApi::RuleDefs.from_name('actors')
       end
       it 'should load list' do
-        r = @gen.load_rule(@rule, 'actors')
-        p r.fetch_list
+        r = @gen.load_rule(@rule, 'actors').fetch_list
+        expect(r).to be_an(::Array)
+        expect(r).to_not be_empty
+        expect(r.first).to be_an(Hash)
+
       end
     end
   end

@@ -9,7 +9,6 @@ module SimpleApi
 
       def fetch_list
         s = super
-        p s
         return s unless s.blank?
         (array.empty? ? [string] : array).map{|i| {filter => i} }
       end
