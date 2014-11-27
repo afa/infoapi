@@ -51,6 +51,12 @@ module Sitemap
   end
 
   def prepare(sitemap)
+    if sitemap
+      session = DB[:sitemap_sessions][sitemap.to_i]
+      if session[:state]
+        #TODO
+      end
+    end
     SimpleApi::Rules.generate(sitemap ? sitemap.to_i : sitemap)
   end
 
