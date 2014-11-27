@@ -41,7 +41,7 @@ module SimpleApi
       end
 
       def generate(sitemap = nil)
-        SimpleApi::Rule.where(param: ['rating', 'rating-annotation').where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.select{|rul| t = JSON.load(rul.traversal_order) rescue []; t.is_a?(::Array) && t.present? }.each do |rule|
+        SimpleApi::Rule.where(param: ['rating', 'rating-annotation']).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.select{|rul| t = JSON.load(rul.traversal_order) rescue []; t.is_a?(::Array) && t.present? }.each do |rule|
           next if rule.traversal_order.blank?
           rule.generate(sitemap)
         end
