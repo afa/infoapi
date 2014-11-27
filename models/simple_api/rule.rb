@@ -131,7 +131,7 @@ module SimpleApi
       refs = DB[:refs]
       prod = ((JSON.load(traversal_order) rescue []) || []).inject([self]) do |rslt, flt|
         klass = SimpleApi::RuleDefs.from_name(flt)
-        if klass && !klass.eq?(SimpleApi::RuleDefs::Default)
+        if klass && !klass.eql?(SimpleApi::RuleDefs::Default)
           rdef = klass.load_rule(self, flt)
           rslt.product(rdef.fetch_list).map(&:flatten)
         else
