@@ -45,6 +45,20 @@ module SimpleApi
           next if rule.traversal_order.blank?
           rule.generate(sitemap)
         end
+        rework(sitemap)
+      end
+
+      def rework(sitemap)
+        DB[:refs].where(sitemap_session_id: sitemap).order(:id).each do |ref|
+          duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { :url => ref[:url] }) }.order(:id).first
+          param = JSON.load(ref[:json])
+          rule = SimpleApi::Rule[param["rule"]]
+          Sentimeta.env   = :staging # :production is default
+          Sentimeta.lang  = rule.lang.to_sym
+          Sentimeta.sphere = rule.sphere
+          empty = (Sentimeta::Client.fetch :objects, {"is_empty" => true}.merge("criteria" => [param.delete('criteria')], "filters" => param.delete_if{|k, v| k == 'rule' }) rescue {})["is_empty"]
+          DB[:refs].where(:id => ref[:id]).update(:is_empty => empty, :duplicate_id => duble.try(:[], :id))
+        end
       end
     end
   end
