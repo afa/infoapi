@@ -56,7 +56,8 @@ module SimpleApi
           Sentimeta.env   = :staging # :production is default
           Sentimeta.lang  = rule.lang.to_sym
           Sentimeta.sphere = rule.sphere
-          empty = (Sentimeta::Client.fetch :objects, {"is_empty" => true}.merge("criteria" => [param.delete('criteria')], "filters" => param.delete_if{|k, v| k == 'rule' }) rescue {})["is_empty"]
+          path = param.delete("path").to_s.split(',')
+          empty = (Sentimeta::Client.fetch :objects, {"is_empty" => true}.merge("criteria" => [param.delete('criteria')], "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})["is_empty"]
           DB[:refs].where(:id => ref[:id]).update(:is_empty => empty, :duplicate_id => duble.try(:[], :id))
         end
       end
