@@ -18,6 +18,7 @@ module SimpleApi
 
       def prepare_params(params)
         prm = OpenStruct.new(JSON.load(params))
+        unless  prm.data.nil? && prm.filters.nil?
         if prm.data.nil?
           prm.data = prm.filters
         end
@@ -29,6 +30,7 @@ module SimpleApi
         end
         if prm.filters["catalog"] && prm.filters["path"].nil?
           prm.filters["path"] = prm.filters["catalog"]
+        end
         end
         p prm
         prm
@@ -53,7 +55,7 @@ module SimpleApi
           duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { :url => ref[:url] }) }.order(:id).first
           param = JSON.load(ref[:json])
           rule = SimpleApi::Rule[param["rule"]]
-          Sentimeta.env   = :staging # :production is default
+          Sentimeta.env   = CONFIG["fapi_stage"] # :production is default
           Sentimeta.lang  = rule.lang.to_sym
           Sentimeta.sphere = rule.sphere
           path = param.delete("path").to_s.split(',')
