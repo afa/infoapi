@@ -9,8 +9,9 @@ module SimpleApi
 
       def fetch_list
         s = super
-        return s unless s.blank?
-        (array.empty? ? [string] : array).map{|i| {filter => i} }
+        return s[:data] if s[:data]
+        return (array.empty? ? [string] : array).map{|i| {filter => i} } unless s[:meta]
+        return [{filter => nil}]
       end
 
       def parse_config

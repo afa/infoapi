@@ -1,0 +1,130 @@
+HTTP/1.1 200 OK
+Server: nginx/1.2.1
+Date: Thu, 27 Nov 2014 22:33:58 GMT
+Content-Type: application/json
+Content-Length: 1843
+Connection: keep-alive
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: OPTIONS, POST, HEAD, GET
+Access-Control-Max-Age: 21600
+Access-Control-Allow-Headers: accept, x-requested-with, x-csrf-token
+
+{
+  "build": "0.1.0",
+  "label": "Genres",
+  "lang": "en",
+  "name": "genres",
+  "sphere": "movies",
+  "total": 27,
+  "values": [
+    {
+      "label": "Adventure",
+      "name": "adventure"
+    },
+    {
+      "label": "Family",
+      "name": "family"
+    },
+    {
+      "label": "Musical",
+      "name": "musical"
+    },
+    {
+      "label": "Film Noir",
+      "name": "film-noir"
+    },
+    {
+      "label": "Western",
+      "name": "western"
+    },
+    {
+      "label": "Horror",
+      "name": "horror"
+    },
+    {
+      "label": "Fantasy",
+      "name": "fantasy"
+    },
+    {
+      "label": "Sport",
+      "name": "sport"
+    },
+    {
+      "label": "Biography",
+      "name": "biography"
+    },
+    {
+      "label": "Drama",
+      "name": "drama"
+    },
+    {
+      "label": "Music",
+      "name": "music"
+    },
+    {
+      "label": "News",
+      "name": "news"
+    },
+    {
+      "label": "Comedy",
+      "name": "comedy"
+    },
+    {
+      "label": "Documentary",
+      "name": "documentary"
+    },
+    {
+      "label": "War",
+      "name": "war"
+    },
+    {
+      "label": "Romance",
+      "name": "romance"
+    },
+    {
+      "label": "History",
+      "name": "history"
+    },
+    {
+      "label": "Mystery",
+      "name": "mystery"
+    },
+    {
+      "label": "Action",
+      "name": "action"
+    },
+    {
+      "label": "Sci Fi",
+      "name": "sci-fi"
+    },
+    {
+      "label": "Reality TV",
+      "name": "reality-tv"
+    },
+    {
+      "label": "Crime",
+      "name": "crime"
+    },
+    {
+      "label": "Game Show",
+      "name": "game-show"
+    },
+    {
+      "label": "Thriller",
+      "name": "thriller"
+    },
+    {
+      "label": "Talk Show",
+      "name": "talk-show"
+    },
+    {
+      "label": "Animation",
+      "name": "animation"
+    },
+    {
+      "label": "Short",
+      "name": "short"
+    }
+  ],
+  "ver": 1
+}
