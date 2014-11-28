@@ -7,7 +7,7 @@ module SimpleApi
 
       def fetch_list
         # super
-        {filter => nil}
+        [{filter => nil}]
       end
 
     end

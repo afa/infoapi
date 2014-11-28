@@ -43,7 +43,7 @@ module SimpleApi
         s = super
         return s[:data] if s[:data]
         return (range.to_a.empty? ? from..to : range).to_a.map{|i| {filter => i} } unless s[:meta]
-        {filter => nil}
+        [{filter => nil}]
         # if %w(any non-empty).include?(config)
         # end
         # return range.to_a.map{|i| {filter => i} }
