@@ -131,24 +131,29 @@ module SimpleApi
       refs = DB[:refs]
       prod = ((JSON.load(traversal_order) rescue []) || []).inject([self]) do |rslt, flt|
         klass = SimpleApi::RuleDefs.from_name(flt)
-        if klass && !klass.eql?(SimpleApi::RuleDefs::Default)
+        # if klass && !klass.eql?(SimpleApi::RuleDefs::Default)
           rdef = klass.load_rule(self, flt)
           rslt.product(rdef.fetch_list).map(&:flatten)
-        else
-          rslt.product([])
-        end
+        # else
+        #   rslt.product([])
+        # end
       end
+
+      data = prod.map do |arr|
+        rs = {arr.first => arr[1..-1].select{|h| !h.values.all?{|v| v.nil? } }.inject({}){|r, h| r.merge(h) }}
+        rs
+      end.select{|d| d.values.map(&:values).flatten.compact.present? }
+      # end.select{|d| d.values.all?{|h| i.present? } }
       route = SimpleApiRouter.new(lang, sphere)
-      p prod
-      prod.each do |movement|
+      data.each do |movement|
         refs.insert(
           rule_id: id,
-          json: JSON.dump({rule: movement.first.id}.merge(movement[1..-1].inject({}){|rslt, k| rslt.merge(k) } )),
-          url: route.route_to('rating', movement[1..-1].inject({}){|rslt, item| rslt.merge(item.keys.first => item.values.first) }),
+          json: JSON.dump({rule: movement.keys.first.id}.merge(movement.values.first)),
+          url: route.route_to('rating', movement.values.first),
           sitemap_session_id: sitemap ? sitemap.to_i : nil
         )
       end
-      prod
+      data
     end
   end
 end

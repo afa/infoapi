@@ -31,8 +31,6 @@ module SimpleApi
         if prm.filters["catalog"] && prm.filters["path"].nil?
           prm.filters["path"] = prm.filters["catalog"]
         end
-        end
-        p prm
         prm
       end
 

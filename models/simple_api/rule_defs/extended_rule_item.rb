@@ -26,21 +26,23 @@ module SimpleApi
           bb << list
           bb << filter
         end.join('/')
-        parm = URI.encode('p={"limit_values": "1000"}')
-        data = JSON.load(URI.parse([uri, parm].join('?')).open) rescue {}
-        return [] if data.empty?
-        data["values"].map{|hsh| hsh["name"] }.map{|i| {filter => i} }
+        parm = URI.encode('p={"limit_values": "10000"}')
+        data = JSON.load(URI.parse([uri, parm].join('?')).open.read) #rescue {} #TODO fix error handling
+        return {meta: false, data: [{filter => nil}]} if data.empty? || data["values"].blank?
+        {meta: true, data: data["values"].map{|hsh| hsh["name"] }.map{|i| {filter => i} }}
       end
 
       def load_from_master
         if definition["fetch_list"].present?
           return load_list(definition["fetch_list"])
+        else
+          return {meta: false}
         end
       end
 
       def fetch_list
         return load_from_master if %w(any non-empty).include?(config)
-        []
+        {meta: false}
       end
 
     end
