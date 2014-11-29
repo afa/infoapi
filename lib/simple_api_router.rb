@@ -19,10 +19,11 @@ class SimpleApiRouter
       components << action
       unless criteria.blank?
         components << 'criteria'
-        p criteria
         components << (criteria.is_a?(::Array) ? criteria.join(',') : criteria)
       end
       unless hash_params.empty?
+        path = hash_params.delete("path")
+          hash_params["catalog"] = path if path
         hash_params.keys.sort.each do |param|
           components << param
           components << hash_params[param]
