@@ -25,11 +25,13 @@ module SimpleApi
           if prm.filters.nil?
             prm.filters = prm.data
           end
+          unless prm.filters["path"].nil? && prm.filters["catalog"].nil?
           if prm.filters["path"] && prm.filters["catalog"].nil?
             prm.filters["catalog"] = prm.filters["path"]
           end
           if prm.filters["catalog"] && prm.filters["path"].nil?
             prm.filters["path"] = prm.filters["catalog"]
+          end
           end
         end
         prm
@@ -42,7 +44,8 @@ module SimpleApi
         end
 
         def generate(sitemap = nil)
-          SimpleApi::Rule.where(param: ['rating', 'rating-annotation']).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.select{|rul| t = JSON.load(rul.traversal_order) rescue []; t.is_a?(::Array) && t.present? }.each do |rule|
+          DB[:refs].where(sitemap_session_id: sitemap).delete
+          SimpleApi::Rule.where(param: ['catalog', 'catalog-annotation', 'rating', 'rating-annotation']).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.select{|rul| t = JSON.load(rul.traversal_order) rescue []; t.is_a?(::Array) && t.present? }.each do |rule|
             next if rule.traversal_order.blank?
             rule.generate(sitemap)
           end
@@ -51,7 +54,7 @@ module SimpleApi
 
         def rework(sitemap)
           DB[:refs].where(sitemap_session_id: sitemap).order(:id).each do |ref|
-            duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { :url => ref[:url] }) }.order(:id).first
+            duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { url: ref[:url], sitemap_session_id: sitemap }) }.order(:id).first
             param = JSON.load(ref[:json])
             rule = SimpleApi::Rule[param["rule"]]
             Sentimeta.env   = CONFIG["fapi_stage"] # :production is default
