@@ -121,14 +121,21 @@ describe SimpleApi::RuleDefs do
       allow(SimpleApi::RuleDefs::TYPES).to receive(:[]).with("actors").and_return({"kind" => "string", 'fetch_list' => 'attributes'})
     end
     context "when any rule" do
-      before do
+      before(:example) do
+        FakeWeb.allow_net_connect = false
+        FakeWeb.register_uri(:get, 'http://5.9.0.5/api/v1/movies/attributes/actors?p=%7B%22limit_values%22:%20%2210000%22%7D', body: '{"eroor": "Internal server error"}')
         @gen = SimpleApi::RuleDefs.from_name('actors')
+      end
+      after(:example) do
+        FakeWeb.clean_registry
+        FakeWeb.allow_net_connect = true
       end
       it 'should load list' do
         r = @gen.load_rule(@rule, 'actors').fetch_list
         expect(r).to be_an(::Array)
         expect(r).to_not be_empty
         expect(r.first).to be_an(Hash)
+        pending
 
       end
     end
