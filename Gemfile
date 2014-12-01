@@ -23,4 +23,5 @@ end
 
 group :test do
   gem 'fakeweb', require: 'fakeweb/safe'
+  gem 'simplecov', require: false
 end

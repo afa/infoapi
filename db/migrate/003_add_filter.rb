@@ -8,7 +8,7 @@ Sequel.migration do
     # refresh dataset
     SimpleApi::Rule.order(:id).all.each do |rule|
       r = SimpleApi::Rule.from_param(rule.values[:sphere], rule.values[:param]).new(rule.values)
-      r.update_fields({ filter: %i(design path stars criteria genres).inject({}){|rslt, attr| rslt.merge(attr => rule.send(attr)) }.to_json}, [:filter]) # path.level 
+      r.update_fields({ filter: %i(design path stars criteria genres).inject({}){|rslt, attr| rslt.merge(attr => rule.send(attr)) }.to_json}, [:filter])
     end
     SimpleApi::Rule.set_dataset :rules
   end

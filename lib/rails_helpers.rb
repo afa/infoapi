@@ -5,7 +5,7 @@ class Enumerator #::Lazy
 
       while true
         n = begin
-              self.next 
+              self.next
             rescue StopIteration
               return ary #.lazy
             end

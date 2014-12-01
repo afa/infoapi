@@ -21,7 +21,7 @@ Sequel.migration do
       primary_key :id
       String :url
       Integer :index_id
-      Integer :duplicate_id 
+      Integer :duplicate_id
       Boolean :is_empty
     end
     add_index :refs, :url

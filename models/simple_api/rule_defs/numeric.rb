@@ -25,7 +25,7 @@ module SimpleApi
         if %w(any non-empty empty).include?(config.strip)
           self.range = 1..-1
         else
-          self.range = range_from_string(config) 
+          self.range = range_from_string(config)
         end
       end
 
@@ -35,19 +35,10 @@ module SimpleApi
       end
 
       def fetch_list
-        # s = super
-        # p s
-        # return s[:data] if s[:data]
-        # return (array.empty? ? [string] : array).map{|i| {filter => i} } unless s[:meta]
-        # return [{filter => nil}]
         s = super
         return s[:data] if s[:data]
         return (range.to_a.empty? ? from..to : range).to_a.map{|i| {filter => i} } unless s[:meta]
         [{filter => nil}]
-        # if %w(any non-empty).include?(config)
-        # end
-        # return range.to_a.map{|i| {filter => i} }
-        # # return s unless s.select{|i| i.values.compact.present? }.blank?
       end
 
       def check(param)
