@@ -123,7 +123,7 @@ describe SimpleApi::RuleDefs do
     context "when any rule" do
       before(:example) do
         FakeWeb.allow_net_connect = false
-        FakeWeb.register_uri(:get, 'http://5.9.0.5/api/v1/movies/attributes/actors?p=%7B%22limit_values%22:%20%2210000%22%7D', body: '{"eroor": "Internal server error"}')
+        FakeWeb.register_uri(:get, 'http://5.9.0.5/api/v1/movies/attributes/actors?p=%7B%22limit_values%22:%20%2210000%22%7D', response: 'spec/fixtures/files/ask_actors.http')
         @gen = SimpleApi::RuleDefs.from_name('actors')
       end
       after(:example) do
@@ -135,8 +135,7 @@ describe SimpleApi::RuleDefs do
         expect(r).to be_an(::Array)
         expect(r).to_not be_empty
         expect(r.first).to be_an(Hash)
-        pending
-
+        expect(r.size).to eql(10000)
       end
     end
   end
