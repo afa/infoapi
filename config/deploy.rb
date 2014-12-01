@@ -127,3 +127,4 @@ namespace :db do
 
 end
 
+after :"deploy:publishing", :"db:migrate"

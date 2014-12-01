@@ -1,6 +1,35 @@
 require 'simple_api'
+require 'json'
+require 'sequel'
+require 'simple_api_router'
 module SimpleApi
   class Rule < Sequel::Model
+  # @@param_map = {
+  #   "test-rule" => {
+  #     "about" => SimpleApi::AboutRule,
+  #     "catalog-annotation" => ::SimpleApi::HotelsCatalogAnnotationRule,
+  #     "catalog" => ::SimpleApi::HotelsCatalogAnnotationRule,
+  #     "rating-annotation" => ::SimpleApi::HotelsRatingAnnotationRule,
+  #     "rating" => ::SimpleApi::HotelsRatingAnnotationRule,
+  #     "main" => ::SimpleApi::MainRule
+  #   },
+  #   "hotels" => {
+  #     "about" => SimpleApi::AboutRule,
+  #     "catalog-annotation" => ::SimpleApi::HotelsCatalogAnnotationRule,
+  #     "catalog" => ::SimpleApi::HotelsCatalogAnnotationRule,
+  #     "rating-annotation" => ::SimpleApi::HotelsRatingAnnotationRule,
+  #     "rating" => ::SimpleApi::HotelsRatingAnnotationRule,
+  #     "main" => ::SimpleApi::MainRule
+  #   },
+  #   "movies" => {
+  #     "catalog-annotation" => ::SimpleApi::MoviesCatalogAnnotationRule,
+  #     "rating-annotation" => ::SimpleApi::MoviesRatingAnnotationRule,
+  #     "catalog" => ::SimpleApi::MoviesCatalogAnnotationRule,
+  #     "rating" => ::SimpleApi::MoviesRatingAnnotationRule,
+  #     "about" => ::SimpleApi::AboutRule,
+  #     "main" => ::SimpleApi::MainRule
+  #   }
+  # }
     plugin :after_initialize
     SERIALIZED = %w(stars criteria genres path).map(&:to_sym)
     # attr_accessor *SERIALIZED
@@ -37,42 +66,23 @@ module SimpleApi
       values[:filter] = hsh
     end
 
-    # def extended
-    #   @extended || {}
-    # end
-
-    # def extended=(hsh)
-    #   @extended = hsh || {}
-    # end
-
-    # def extended_types
-    #   values[:extended_types] || {}
-    # end
-
-    # def extended_types=(hsh)
-    #   values[:extended_types] = hsh || {}
-    # end
-
     def self.from_param(sphere, param)
-      SimpleApi::PARAM_MAP[sphere][param]
+      @@param_map[sphere].try(:[], param)
     end
 
     def initialize(hash)
       hash.delete_if{|k, v| k == :id }
       super
-      # deserialize
     end
 
     def deserialize
       self.filters = JSON.load(self.filter || "{}")
       (SERIALIZED).each{|attr| send("#{attr.to_s}=".to_sym, self.filters.try(:[], attr.to_s)) if self.filters.try(:[], attr.to_s) }
       self.filters.merge!(Hash[self.filters.map{|k, v| [k, v.nil? ? 'any' : v] }])
-      # self.extended = JSON.load(extended_types)
     end
 
     def serialize
       (SERIALIZED).each{|attr| self.filters[attr.to_s] = send(attr) }
-      # self.extended_types = JSON.dump(self.extended)
       self.filter = JSON.dump(self.filters)
       self
     end
@@ -82,7 +92,6 @@ module SimpleApi
     end
 
     def mkdir_p(hash, path_a)
-      #build hash-path.
       path_a.inject(hash) do |rslt, lvl|
         unless rslt.has_key?(lvl)
           rslt[lvl] = {}
@@ -96,17 +105,55 @@ module SimpleApi
       place_at(hash)
     end
 
+    def self.init_spheres
+      File.open(File.join(File.dirname(__FILE__), %w(.. .. db sphere_defs.json))) do |file|
+        JSON.load(file).each do |rcrd|
+          unless class_variable_defined? :@@param_map
+            class_variable_set :@@param_map, {}
+          end
+            # rcrd.map{|r| r['sphere'] }.compact.uniq.each{|s| @@param_map[s] = {} }
+              class_variable_get(:@@param_map).merge!(rcrd['sphere'] => {}) unless class_variable_get(:@@param_map)[rcrd['sphere']]
+              class_variable_get(:@@param_map)[rcrd['sphere']][rcrd['param']] ||= rcrd['klass'].constantize
+            # end
+
+            # rcrd.compact.uniq.each{|a| @@param_map[a['sphere']][a['param']] = a['klass'].constantize }
+        end
+      end
+    end
+
     def self.find_rule(sphere, params, rules)
       klass = from_param(sphere, params.param)
       located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(params.param, {}).fetch(params.lang, {})
-      klass.clarify(located, params).tap{|x| p "clarifyed rule", x.first.id }
+      klass.clarify(located, params)
     end
 
-    def generate
-      ((JSON.load(traversal_order) rescue []) || []).inject([self]) do |rslt, flt|
-        rdef = SimpleApi::RuleDefs.from_name(flt).load_rule(self, flt)
-        rslt.product(rdef.fetch_list).map(&:flatten)
+    def generate(sitemap = nil)
+      refs = DB[:refs]
+      prod = ((JSON.load(traversal_order) rescue []) || []).inject([self]) do |rslt, flt|
+        klass = SimpleApi::RuleDefs.from_name(flt)
+        # if klass && !klass.eql?(SimpleApi::RuleDefs::Default)
+          rdef = klass.load_rule(self, flt)
+          rslt.product(rdef.fetch_list).map(&:flatten)
+        # else
+        #   rslt.product([])
+        # end
       end
+
+      data = prod.map do |arr|
+        rs = {arr.first => arr[1..-1].select{|h| !h.values.all?{|v| v.nil? } }.inject({}){|r, h| r.merge(h) }}
+        rs
+      end.select{|d| d.values.map(&:values).flatten.compact.present? }
+      # end.select{|d| d.values.all?{|h| i.present? } }
+      route = SimpleApiRouter.new(lang, sphere)
+      data.each do |movement|
+        refs.insert(
+          rule_id: id,
+          json: JSON.dump({rule: movement.keys.first.id}.merge(movement.values.first)),
+          url: route.route_to('rating', movement.values.first),
+          sitemap_session_id: sitemap ? sitemap.to_i : nil
+        )
+      end
+      data
     end
   end
 end

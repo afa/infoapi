@@ -1,12 +1,23 @@
 module SimpleApi
   module RuleDefs
+    class DefaultRuleItem < ExtendedRuleItem
+      def initialize(rule, flt)
+        super
+      end
+
+      def fetch_list
+        # super
+        [{filter => nil}]
+      end
+
+    end
     module Default
       def parse_params(param, hsh_rule)
         nil
       end
 
       def load_rule(rule, flt)
-        nil
+        SimpleApi::RuleDefs::DefaultRuleItem.new(rule, flt)
       end
 
       def like?(param, rule)

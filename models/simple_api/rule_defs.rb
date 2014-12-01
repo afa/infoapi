@@ -15,7 +15,7 @@ module SimpleApi
     }
 
     def from_name(name)
-      DEFS[TYPES[name]['kind'] || 'default'] || SimpleApi::RuleDefs::Default
+      DEFS[TYPES[name].try(:[], 'kind') || 'default'] || SimpleApi::RuleDefs::Default
     end
 
     def load_definitions(stream)

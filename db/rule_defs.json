@@ -1,6 +1,7 @@
 {
   "path": {
-    "kind": "string"
+    "kind": "string",
+    "list": "path"
   },
   "criteria": {
     "kind": "string",

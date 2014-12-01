@@ -1,5 +1,12 @@
-require 'rails_helpers'
+# require 'bundler/setup'
+# Bundler.setup
+# Bundler.require(:default)
+# require 'init_db'
+# p require 'simple_api'
+# require 'rails_helpers'
 require 'sentimeta'
+# require 'simple_api_tester'
+# p require 'simple_api/rules'
 require 'pp'
 module Sitemap
   def load_paged(what, params = {})
@@ -43,7 +50,14 @@ module Sitemap
 
   end
 
-  def prepare
+  def prepare(sitemap)
+    if sitemap
+      session = DB[:sitemap_sessions][sitemap.to_i]
+      if session[:state]
+        #TODO
+      end
+    end
+    SimpleApi::Rules.generate(sitemap ? sitemap.to_i : sitemap)
   end
 
   def generate

@@ -24,6 +24,14 @@ class SimpleApiTester < Sinatra::Base
           'Ok'
         end
       end
+      post '/sitemap_init' do
+        if params[:token].strip.present? && params[:token].strip == settings.config['token']
+          session = params[:session].try(:strip)
+          `/usr/bin/env bundle exec rake sitemap:prepare#{session.present? ? "\\[#{session.to_i.to_s}\\]" : ''}&`
+          # SimpleApi::Rules.init(settings.config)
+          'Ok'
+        end
+      end
     end
 
     get '/:sphere/infotext' do |sphere|

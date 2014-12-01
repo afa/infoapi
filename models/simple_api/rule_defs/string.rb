@@ -8,7 +8,10 @@ module SimpleApi
       end
 
       def fetch_list
-        array.empty? ? [string] : array
+        s = super
+        return s[:data] if s[:data]
+        return (array.empty? ? [string] : array).map{|i| {filter => i} } unless s[:meta]
+        return [{filter => nil}]
       end
 
       def parse_config
@@ -16,26 +19,27 @@ module SimpleApi
           self.array = config
           return
         end
-        self.array = []
         self.string = config.strip
+        self.array = [string]
       end
 
       def check(param)
         return true if super
-        val = JSON.load(param.data[filter]) rescue param.data[filter]
+        val = JSON.load(param.data[filter]) rescue param.data[filter] # val is request
         return false if val.nil?
-        return true if val.kind_of?(::Array) && ((array & val == val) || (array.include?(val)))
-        array.include? val || val == string
+        return true if val.kind_of?(::Array) && ((val & array  == val) || ([string] == val))
+        return true if val.kind_of?(::String) && ((val == string) || (array.include?(val)))
+        false
       end
     end
 
     module String
       def load_rule(rule, flt)
-        tester = SimpleApi::RuleDefs::StringRuleItem.new(rule, flt)
+        SimpleApi::RuleDefs::StringRuleItem.new(rule, flt)
       end
 
       def like?(param, tester)
-        return tester.check(param)
+        tester.check(param)
       end
       module_function :load_rule, :like?
       # :parse_params, , :convert

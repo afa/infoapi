@@ -11,9 +11,9 @@ module SimpleApi
 
       def valid_range(first, last)
         first ||= from
-        first = from if first.to_i < from
+        first = from if first.to_i < from.to_i
         last ||= to
-        last = to if last.to_i > to
+        last = to if last.to_i > to.to_i
         first.to_i..last.to_i
       end
 
@@ -35,7 +35,19 @@ module SimpleApi
       end
 
       def fetch_list
-        range.to_a
+        # s = super
+        # p s
+        # return s[:data] if s[:data]
+        # return (array.empty? ? [string] : array).map{|i| {filter => i} } unless s[:meta]
+        # return [{filter => nil}]
+        s = super
+        return s[:data] if s[:data]
+        return (range.to_a.empty? ? from..to : range).to_a.map{|i| {filter => i} } unless s[:meta]
+        [{filter => nil}]
+        # if %w(any non-empty).include?(config)
+        # end
+        # return range.to_a.map{|i| {filter => i} }
+        # # return s unless s.select{|i| i.values.compact.present? }.blank?
       end
 
       def check(param)
@@ -43,7 +55,7 @@ module SimpleApi
         val = JSON.load(param.data[filter]) rescue param.data[filter]
         return false if val.nil?
         return (range_from_string(val).to_a & range.to_a) if val.is_a?(::String)
-        (val >= from && val <= to && (range.include? val || val == config))
+        (val >= from.to_i && val <= to.to_i && (range.include? val || val == config.to_i))
       end
     end
     module Numeric
