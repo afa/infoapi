@@ -121,6 +121,10 @@ module SimpleApi
       end
     end
 
+    def self.take_spheres
+      (class_variable_get(:@@param_map) || {}).keys
+    end
+
     def self.find_rule(sphere, params, rules)
       klass = from_param(sphere, params.param)
       located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(params.param, {}).fetch(params.lang, {})
