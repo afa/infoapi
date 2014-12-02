@@ -11,7 +11,15 @@ module SimpleApi
 
       def load_rules
         spheres = SimpleApi::Rule.take_spheres
-        Rule.order(:position).all.select{|rl| spheres.include? rl.sphere }.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] rescue puts "error in rule #{item.id.to_s}" }
+        Rule.order(:position).all.select do|rl|
+          if spheres.include? rl.sphere
+            true
+          else
+            puts "drop rule #{rl.id.to_s}"
+            p rl
+            false
+          end
+        end.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] rescue puts "error in rule #{item.id.to_s}" }
       end
 
       def connect_db(config)
