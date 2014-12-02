@@ -11,9 +11,17 @@
   {"sphere": "test", "param": "rating-annotation", "klass": "SimpleApi::HotelsRatingAnnotationRule"},
   {"sphere": "test", "param": "rating", "klass": "SimpleApi::HotelsRatingAnnotationRule"},
   {"sphere": "test", "param": "main", "klass": "SimpleApi::MainRule"},
+  {"sphere": "books", "param": "about", "klass": "SimpleApi::AboutRule"},
+  {"sphere": "books", "param": "catalog-annotation", "klass": "SimpleApi::HotelsCatalogAnnotationRule"},
+  {"sphere": "books", "param": "catalog", "klass": "SimpleApi::HotelsCatalogAnnotationRule"},
+  {"sphere": "books", "param": "rating-annotation", "klass": "SimpleApi::HotelsRatingAnnotationRule"},
+  {"sphere": "books", "param": "rating", "klass": "SimpleApi::HotelsRatingAnnotationRule"},
+  {"sphere": "books", "param": "main", "klass": "SimpleApi::MainRule"},
 
   {"sphere": "movies", "param": "test-rule", "klass": "SimpleApi::TestRule"},
   {"sphere": "hotels", "param": "test-rule", "klass": "SimpleApi::TestRule"},
+  {"sphere": "books", "param": "test-rule", "klass": "SimpleApi::TestRule"},
+  {"sphere": "test", "param": "test-rule", "klass": "SimpleApi::TestRule"},
 
   {"sphere": "movies", "param": "catalog-annotation", "klass": "SimpleApi::MoviesCatalogAnnotationRule"},
   {"sphere": "movies", "param": "rating-annotation", "klass": "SimpleApi::MoviesRatingAnnotationRule"},
