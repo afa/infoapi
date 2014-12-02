@@ -10,7 +10,7 @@ module SimpleApi
       end
 
       def load_rules
-        spheres = SimpleApi::Rule.get_spheres
+        spheres = SimpleApi::Rule.take_spheres
         Rule.order(:position).all.select{|rl| spheres.include? rl.sphere }.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] rescue puts "error in rule #{item.id.to_s}" }
       end
 
