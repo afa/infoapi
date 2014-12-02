@@ -42,7 +42,6 @@ module SimpleApi
         tester.check(param)
       end
       module_function :load_rule, :like?
-      # :parse_params, , :convert
     end
   end
 end
