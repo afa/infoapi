@@ -50,6 +50,7 @@ module SimpleApi
         return true if super
         val = JSON.load(param.data[filter]) rescue param.data[filter]
         return false if val.nil?
+        p "val-check", val
         return (range_from_hash(val).to_a & range.to_a) if val.is_a?(::Hash)
         return (range_from_string(val).to_a & range.to_a) if val.is_a?(::String)
         (val >= from.to_i && val <= to.to_i && (range.include? val || val == config.to_i))
