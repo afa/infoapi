@@ -34,6 +34,10 @@ module SimpleApi
         valid_range(ary.first, ary.last)
       end
 
+      def range_from_hash(config)
+        valid_range(config["from"] ? config["from"].to_i : nil, config["to"] ? config["to"].to_i : nil)
+      end
+
       def fetch_list
         s = super
         return s[:data] if s[:data]
@@ -45,6 +49,7 @@ module SimpleApi
         return true if super
         val = JSON.load(param.data[filter]) rescue param.data[filter]
         return false if val.nil?
+        return (range_from_hash(val).to_a & range.to_a) if val.is_a?(::Hash)
         return (range_from_string(val).to_a & range.to_a) if val.is_a?(::String)
         (val >= from.to_i && val <= to.to_i && (range.include? val || val == config.to_i))
       end
