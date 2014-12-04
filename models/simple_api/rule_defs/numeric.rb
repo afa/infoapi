@@ -35,6 +35,7 @@ module SimpleApi
       end
 
       def range_from_hash(config)
+        p "num rangefromhash", config
         valid_range(config["from"] ? config["from"].to_i : nil, config["to"] ? config["to"].to_i : nil)
       end
 
