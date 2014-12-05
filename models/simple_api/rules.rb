@@ -1,4 +1,5 @@
 require 'pp'
+require 'sentimeta'
 module SimpleApi
   # require 'simple_api'
   # require 'simple_api/rule'
@@ -10,16 +11,21 @@ module SimpleApi
       end
 
       def load_rules
-        spheres = SimpleApi::Rule.take_spheres
-        Rule.order(:position).all.select do|rl|
-          if spheres.include? rl.sphere
+        Sentimeta.env = CONFIG["fapi_stage"]
+        Sentimeta.lang = :en
+        sp_list = (Sentimeta::Client.spheres rescue []).map{|s| s["name"] } << "test"
+        # spheres = SimpleApi::Rule.take_spheres << "test"
+        rls = Rule.order(:position).all.select do|rl|
+          if sp_list.include?(rl.sphere).tap{|x| p x }
             true
           else
-            puts "drop rule #{rl.id.to_s}"
+            puts "drop rule #{rl.try(:id).to_s}"
             p rl
             false
           end
-        end.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] rescue puts "error in rule #{item.id.to_s}" }
+        end
+        rls.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] #rescue puts "error in rule #{item.id.to_s}" 
+        }
       end
 
       def connect_db(config)

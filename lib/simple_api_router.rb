@@ -11,8 +11,6 @@ class SimpleApiRouter
     if criteria.is_a?(::Array)
       criteria.sort!
     end
-    # params = hash_params.inject([]){|rslt, (k, v)| rslt << {k => v} }.sort_by{|item| item.keys.first }
-    # p params
     [''].tap do |components|
       components << lang
       components << sphere

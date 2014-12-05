@@ -66,8 +66,14 @@ module SimpleApi
       values[:filter] = hsh
     end
 
+    def self.map_param(param)
+      return 'rating' if param == 'rating_annotation'
+      return 'catalog' if param == 'catalog_annotation'
+      param
+    end
+
     def self.from_param(sphere, param)
-      @@param_map[sphere].try(:[], param)
+      @@param_map[sphere].try(:[], map_param(param))
     end
 
     def initialize(hash)
@@ -88,7 +94,7 @@ module SimpleApi
     end
 
     def rule_path
-      [self.sphere, 'infotext', self.param, self.lang]
+      [self.sphere, 'infotext', self.class.map_param(self.param), self.lang]
     end
 
     def mkdir_p(hash, path_a)
@@ -127,7 +133,7 @@ module SimpleApi
 
     def self.find_rule(sphere, params, rules)
       klass = from_param(sphere, params.param)
-      located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(params.param, {}).fetch(params.lang, {})
+      located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(map_param(params.param), {}).fetch(params.lang, {})
       klass.clarify(located, params)
     end
 
@@ -135,12 +141,8 @@ module SimpleApi
       refs = DB[:refs]
       prod = ((JSON.load(traversal_order) rescue []) || []).inject([self]) do |rslt, flt|
         klass = SimpleApi::RuleDefs.from_name(flt)
-        # if klass && !klass.eql?(SimpleApi::RuleDefs::Default)
-          rdef = klass.load_rule(self, flt)
-          rslt.product(rdef.fetch_list).map(&:flatten)
-        # else
-        #   rslt.product([])
-        # end
+        rdef = klass.load_rule(self, flt)
+        rslt.product(rdef.fetch_list).map(&:flatten)
       end
 
       data = prod.map do |arr|

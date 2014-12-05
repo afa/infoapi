@@ -2,6 +2,7 @@ require 'init_db'
 require 'simple_api'
 Dir["./lib/**/*.rb"].each {|file| require file }
 require 'yaml'
+require_relative 'routes/indexator'
 
 class SimpleApiTester < Sinatra::Base
   register Sinatra::Namespace
@@ -16,6 +17,7 @@ class SimpleApiTester < Sinatra::Base
     env['sinatra.error'].name
   end
 
+  register Sinatra::Custom::Routing::Indexator
   namespace '/api/v1' do
     namespace '/:sphere/infoapi' do
       post '/reload' do
@@ -33,6 +35,7 @@ class SimpleApiTester < Sinatra::Base
         end
       end
     end
+
 
     get '/:sphere/infotext' do |sphere|
       content_type :json, charset: 'utf-8'
@@ -67,6 +70,7 @@ class SimpleApiTester < Sinatra::Base
 
 
   get '/*' do
+    p params
     content_type :json, charset: 'utf-8'
     error(JSON.dump(status: "Page not found"), 404)
   end
