@@ -38,4 +38,26 @@ describe SimpleApi::TestRule do
     end
   end
 
+  context "on rules loading" do
+    context "when rule sphere unknown" do
+      before(:example) do
+        FakeWeb.register_uri(:get, 'http://5.9.0.5/api/v1/en/spheres', body: JSON.dump([{"label"=>"Youtube", "name"=>"videos"}, {"label"=>"Companies", "name"=>"companies"}, {"label"=>"Movies", "name"=>"movies"}]))
+        allow(Sentimeta::Client).to receive(:spheres).and_return([{"label"=>"Youtube", "name"=>"videos"}, {"label"=>"Companies", "name"=>"companies"}, {"label"=>"Movies", "name"=>"movies"}])
+        @trw620rule_right = SimpleApi::TestRule.create(@template.merge sphere: 'abyrvalg', filter: "{\"criteria\":\"any\", \"path\":\"empty\",\"stars\":\"empty\",\"years\":\"empty\"}", name: 'yearrul', traversal_order: '[]')
+        @trw620rule = SimpleApi::TestRule.create(@template.merge filter: "{\"criteria\":\"any\", \"path\":\"empty\",\"stars\":\"empty\",\"year\":\"empty\"}", name: 'yearrul', traversal_order: '[]')
+        allow(SimpleApi::Rule).to receive_message_chain(:order, :all).and_return([@trw620rule_right, @trw620rule])
+        allow(SimpleApi::Rule).to receive(:from_param).and_return(SimpleApi::TestRule)
+        allow(SimpleApi::TestRule).to receive(:[]).and_return(@trw620rule_right, @trw620rule)
+      end
+      after(:example) do
+        FakeWeb.clean_registry
+        FakeWeb.allow_net_connect = true
+      end
+      it "should skip rule" do
+        expect(SimpleApi::Rules.load_rules.detect{|r| r.sphere == 'abyrvalg' }).to be_falsy
+        expect(SimpleApi::Rules.load_rules.detect{|r| r.sphere == 'abyrvalg' }).to be_falsy
+      end
+    end
+  end
+
 end
