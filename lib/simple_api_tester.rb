@@ -38,7 +38,7 @@ class SimpleApiTester < Sinatra::Base
       content_type :json, charset: 'utf-8'
       begin
         p = SimpleApi::Rules.prepare_params(params[:p])
-      rescue Exception => e
+      rescue => e
         error JSON.dump(status: e.message), 500
       end
       logger.info "processing #{p.inspect}"

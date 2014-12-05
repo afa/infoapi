@@ -8,6 +8,7 @@ module SimpleApi
         self.current_rule = rule
         self.definition = SimpleApi::RuleDefs::TYPES[flt]
         self.config = JSON.load(rule.filters[flt]) rescue rule.filters[flt]
+        self.config ||= 'any'
       end
 
       def check(param)
