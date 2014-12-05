@@ -1,4 +1,5 @@
 set :stage, :staging
+set :env,       :staging
 
 set :deploy_to, "/home/#{fetch :deploy_user}/#{fetch :application}-#{fetch :stage}"
 

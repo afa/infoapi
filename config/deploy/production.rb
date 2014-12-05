@@ -1,6 +1,7 @@
 set :host, "144.76.4.166"
 
 set :stage,     :production
+set :env,       :production
 set :user,      "rbdev"
 set :deploy_to, "/home/#{fetch :user}/#{fetch :application}"
 set :branch,    "master"

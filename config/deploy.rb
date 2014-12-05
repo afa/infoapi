@@ -51,7 +51,7 @@ namespace :deploy do
           execute :kill, "`cat #{pid}`;rm #{pid}"
           # execute :bundle, "exec thin stop -C #{File.join %w(config thin), fetch(:stage).to_s}.yml -e #{fetch :stage}" if need_kill
         end
-        execute :bundle, "exec thin start -d -C #{File.join %w(config thin), fetch(:stage).to_s}.yml -e #{fetch :stage}"
+        execute :bundle, "exec thin start -d -C #{File.join %w(config thin), fetch(:stage).to_s}.yml -e #{fetch :env}"
       end
     end
   end
@@ -84,7 +84,7 @@ namespace :db do
   task :migrate do
     on roles(:web), in: :parallel do
       within release_path do
-        execute :bundle, "exec rake maintenance:db:migrate RAILS_ENV=#{fetch(:stage)}"
+        execute :bundle, "exec rake maintenance:db:migrate RAILS_ENV=#{fetch(:env)}"
       end
     end
   end
@@ -93,7 +93,7 @@ namespace :db do
   task :create do
     on roles(:web), in: :parallel do
       within release_path do
-        execute :bundle, "exec rake maintenance:db:create RAILS_ENV=#{fetch(:stage)}"
+        execute :bundle, "exec rake maintenance:db:create RAILS_ENV=#{fetch(:env)}"
       end
     end
   end
@@ -102,7 +102,7 @@ namespace :db do
   task :drop do
     on roles(:web), in: :parallel do
       within release_path do
-        execute :bundle, "exec rake maintenance:db:drop RAILS_ENV=#{fetch(:stage)}"
+        execute :bundle, "exec rake maintenance:db:drop RAILS_ENV=#{fetch(:env)}"
       end
     end
   end
@@ -111,7 +111,7 @@ namespace :db do
   task :dump do
     on roles(:web), in: :parallel do
       within release_path do
-        execute :bundle, "exec rake maintenance:db:dump RAILS_ENV=#{fetch(:stage)}"
+        execute :bundle, "exec rake maintenance:db:dump RAILS_ENV=#{fetch(:env)}"
       end
     end
   end
@@ -120,7 +120,7 @@ namespace :db do
   task :seed do
     on roles(:web), in: :parallel do
       within release_path do
-        execute :bundle, "exec rake maintenance:db:seed RAILS_ENV=#{fetch(:stage)}"
+        execute :bundle, "exec rake maintenance:db:seed RAILS_ENV=#{fetch(:env)}"
       end
     end
   end
