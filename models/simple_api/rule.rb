@@ -137,6 +137,25 @@ module SimpleApi
       klass.clarify(located, params)
     end
 
+    def recurse_index(flst, root, parent, idx)
+      return if flst.blank?
+      wlst = flst.dup
+      flt = wlst.shift
+      klass = SimpleApi::RuleDefs.from_name(flt)
+      rdef = klass.load_rule(self, flt)
+      values = rdef.fetch_list
+      values.each do |val|
+        ix = idx.insert(root_id: root, parent_id: parent, filter: flt, value: val[flt], rule_id: self.pk)
+        recurse_index(wlst, root, ix, idx)
+      end
+    end
+
+    def build_index(root)
+      idx = DB[:indexes]
+      filter_list = JSON.load(traversal_order) rescue []
+      recurse_index(filter_list, root, nil, idx)
+    end
+
     def generate(sitemap = nil)
       refs = DB[:refs]
       prod = ((JSON.load(traversal_order) rescue []) || []).inject([self]) do |rslt, flt|

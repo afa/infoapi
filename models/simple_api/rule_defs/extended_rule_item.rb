@@ -22,6 +22,7 @@ module SimpleApi
 
       def load_list(list)
         fapi_prefix = CONFIG["fapi_prefix"]
+        # refactor for sentimeta
         uri = [fapi_prefix].tap do |bb|
           bb << current_rule.sphere
           bb << list
@@ -30,7 +31,7 @@ module SimpleApi
         parm = URI.encode('p={"limit_values": "10000"}')
         data = JSON.load(URI.parse([uri, parm].join('?')).open.read) #rescue {} #TODO fix error handling
         return {meta: false, data: [{filter => nil}]} if data.empty? || data["values"].blank?
-        {meta: true, data: data["values"].map{|hsh| hsh["name"] }.map{|i| {filter => i} }}
+        {meta: true, data: data["values"].map{|hsh| hsh["name"] }.map{|i| {filter => i} } + ('any' == config ? [{filter => nil}] : [])}
       end
 
       def load_from_master

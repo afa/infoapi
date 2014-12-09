@@ -13,4 +13,10 @@ namespace :sitemap do
     sitemap = argv.with_defaults(sitemap: nil)[:sitemap]
     Sitemap.prepare(sitemap ? sitemap.to_i : sitemap)
   end
+
+  desc 'prepare index'
+  task :index, [:sphere] do |t, argv|
+    sphere = argv.with_defaults(sphere: 'movies')[:sphere]
+    SimpleApi::Rules.make_index(sphere)
+  end
 end
