@@ -39,35 +39,37 @@ module SimpleApi
         lded = JSON.load(params["p"]) rescue params['p']
         lded ||= {}
         hash = {}
+        sphere = DB[:roots].where(id: root).first[:sphere]
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
         hash.merge!(lded["filters"]) if lded.has_key?('filters')
-        curr = {id: nil} #idx.where(root_id: root, rule_id: rule.pk, parent_id: nil).all.tap{|x| p 'x', x }.first
-        # curr = idx.where(root_id: root, rule_id: rule.pk, parent_id: nil).all.tap{|x| p 'x', x }.first
-        return '[]' unless curr
+        curr = {id: nil}
 
         bcr = []
         # bcr << {curr[:filter] => curr[:value]}
         selector.each do |fname|
           parent = curr
-          p rule, parent, fname, hash
           curr = idx.where(root_id: root, rule_id: rule.pk, parent_id: parent[:id], filter: fname, value: hash[fname]).first
-          p curr
           break unless curr
           bcr << {curr[:filter] => curr[:value]}
         end
-        return '[]' unless curr
+        return '{}' unless curr
         nxt = idx.where(root_id: root, rule_id: rule.pk, parent_id: curr[:id]).all
         rsp = {}
         if nxt.present?
           rsp['next'] = nxt.map do |item|
           sel = bcr + [{item[:filter] => item[:value]}]
           parm = mk_params(sel)
-          p 'sel', sel, sel.map{|s| s.keys }.flatten
             {
               'name' => item[:filter],
-              'url' => "/en/#{DB[:roots].where(id: root).first[:sphere]}/index/#{ ([(['rating', name] + parm[:list]).join(',')] + parm[:path]).join('/') }"
+              'url' => "/en/#{sphere}/index/#{ ([(['rating', name] + parm[:list]).join(',')] + parm[:path]).join('/') }"
             }
           end
+        end
+        rte = SimpleApiRouter.new('en', sphere)
+        url = rte.route_to('rating', sel.inject({}){|r, h| r.merge(h) })
+        lns = DB[:refs].where(url: url, is_empty: false, duplicate_id: nil).all
+        if lns.present?
+          rsp['links'] = [{'name' => '', 'url' => url}]
         end
         JSON.dump(rsp)
       end

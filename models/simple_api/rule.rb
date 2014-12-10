@@ -168,7 +168,6 @@ module SimpleApi
         rs = {arr.first => arr[1..-1].select{|h| !h.values.all?{|v| v.nil? } }.inject({}){|r, h| r.merge(h) }}
         rs
       end.select{|d| d.values.map(&:values).flatten.compact.present? }
-      # end.select{|d| d.values.all?{|h| i.present? } }
       route = SimpleApiRouter.new(lang, sphere)
       data.each do |movement|
         refs.insert(

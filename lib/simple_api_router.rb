@@ -31,5 +31,4 @@ class SimpleApiRouter
 
   end
 
-  # def route_rating
 end
