@@ -66,11 +66,12 @@ module SimpleApi
           end
         end
         rte = SimpleApiRouter.new('en', sphere)
-        url = rte.route_to('rating', sel.inject({}){|r, h| r.merge(h) })
-        lns = DB[:refs].where(url: url, is_empty: false, duplicate_id: nil).all
-        if lns.present?
-          rsp['links'] = [{'name' => '', 'url' => url}]
-        end
+        # sel = bcr + [{item[:filter] => item[:value]}]
+        # url = rte.route_to('rating', sel.inject({}){|r, h| r.merge(h) })
+        # lns = DB[:refs].where(url: url, is_empty: false, duplicate_id: nil).all
+        # if lns.present?
+        #   rsp['links'] = [{'name' => '', 'url' => url}]
+        # end
         JSON.dump(rsp)
       end
 
