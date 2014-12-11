@@ -11,8 +11,8 @@ module SimpleApi
       end
 
       def load_rules
-        Sentimeta.env = CONFIG["fapi_stage"]
-        Sentimeta.lang = :en
+        Sentimeta.env = CONFIG["fapi_stage"] || :production
+        # Sentimeta.lang = :en
         sp_list = (Sentimeta::Client.spheres rescue []).map{|s| s["name"] } << "test"
         p sp_list
         # spheres = SimpleApi::Rule.take_spheres << "test"
