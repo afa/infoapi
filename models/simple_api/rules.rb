@@ -14,9 +14,11 @@ module SimpleApi
         Sentimeta.env = CONFIG["fapi_stage"]
         Sentimeta.lang = :en
         sp_list = (Sentimeta::Client.spheres rescue []).map{|s| s["name"] } << "test"
+        p sp_list
         # spheres = SimpleApi::Rule.take_spheres << "test"
         rls = Rule.order(:position).all.select do|rl|
-          if sp_list.include?(rl.sphere).tap{|x| p x }
+          p rl.sphere
+          if sp_list.include?(rl.sphere)
             true
           else
             puts "drop rule #{rl.try(:id).to_s}"
