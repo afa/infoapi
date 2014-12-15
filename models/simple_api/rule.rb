@@ -4,39 +4,10 @@ require 'sequel'
 require 'simple_api_router'
 module SimpleApi
   class Rule < Sequel::Model
-  # @@param_map = {
-  #   "test-rule" => {
-  #     "about" => SimpleApi::AboutRule,
-  #     "catalog-annotation" => ::SimpleApi::HotelsCatalogAnnotationRule,
-  #     "catalog" => ::SimpleApi::HotelsCatalogAnnotationRule,
-  #     "rating-annotation" => ::SimpleApi::HotelsRatingAnnotationRule,
-  #     "rating" => ::SimpleApi::HotelsRatingAnnotationRule,
-  #     "main" => ::SimpleApi::MainRule
-  #   },
-  #   "hotels" => {
-  #     "about" => SimpleApi::AboutRule,
-  #     "catalog-annotation" => ::SimpleApi::HotelsCatalogAnnotationRule,
-  #     "catalog" => ::SimpleApi::HotelsCatalogAnnotationRule,
-  #     "rating-annotation" => ::SimpleApi::HotelsRatingAnnotationRule,
-  #     "rating" => ::SimpleApi::HotelsRatingAnnotationRule,
-  #     "main" => ::SimpleApi::MainRule
-  #   },
-  #   "movies" => {
-  #     "catalog-annotation" => ::SimpleApi::MoviesCatalogAnnotationRule,
-  #     "rating-annotation" => ::SimpleApi::MoviesRatingAnnotationRule,
-  #     "catalog" => ::SimpleApi::MoviesCatalogAnnotationRule,
-  #     "rating" => ::SimpleApi::MoviesRatingAnnotationRule,
-  #     "about" => ::SimpleApi::AboutRule,
-  #     "main" => ::SimpleApi::MainRule
-  #   }
-  # }
     plugin :after_initialize
     SERIALIZED = %w(stars criteria genres path).map(&:to_sym)
-    # attr_accessor *SERIALIZED
     attr :filter
-    # attr :extended
     attr :filters
-    # attr :extended_types
 
     def after_initialize
       super
@@ -45,9 +16,6 @@ module SimpleApi
 
     def before_validation
       self.serialize
-    end
-
-    def extract_series
     end
 
     def filters
@@ -67,8 +35,8 @@ module SimpleApi
     end
 
     def self.map_param(param)
-      return 'rating' if param == 'rating_annotation'
-      return 'catalog' if param == 'catalog_annotation'
+      return 'rating' if param == 'rating-annotation'
+      return 'catalog' if param == 'catalog-annotation'
       param
     end
 
@@ -82,14 +50,17 @@ module SimpleApi
     end
 
     def deserialize
-      self.filters = JSON.load(self.filter || "{}")
-      (SERIALIZED).each{|attr| send("#{attr.to_s}=".to_sym, self.filters.try(:[], attr.to_s)) if self.filters.try(:[], attr.to_s) }
-      self.filters.merge!(Hash[self.filters.map{|k, v| [k, v.nil? ? 'any' : v] }])
+      self.filters = Filter.new(JSON.load(self.filter || "{}"))
+      # (SERIALIZED).each{|attr| send("#{attr.to_s}=".to_sym, self.filters.try(:[], attr.to_s)) if self.filters.try(:[], attr.to_s) }
+      self.filters.postprocess_init
+      self.filters.traversal_order = self.traversal_order
+      # self.filters.merge!(Hash[self.filters.map{|k, v| [k, v.nil? ? 'any' : v] }])
     end
 
     def serialize
-      (SERIALIZED).each{|attr| self.filters[attr.to_s] = send(attr) }
-      self.filter = JSON.dump(self.filters)
+      # (SERIALIZED).each{|attr| self.filters[attr.to_s] = send(attr) }
+      self.traversal_order = self.filters.traversal_order.to_json
+      self.filter = self.filters.to_json
       self
     end
 
@@ -117,12 +88,8 @@ module SimpleApi
           unless class_variable_defined? :@@param_map
             class_variable_set :@@param_map, {}
           end
-            # rcrd.map{|r| r['sphere'] }.compact.uniq.each{|s| @@param_map[s] = {} }
-              class_variable_get(:@@param_map).merge!(rcrd['sphere'] => {}) unless class_variable_get(:@@param_map)[rcrd['sphere']]
-              class_variable_get(:@@param_map)[rcrd['sphere']][rcrd['param']] ||= rcrd['klass'].constantize
-            # end
-
-            # rcrd.compact.uniq.each{|a| @@param_map[a['sphere']][a['param']] = a['klass'].constantize }
+          class_variable_get(:@@param_map).merge!(rcrd['sphere'] => {}) unless class_variable_get(:@@param_map)[rcrd['sphere']]
+          class_variable_get(:@@param_map)[rcrd['sphere']][rcrd['param']] ||= rcrd['klass'].constantize
         end
       end
     end
@@ -137,47 +104,36 @@ module SimpleApi
       klass.clarify(located, params)
     end
 
-    def recurse_index(flst, root, parent, idx)
-      return if flst.blank?
-      wlst = flst.dup
-      flt = wlst.shift
-      klass = SimpleApi::RuleDefs.from_name(flt)
-      rdef = klass.load_rule(self, flt)
-      values = rdef.fetch_list
-      values.each do |val|
-        ix = idx.insert(root_id: root, parent_id: parent, filter: flt, value: val[flt], rule_id: self.pk)
-        recurse_index(wlst, root, ix, idx)
-      end
-    end
-
     def build_index(root)
-      idx = DB[:indexes]
-      filter_list = JSON.load(traversal_order) rescue []
-      recurse_index(filter_list, root, nil, idx)
+      filters.build_index(root, self)
     end
 
-    def generate(sitemap = nil)
+    def write_ref(root_id, hash, index_id)
       refs = DB[:refs]
-      prod = ((JSON.load(traversal_order) rescue []) || []).inject([self]) do |rslt, flt|
-        klass = SimpleApi::RuleDefs.from_name(flt)
-        rdef = klass.load_rule(self, flt)
-        rslt.product(rdef.fetch_list).map(&:flatten)
-      end
-
-      data = prod.map do |arr|
-        rs = {arr.first => arr[1..-1].select{|h| !h.values.all?{|v| v.nil? } }.inject({}){|r, h| r.merge(h) }}
-        rs
-      end.select{|d| d.values.map(&:values).flatten.compact.present? }
       route = SimpleApiRouter.new(lang, sphere)
-      data.each do |movement|
-        refs.insert(
-          rule_id: id,
-          json: JSON.dump({rule: movement.keys.first.id}.merge(movement.values.first)),
-          url: route.route_to('rating', movement.values.first),
-          sitemap_session_id: sitemap ? sitemap.to_i : nil
-        )
-      end
-      data
+      refs.insert(
+        rule_id: pk,
+        json: JSON.dump(hash),
+        url: route.route_to('rating', hash),
+        index_id: index_id
+        # sitemap_session_id: sitemap ? sitemap.to_i : nil
+      )
+    end
+
+    def generate(sitemap = nil, root)
+      prod = build_index(root)
+      # prod = filters.product(self)
+      # prod = ((JSON.load(traversal_order) rescue []) || []).inject([self]) do |rslt, flt|
+      #   klass = SimpleApi::RuleDefs.from_name(flt)
+      #   rdef = klass.load_rule(self, flt)
+      #   rslt.product(rdef.fetch_list).map(&:flatten)
+      # end
+
+      # data = prod.map do |arr|
+      #   rs = {arr.first => arr[1..-1].select{|h| !h.values.all?{|v| v.nil? } }.inject({}){|r, h| r.merge(h) }}
+      #   rs
+      # end.select{|d| d.values.map(&:values).flatten.compact.present? }
+      prod
     end
   end
 end

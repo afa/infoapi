@@ -14,23 +14,18 @@ module SimpleApi
         Sentimeta.env = CONFIG["fapi_stage"] || :production
         # Sentimeta.lang = :en
         sp_list = (Sentimeta::Client.spheres rescue []).map{|s| s["name"] } << "test"
-        p sp_list
         # spheres = SimpleApi::Rule.take_spheres << "test"
         rls = Rule.order(:position).all.select do|rl|
-          p rl.sphere
           if sp_list.include?(rl.sphere)
             true
           else
             puts "drop rule #{rl.try(:id).to_s}"
-            p rl
+            puts "rule id:#{rl.pk} name:#{rl.name.to_s} sphere:#{rl.sphere} param:#{rl.param}"
             false
           end
         end
         rls.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] #rescue puts "error in rule #{item.id.to_s}" 
         }
-      end
-
-      def connect_db(config)
       end
 
       def prepare_params(params)
@@ -51,6 +46,8 @@ module SimpleApi
             end
           end
         end
+        prm.param = 'catalog' if prm.param == 'catalog-annotation'
+        prm.param = 'rating' if prm.param == 'rating-annotation'
         prm
       end
 
@@ -61,29 +58,35 @@ module SimpleApi
       end
 
       def make_index(sphere, name = nil)
+        raise 'Need sphere to process' unless sphere
         name = sphere unless name
-        p name, sphere
-        root = DB[:roots].insert(sphere: sphere, name: name)
-        p root
+        root = DB[:roots].insert(sphere: sphere, name: name, param: 'rating')
         SimpleApi::Rule.where(param: ['rating', 'rating-annotation'], sphere: sphere).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.select{|rul| t = JSON.load(rul.traversal_order) rescue []; t.is_a?(::Array) && t.present? }.each do |rule|
           rule.build_index(root)
         end
+        rework(index_id: DB[:indexes].where(root_id: root).map{|i| i[:id] })
+        root_ids = DB[:roots].where(sphere: sphere, param: 'rating').exclude(id: root).all.map{|r| r[:id] }
+        index_ids = DB[:indexes].where(root_id: root_ids).all.map{|i| i[:id] }
+        DB[:refs].where(index_id: index_ids).delete
+        DB[:indexes].where(root_id: root_ids).delete
+        DB[:roots].where(sphere: sphere, param: 'rating').exclude(id: root).delete
       end
 
       def generate(sitemap = nil)
         DB[:refs].where(sitemap_session_id: sitemap).delete
-        SimpleApi::Rule.where(param: ['rating', 'rating-annotation']).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.select{|rul| t = JSON.load(rul.traversal_order) rescue []; t.is_a?(::Array) && t.present? }.each do |rule|
-          next if rule.traversal_order.blank?
+        SimpleApi::Rule.where(param: ['rating', 'rating-annotation']).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.each do |rule|
+          next if rule.filters.traversal_order.blank?
           rule.generate(sitemap)
+          # fix for null filters.
         end
-        rework(sitemap)
+        rework(sitemap_session_id: sitemap)
       end
 
-      def rework(sitemap)
-        DB[:refs].where(sitemap_session_id: sitemap).order(:id).each do |ref|
-          duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { url: ref[:url], sitemap_session_id: sitemap }) }.order(:id).first
+      def rework(scope)
+        DB[:refs].where(scope).order(:id).each do |ref|
+          duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { url: ref[:url] }) }.where(scope).order(:id).first
           param = JSON.load(ref[:json])
-          rule = SimpleApi::Rule[param["rule"]]
+          rule = SimpleApi::Rule[ref[:rule_id]]
           Sentimeta.env   = CONFIG["fapi_stage"] # :production is default
           Sentimeta.lang  = rule.lang.to_sym
           Sentimeta.sphere = rule.sphere

@@ -11,5 +11,8 @@ require 'simple_api_tester' # and any other gems you need
 require 'simple_api'
 
 RSpec.configure do |config|
-  # some (optional) config here
+  config.around(:each) do |example|
+    DB.transaction(:rollback=>:always, :auto_savepoint=>true){example.run}
+  end
+
 end

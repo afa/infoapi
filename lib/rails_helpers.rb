@@ -104,6 +104,10 @@ class NilClass
   def blank?
     true
   end
+
+  def empty?
+    true
+  end
 end
 
 class Hash

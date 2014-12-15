@@ -2,16 +2,18 @@ module SimpleApi
   module RuleDefs
     class StringRuleItem < ExtendedRuleItem
       attr_accessor :string, :array
-      def initialize(rule, flt)
+      def initialize(flt, data)
+      # def initialize(rule, flt)
         super
         parse_config
       end
 
-      def fetch_list
+      def fetch_list(rule)
         s = super
         return s[:data] if s[:data]
-        return (array.empty? ? [string] : array).map{|i| {filter => i} } unless s[:meta]
-        return [{filter => nil}]
+        # return (array.empty? ? [string] : array).map{|i| {filter => i} } unless s[:meta]
+        return (array.empty? ? [string] : array) unless s[:meta]
+        return [nil]
       end
 
       def parse_config
@@ -19,8 +21,10 @@ module SimpleApi
           self.array = config
           return
         end
+        unless %w(any empty non-empty).include?(config)
         self.string = config.strip
         self.array = [string]
+        end
       end
 
       def check(param)
@@ -34,8 +38,8 @@ module SimpleApi
     end
 
     module String
-      def load_rule(rule, flt)
-        SimpleApi::RuleDefs::StringRuleItem.new(rule, flt)
+      def load_rule(flt, cfg)
+        SimpleApi::RuleDefs::StringRuleItem.new(flt, cfg)
       end
 
       def like?(param, tester)

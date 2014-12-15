@@ -21,10 +21,13 @@ class SimpleApiRouter
       end
       unless hash_params.empty?
         path = hash_params.delete("path")
-          hash_params["catalog"] = path if path
-        hash_params.keys.sort.each do |param|
-          components << param
-          components << hash_params[param]
+        hash_params["catalog"] = path if path
+        unless hash_params.values.all?(&:nil?)
+          components << 'filters'
+          hash_params.keys.sort.each do |param|
+            components << param
+            components << hash_params[param]
+          end
         end
       end
     end.join('/')

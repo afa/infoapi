@@ -2,36 +2,43 @@ module SimpleApi
   class Index
     class << self
       def roots(sphere)
-        root = DB[:roots].reverse_order(:id).select(:id).where(sphere: sphere).first.tap{|x| p x }.try(:[], :id)
-        JSON.dump(next: SimpleApi::Rule.where(sphere: sphere).where('traversal_order is not null').order(:position).all.select{|r| (JSON.load(r.traversal_order) rescue []).present? }.map{|r| {name: r.name, url:"/en/#{sphere}/index/rating,#{r.name}"} } )
+        root = DB[:roots].reverse_order(:id).select(:id).where(sphere: sphere).first
+        JSON.dump(next: SimpleApi::Rule.where(sphere: sphere, param: %w(rating rating-annotation)).where('traversal_order is not null').order(:position).all.select{|r| (JSON.load(r.traversal_order) rescue []).present? }.map{|r| {name: r.name, url:"/en/#{sphere}/index/rating,#{r.name}"} } )
       end
 
       def tree(sphere, rule_selector, rule_params, params)
-        root = DB[:roots].reverse_order(:id).select(:id).where(sphere: sphere).first.tap{|x| p x }.try(:[], :id)
+        root = DB[:roots].reverse_order(:id).select(:id).where(sphere: sphere).first[:id]
         selector = rule_selector.strip.split(',')
-        p selector
-        p rule_params
-        p params
         rat = selector.shift
-        return roots(sphere) unless 'rating' == rat
+        # return roots(sphere) unless 'rating' == rat
         if selector.empty?
           return roots(sphere)
         end
         lang = "en"
         name = selector.shift
         return roots(sphere) unless name.present?
-        return roots(sphere) unless rule = Rule.where(name: name).first
+        return roots(sphere) unless rule = Rule.where(name: name, param: %w(rating rating-annotation)).first
         fields = selector || []
         leaf_page(root, rule, name, selector, params)
        end
 
-      def index_page(root)
-        JSON.dump(DB[:indexes].where(root_id: root, parent_id: nil).all)
-      end
 
-      # def root_page
-      #   '[]'
-      # end
+      def index_links(bcr, curr, route)
+        p bcr, curr
+        sel = bcr # + [{item[:filter] => item[:value]}]
+        url = route.route_to('rating', sel.inject({}){|r, h| r.merge(h) })
+        links = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).all
+        if links.present?
+          links.map do |ref|
+            {
+              name: ref[:url],
+              url: ref[:url]
+            }
+          end
+        else
+          '[]'
+        end
+      end
 
       def leaf_page(root, rule, name, selector, params)
         idx = DB[:indexes]
@@ -40,38 +47,35 @@ module SimpleApi
         lded ||= {}
         hash = {}
         sphere = DB[:roots].where(id: root).first[:sphere]
+        route = SimpleApiRouter.new('en', sphere)
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
         hash.merge!(lded["filters"]) if lded.has_key?('filters')
         curr = {id: nil}
 
         bcr = []
-        # bcr << {curr[:filter] => curr[:value]}
         selector.each do |fname|
           parent = curr
           curr = idx.where(root_id: root, rule_id: rule.pk, parent_id: parent[:id], filter: fname, value: hash[fname]).first
           break unless curr
           bcr << {curr[:filter] => curr[:value]}
         end
-        return '{}' unless curr
+        unless curr
+          return JSON.dump({'links' => index_links(bcr, parent, route)})
+        end
         nxt = idx.where(root_id: root, rule_id: rule.pk, parent_id: curr[:id]).all
         rsp = {}
         if nxt.present?
           rsp['next'] = nxt.map do |item|
             sel = bcr + [{item[:filter] => item[:value]}]
-            parm = mk_params(sel)
+            spath = sel.map{|i| i.keys.first }.join(',')
+            parm = route.route_to("index/#{['rating', name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
             {
               'name' => item[:filter],
-              'url' => "/en/#{sphere}/index/#{ ([(['rating', name] + parm[:list]).join(',')] + parm[:path]).join('/') }"
+              'url' => parm
             }
           end
         end
-        rte = SimpleApiRouter.new('en', sphere)
-        sel = bcr # + [{item[:filter] => item[:value]}]
-        url = rte.route_to('rating', sel.inject({}){|r, h| r.merge(h) })
-        lns = DB[:refs].where(url: url, is_empty: false, duplicate_id: nil).all
-        if lns.present?
-          rsp['links'] = [{'name' => '', 'url' => url}]
-        end
+        rsp['links'] = index_links(bcr, curr, route)
         JSON.dump(rsp)
       end
 

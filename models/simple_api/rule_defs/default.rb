@@ -5,9 +5,9 @@ module SimpleApi
         super
       end
 
-      def fetch_list
+      def fetch_list(rule)
         # super
-        [{filter => nil}]
+        [nil]
       end
 
     end
@@ -20,10 +20,11 @@ module SimpleApi
         SimpleApi::RuleDefs::DefaultRuleItem.new(rule, flt)
       end
 
-      def like?(param, rule)
-        true
-      end
-      module_function :parse_params, :load_rule, :like?
+      # def like?(param, rule)
+      #   true
+      # end
+      module_function :parse_params, :load_rule
+      # , :like?
     end
   end
 end

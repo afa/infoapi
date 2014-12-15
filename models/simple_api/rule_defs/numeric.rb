@@ -2,7 +2,7 @@ module SimpleApi
   module RuleDefs
     class NumericRuleItem < ExtendedRuleItem
       attr_accessor :from, :to, :range
-      def initialize(rule, flt)
+      def initialize(flt, cfg)
         super
         self.from = definition['min'] if definition['min']
         self.to = definition['max'] if definition['max']
@@ -38,11 +38,12 @@ module SimpleApi
         valid_range(config["from"] ? config["from"].to_i : nil, config["to"] ? config["to"].to_i : nil)
       end
 
-      def fetch_list
+      def fetch_list(rule)
         s = super
         return s[:data] if s[:data]
-        return (range.to_a.empty? ? from..to : range).to_a.map{|i| {filter => i} } unless s[:meta]
-        [{filter => nil}]
+        return (range.to_a.empty? ? from..to : range).to_a unless s[:meta]
+        # return (range.to_a.empty? ? from..to : range).to_a.map{|i| {filter => i} } unless s[:meta]
+        [nil]
       end
 
       def check(param)
@@ -56,14 +57,15 @@ module SimpleApi
     end
     module Numeric
 
-      def load_rule(rule, flt)
-        SimpleApi::RuleDefs::NumericRuleItem.new(rule, flt)
+      def load_rule(flt, cfg)
+        SimpleApi::RuleDefs::NumericRuleItem.new(flt, cfg)
       end
 
-      def like?(param, tester)
-        return tester.check(param)
-      end
-      module_function :load_rule, :like?
+      # def like?(param, tester)
+      #   return tester.check(param)
+      # end
+      module_function :load_rule
+      # , :like?
     end
   end
 end

@@ -31,6 +31,10 @@
   "actors": {
     "kind": "string"
   },
+  "country": {
+    "kind": "string",
+    "list": "country"
+  },
   "default": {
     "kind": "default"
   }

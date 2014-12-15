@@ -22,23 +22,23 @@ describe SimpleApi::RuleDefs do
         allow(SimpleApi::RuleDefs::TYPES).to receive(:[]).with("actors").and_return({"kind" => "string"})
       end
       it "should return rule for single str" do
-        r = SimpleApi::RuleDefs::String.load_rule(@rule_arr, 'actors')
+        r = SimpleApi::RuleDefs::String.load_rule('actors', ['dike', 'mike'])
         expect(r.check(@paramstr)).to be_truthy
       end
       it "should return rule for array eq array in rule" do
-        r = SimpleApi::RuleDefs::String.load_rule(@rule_arr, 'actors')
+        r = SimpleApi::RuleDefs::String.load_rule('actors', ['dike', 'mike'])
         expect(r.check(@paramarr)).to be_truthy
       end
       it "should nt return rule for array partally equal with array in rule" do
-        r = SimpleApi::RuleDefs::String.load_rule(@rule_arr, 'actors')
+        r = SimpleApi::RuleDefs::String.load_rule('actors', ['dike', 'mike'])
         expect(r.check(@paramarr2)).to be_falsy
       end
       it "should return rule for single str param wit str rule" do
-        r = SimpleApi::RuleDefs::String.load_rule(@rule_str, 'actors')
+        r = SimpleApi::RuleDefs::String.load_rule('actors', "dike")
         expect(r.check(@paramstr2)).to be_truthy
       end
       it "should nt return rule for single str param iunlike wit str rule" do
-        r = SimpleApi::RuleDefs::String.load_rule(@rule_str, 'actors')
+        r = SimpleApi::RuleDefs::String.load_rule('actors', "dike")
         expect(r.check(@paramstr)).to be_falsy
       end
     end
@@ -55,39 +55,39 @@ describe SimpleApi::RuleDefs do
         allow(SimpleApi::RuleDefs::TYPES).to receive(:[]).with("nms").and_return({"kind" => "int", "min" => '10', "max" =>'15'})
       end
       it "should return strrule for str" do
-        r = SimpleApi::RuleDefs::Numeric.load_rule(@rule_str, 'nms')
+        r = SimpleApi::RuleDefs::Numeric.load_rule('nms', '11')
         expect(r.check(@paramstr)).to be_truthy
       end
       it "should return strrule for num" do
-        r = SimpleApi::RuleDefs::Numeric.load_rule(@rule_str, 'nms')
+        r = SimpleApi::RuleDefs::Numeric.load_rule('nms', '11')
         expect(r.check(@paramnum)).to be_truthy
       end
       it "should return strrule for rng" do
-        r = SimpleApi::RuleDefs::Numeric.load_rule(@rule_str, 'nms')
+        r = SimpleApi::RuleDefs::Numeric.load_rule('nms', '11')
         expect(r.check(@paramrng)).to be_truthy
       end
       it "should return numrule for str" do
-        r = SimpleApi::RuleDefs::Numeric.load_rule(@rule_num, 'nms')
+        r = SimpleApi::RuleDefs::Numeric.load_rule('nms', 11)
         expect(r.check(@paramstr)).to be_truthy
       end
       it "should return numrule for num" do
-        r = SimpleApi::RuleDefs::Numeric.load_rule(@rule_num, 'nms')
+        r = SimpleApi::RuleDefs::Numeric.load_rule('nms', 11)
         expect(r.check(@paramnum)).to be_truthy
       end
       it "should return numrule for rng" do
-        r = SimpleApi::RuleDefs::Numeric.load_rule(@rule_num, 'nms')
+        r = SimpleApi::RuleDefs::Numeric.load_rule('nms', 11)
         expect(r.check(@paramrng)).to be_truthy
       end
       it "should return rngrule for str" do
-        r = SimpleApi::RuleDefs::Numeric.load_rule(@rule_rng, 'nms')
+        r = SimpleApi::RuleDefs::Numeric.load_rule('nms', '11-13')
         expect(r.check(@paramstr)).to be_truthy
       end
       it "should return rngrule for num" do
-        r = SimpleApi::RuleDefs::Numeric.load_rule(@rule_rng, 'nms')
+        r = SimpleApi::RuleDefs::Numeric.load_rule('nms', '11-13')
         expect(r.check(@paramnum)).to be_truthy
       end
       it "should return rngrule for rng" do
-        r = SimpleApi::RuleDefs::Numeric.load_rule(@rule_rng, 'nms')
+        r = SimpleApi::RuleDefs::Numeric.load_rule('nms', '11-13')
         expect(r.check(@paramrng)).to be_truthy
       end
      end
@@ -117,10 +117,11 @@ describe SimpleApi::RuleDefs do
   end
   context "when generating" do
     before(:example) do
-      @rule = SimpleApi::MoviesRatingAnnotationRule.create(@template.merge(filter: JSON.dump('actors' => 'any')))
+      @ruleany = SimpleApi::MoviesRatingAnnotationRule.create(@template.merge(filter: JSON.dump('actors' => 'any')))
+      @rulene = SimpleApi::MoviesRatingAnnotationRule.create(@template.merge(filter: JSON.dump('actors' => 'non-empty')))
       allow(SimpleApi::RuleDefs::TYPES).to receive(:[]).with("actors").and_return({"kind" => "string", 'fetch_list' => 'attributes'})
     end
-    context "when any rule" do
+    context "when any  or non-empty rule" do
       before(:example) do
         FakeWeb.allow_net_connect = false
         FakeWeb.register_uri(:get, 'http://5.9.0.5/api/v1/movies/attributes/actors?p=%7B%22limit_values%22:%20%2210000%22%7D', response: 'spec/fixtures/files/ask_actors.http')
@@ -131,11 +132,19 @@ describe SimpleApi::RuleDefs do
         FakeWeb.allow_net_connect = true
       end
       it 'should load list' do
-        r = @gen.load_rule(@rule, 'actors').fetch_list
+        r = @gen.load_rule('actors', 'non-empty').fetch_list(@rulene)
         expect(r).to be_an(::Array)
         expect(r).to_not be_empty
-        expect(r.first).to be_an(Hash)
+        expect(r.first).to be_an(String)
         expect(r.size).to eql(10000)
+      end
+      it 'should load list and empty item' do
+        r = @gen.load_rule('actors', 'any').fetch_list(@ruleany)
+        expect(r).to be_an(::Array)
+        expect(r).to_not be_empty
+        expect(r.first).to be_an(String)
+        expect(r.compact.size).to eql(10000)
+        expect(r.size).to eql(10001)
       end
     end
   end
