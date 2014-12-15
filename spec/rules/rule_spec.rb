@@ -54,9 +54,12 @@ describe SimpleApi::Rule do
   describe "when generating rating refs" do
     before(:example) do
       FakeWeb.allow_net_connect = false
-      @year_rule = SimpleApi::MoviesRatingAnnotationRule.new(@template.merge filter: "{\"years\":\"2000-2003\", \"genres\":[\"action\",\"fantasy\"]}", name: 'yearrul', traversal_order: '["years", "genres"]')
-      @year_rule.deserialize
-      @genres_rule = SimpleApi::MoviesRatingAnnotationRule.new(@template.merge filter: "{\"genres\":\"non-empty\"}", name: 'genresrul', traversal_order: '["genres"]')
+      @root = 1
+      @year_rule = SimpleApi::MoviesRatingAnnotationRule.create(@template.merge filter: "{\"years\":\"2000-2003\", \"genres\":[\"action\",\"fantasy\"]}", name: 'yearrul1', traversal_order: '["years", "genres"]')
+      allow(@year_rule).to receive(:filters).and_return(SimpleApi::Filter.new({"years" => "2000-2003", "genres" => ["action", "fantasy"]}))
+
+      # @year_rule.deserialize
+      @genres_rule = SimpleApi::MoviesRatingAnnotationRule.create(@template.merge filters: "{\"genres\":\"non-empty\"}", name: 'genresrul', traversal_order: '["genres"]')
       @genres_rule.deserialize
       @any_stars_rule = SimpleApi::MoviesRatingAnnotationRule.new(@template.merge filter: "{\"stars\":null}", name: 'defstrul')
       @any_stars_rule.deserialize
@@ -69,21 +72,23 @@ describe SimpleApi::Rule do
     end
     it "must generate product of metarules for list of genres & years from list" do
       rul = nil
-      expect{rul = @year_rule.generate(nil, nil)}.to_not raise_error
-      expect(rul).to be_kind_of(Array)
-      expect(rul.size).to be_eql(8)
+      expect(@year_rule.filters).to receive(:build_index).and_call_original
+      expect(@year_rile.filters).to receive(:write_ref).exactly(8).times.and_call_original
+      expect{rul = @year_rule.generate(nil, @root)}.to_not raise_error
+      # expect(rul).to be_kind_of(Array)
+      # expect(rul.size).to be_eql(8)
     end
     context "when any or non-empty" do
     it "must fetch genre list from api" do
       FakeWeb.register_uri(:any, 'http://5.9.0.5/api/v1/movies/attributes/genres?p=%7B%22limit_values%22:%20%2210000%22%7D', response: 'spec/fixtures/files/ask_genres.http')
-      rul = @genres_rule.generate(nil, nil)
+      rul = @genres_rule.generate(nil, @root)
       expect(rul).to be_an(Array)
       expect(rul.size).to eql(27)
       # expect(rul.last.last["genres"]).to eql 'action'
     end
     it "must skip genre on error" do
       FakeWeb.register_uri(:any, 'http://5.9.0.5/api/v1/movies/attributes/genres?p=%7B%22limit_values%22:%20%2210000%22%7D', body: '{"error":"Internal server error"}')
-      rul = @genres_rule.generate(nil, nil)
+      rul = @genres_rule.generate(nil, @root)
       expect(rul).to be_an(Array)
       expect(rul).to be_empty
       # expect(rul.last.last["genres"]).to eql 'action'

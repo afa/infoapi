@@ -63,11 +63,5 @@ module SimpleApi
       recurse_index(filter_list, {}, root, nil, idx, rule)
     end
 
-    # def product(rule)
-    #   (traversal_order || []).inject([rule]) do |rslt, flt|
-    #     rslt.product(rules[flt].fetch_list(rule)).map(&:flatten)
-    #   end
-    # end
-
   end
 end

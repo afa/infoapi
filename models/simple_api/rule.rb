@@ -116,23 +116,11 @@ module SimpleApi
         json: JSON.dump(hash),
         url: route.route_to('rating', hash),
         index_id: index_id
-        # sitemap_session_id: sitemap ? sitemap.to_i : nil
       )
     end
 
     def generate(sitemap = nil, root)
       prod = build_index(root)
-      # prod = filters.product(self)
-      # prod = ((JSON.load(traversal_order) rescue []) || []).inject([self]) do |rslt, flt|
-      #   klass = SimpleApi::RuleDefs.from_name(flt)
-      #   rdef = klass.load_rule(self, flt)
-      #   rslt.product(rdef.fetch_list).map(&:flatten)
-      # end
-
-      # data = prod.map do |arr|
-      #   rs = {arr.first => arr[1..-1].select{|h| !h.values.all?{|v| v.nil? } }.inject({}){|r, h| r.merge(h) }}
-      #   rs
-      # end.select{|d| d.values.map(&:values).flatten.compact.present? }
       prod
     end
   end
