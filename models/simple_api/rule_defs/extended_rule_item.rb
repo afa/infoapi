@@ -21,6 +21,9 @@ module SimpleApi
         false
       end
 
+      # def to_json
+      #   {}
+
       def load_list(list, rule)
         fapi_prefix = CONFIG["fapi_prefix"]
         # refactor for sentimeta

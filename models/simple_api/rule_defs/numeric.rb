@@ -22,10 +22,15 @@ module SimpleApi
           self.range = valid_range(config, config)
           return
         end
-        if %w(any non-empty empty).include?(config.strip)
+        if config.kind_of?(::String) && %w(any non-empty empty).include?(config.strip)
           self.range = 1..-1
         else
-          self.range = range_from_string(config)
+          if config.is_a?(::String)
+            self.range = range_from_string(config)
+          end
+          if config.is_a?(::Hash)
+            self.range = range_from_hash(config)
+          end
         end
       end
 
@@ -50,9 +55,17 @@ module SimpleApi
         return true if super
         val = JSON.load(param.data[filter]) rescue param.data[filter]
         return false if val.nil?
-        return (range_from_hash(val).to_a & (range ||[]).to_a).present? if val.is_a?(::Hash)
+        return (range_from_hash(val).to_a & (range || []).to_a).present? if val.is_a?(::Hash)
         return (range_from_string(val).to_a & (range || []).to_a).present? if val.is_a?(::String)
         (val >= from.to_i && val <= to.to_i && ((range || []).include? val || val == config.to_i))
+      end
+
+      def convolution(param)
+        val = JSON.load(param) rescue param
+        return nil if val.nil?
+        return range_from_hash(val).first.to_i if val.is_a?(::Hash) && range_from_hash(val).size == 1
+        return range_from_string(val).first.to_i if val.is_a?(::String) && range_from_string(val).size == 1
+        val.to_i
       end
     end
     module Numeric

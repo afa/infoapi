@@ -72,7 +72,7 @@ describe SimpleApi::Rule do
     end
     it "must generate product of metarules for list of genres & years from list" do
       rul = nil
-      expect(@year_rule.filters).to receive(:build_index).and_call_original
+      expect(@year_rule.filters).to receive(:build_index)
       expect(@year_rile.filters).to receive(:write_ref).exactly(8).times.and_call_original
       expect{rul = @year_rule.generate(nil, @root)}.to_not raise_error
       # expect(rul).to be_kind_of(Array)

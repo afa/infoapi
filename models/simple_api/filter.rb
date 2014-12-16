@@ -22,7 +22,7 @@ module SimpleApi
     end
 
     def to_json
-      JSON.dump({}) #TODO dump to json
+      {'filter' => rules.to_json, 'traversal_order' => traversal_order.to_json} #TODO dump to json
     end
 
     def like?(params)

@@ -55,7 +55,8 @@ module SimpleApi
         bcr = []
         selector.each do |fname|
           parent = curr
-          curr = idx.where(root_id: root, rule_id: rule.pk, parent_id: parent[:id], filter: fname, value: hash[fname]).first
+          flt = SimpleApi::RuleDefs.from_name(fname).load_rule(fname, hash[fname])
+          curr = idx.where(root_id: root, rule_id: rule.pk, parent_id: parent[:id], filter: fname, value: flt.convolution(hash[fname]).to_s).first
           break unless curr
           bcr << {curr[:filter] => curr[:value]}
         end
