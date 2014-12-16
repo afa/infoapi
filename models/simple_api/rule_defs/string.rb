@@ -35,6 +35,13 @@ module SimpleApi
         return true if val.kind_of?(::String) && ((val == string) || ((array || []).include?(val)))
         false
       end
+
+      def convolution(param)
+        val = JSON.load(param) rescue param
+        return nil if val.nil?
+        return val.first if val.is_a?(::Array) && val.size == 1
+        val.to_s
+      end
     end
 
     module String
