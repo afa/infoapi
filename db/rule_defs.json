@@ -1,7 +1,8 @@
 {
   "path": {
-    "kind": "string",
-    "list": "path"
+    "kind": "catalog",
+    "list": "path",
+    "fetch_list": "attributes"
   },
   "criteria": {
     "kind": "string",

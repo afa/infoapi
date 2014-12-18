@@ -31,7 +31,7 @@ module SimpleApi
         return true if super
         val = JSON.load(param.data[filter]) rescue param.data[filter] # val is request
         return false if val.nil?
-        return true if val.kind_of?(::Array) && ((val & array  == val) || ([string] == val))
+        return true if val.kind_of?(::Array) && ((val & (array || []) == val) || ([string] == val))
         return true if val.kind_of?(::String) && ((val == string) || ((array || []).include?(val)))
         false
       end

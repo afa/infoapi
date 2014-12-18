@@ -32,7 +32,7 @@ module SimpleApi
     end
 
     def default?
-      (rules.has_key?('default') && rule.filters['default']) || (rules.values.all?{|item| item.config == 'any' })
+      (rules.has_key?('default') && self['default']) || (rules.values.all?{|item| item.config == 'any' })
     end
 
     def write_ref(rule, root_id, hash, index)

@@ -110,11 +110,13 @@ module SimpleApi
 
     def write_ref(root_id, hash, index_id)
       refs = DB[:refs]
+      roots = DB[:roots]
       route = SimpleApiRouter.new(lang, sphere)
       refs.insert(
         rule_id: pk,
         json: JSON.dump(hash),
         url: route.route_to('rating', hash),
+        sitemap_session_id: roots.where(id: root_id).first[:sitemap_session_id],
         index_id: index_id
       )
     end

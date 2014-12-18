@@ -31,6 +31,7 @@ module SimpleApi
           if config.is_a?(::Hash)
             self.range = range_from_hash(config)
           end
+          self.config = self.range.to_a.first if self.range && self.range.is_a?(Range) && self.range.size == 1
         end
       end
 

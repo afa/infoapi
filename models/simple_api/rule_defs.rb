@@ -4,9 +4,11 @@ module SimpleApi
     require 'simple_api/rule_defs/default'
     require 'simple_api/rule_defs/numeric'
     require 'simple_api/rule_defs/string'
+    require 'simple_api/rule_defs/catalog'
 
     DEFS = {
       'string' => SimpleApi::RuleDefs::String,
+      'catalog' => SimpleApi::RuleDefs::Catalog,
       'default' => SimpleApi::RuleDefs::Default,
       'int' => SimpleApi::RuleDefs::Numeric
     }
