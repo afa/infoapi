@@ -3,7 +3,7 @@ module SimpleApi
     class << self
       def roots(sphere)
         root = DB[:roots].reverse_order(:id).select(:id).where(sphere: sphere).first
-        JSON.dump(next: SimpleApi::Rule.where(sphere: sphere, param: %w(rating rating-annotation)).where('traversal_order is not null').order(:position).all.select{|r| (JSON.load(r.traversal_order) rescue []).present? }.map{|r| {name: r.name, url:"/en/#{sphere}/index/rating,#{r.name}"} } )
+        JSON.dump(next: SimpleApi::Rule.where(sphere: sphere, param: %w(rating rating-annotation)).where('traversal_order is not null').order(:position).all.select{|r| (JSON.load(r.traversal_order) rescue []).present? }.map{|r| {name: r.name, label: ((JSON.load(r.content) rescue '{}')['h1'] || r.name), links: {}, url:"/en/#{sphere}/index/rating,#{r.name}"} } )
       end
 
       def tree(sphere, rule_selector, rule_params, params)

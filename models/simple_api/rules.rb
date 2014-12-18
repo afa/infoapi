@@ -83,8 +83,15 @@ module SimpleApi
       end
 
       def rework(scope)
-        DB[:refs].where(scope).order(:id).each do |ref|
-          duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { url: ref[:url] }) }.where(scope).order(:id).first
+        doubles = DB[:refs].select('min(id) id, url').where(scope).group('url').having('count(*) > 1').all
+        doubles.each do |hsh|
+          puts "rework double #{hsh[:id]}"
+          rs = DB[:refs].order(:id).where(scope).where(url: hsh[:url]).all.select{|h| h[:id].to_i != hsh[:id].to_i }
+          DB[:refs].where(:id => rs.map(&:id)).update(:duplicate_id => hsh[:id])
+        end
+        DB[:refs].where(scope)..where(is_empty: nil).order(:id).each do |ref|
+          puts "rework empty #{ref[:id]}" if ref[:id].to_i % 100 == 0
+          # duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { url: ref[:url] }) }.where(scope).order(:id).first
           param = JSON.load(ref[:json])
           rule = SimpleApi::Rule[ref[:rule_id]]
           Sentimeta.env   = CONFIG["fapi_stage"] # :production is default
@@ -92,7 +99,7 @@ module SimpleApi
           Sentimeta.sphere = rule.sphere
           path = param.delete("path").to_s.split(',')
           empty = (Sentimeta::Client.fetch :objects, {"is_empty" => true}.merge("criteria" => [param.delete('criteria')], "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})["is_empty"]
-          DB[:refs].where(:id => ref[:id]).update(:is_empty => empty, :duplicate_id => duble.try(:[], :id))
+          DB[:refs].where(:id => ref[:id]).update(:is_empty => empty)
         end
       end
     end
