@@ -89,7 +89,7 @@ module SimpleApi
           rs = DB[:refs].order(:id).where(scope).where(url: hsh[:url]).all.select{|h| h[:id].to_i != hsh[:id].to_i }
           DB[:refs].where(:id => rs.map(&:id)).update(:duplicate_id => hsh[:id])
         end
-        DB[:refs].where(scope)..where(is_empty: nil).order(:id).each do |ref|
+        DB[:refs].where(scope).where(is_empty: nil).order(:id).each do |ref|
           puts "rework empty #{ref[:id]}" if ref[:id].to_i % 100 == 0
           # duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { url: ref[:url] }) }.where(scope).order(:id).first
           param = JSON.load(ref[:json])
