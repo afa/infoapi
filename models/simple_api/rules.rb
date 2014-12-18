@@ -83,7 +83,7 @@ module SimpleApi
       end
 
       def rework(scope)
-        doubles = DB[:refs].select('min(id) id, url').where(scope).group(:url).having('count(*) > 1').all
+        doubles = DB[:refs].select('min(id) id, url').where(scope).group([:url]).having('count(*) > 1').all
         doubles.each do |hsh|
           puts "rework double #{hsh[:id]}"
           rs = DB[:refs].order(:id).where(scope).where(url: hsh[:url]).all.select{|h| h[:id].to_i != hsh[:id].to_i }
