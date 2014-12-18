@@ -43,7 +43,7 @@ module SimpleApi
       def leaf_page(root, rule, name, selector, params)
         idx = DB[:indexes]
         parent = nil
-        lded = JSON.load(params["p"]) rescue params['p']
+        lded = JSON.load(params['p']) rescue params['p']
         lded ||= {}
         hash = {}
         sphere = DB[:roots].where(id: root).first[:sphere]
@@ -71,13 +71,18 @@ module SimpleApi
             spath = sel.map{|i| i.keys.first }.join(',')
             parm = route.route_to("index/#{['rating', name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
             {
+              'label' => "#{item[:filter]}:#{item[:value]}"
               'name' => item[:filter],
-              'url' => parm
+              'url' => parm,
+              'links' => next_links
             }
           end
         end
         rsp['links'] = index_links(bcr, curr, route)
         JSON.dump(rsp)
+      end
+
+      def next_links
       end
 
       def mk_params(sel)

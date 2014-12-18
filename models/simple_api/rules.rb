@@ -82,13 +82,16 @@ module SimpleApi
         rework(sitemap_session_id: sitemap)
       end
 
-      def rework(scope)
-        doubles = DB[:refs].select('min(id) id, url').where(scope).group([:url]).having('count(*) > 1').all
+      def rework_doubles(scope)
+        doubles = DB[:refs].select{[min(id), url]}.where(scope).group([:url]).having('count(*) > 1').all
         doubles.each do |hsh|
-          puts "rework double #{hsh[:id]}"
-          rs = DB[:refs].order(:id).where(scope).where(url: hsh[:url]).all.select{|h| h[:id].to_i != hsh[:id].to_i }
-          DB[:refs].where(:id => rs.map(&:id)).update(:duplicate_id => hsh[:id])
+          puts "rework double #{hsh[:min]}"
+          rs = DB[:refs].order(:id).where(scope).where(url: hsh[:url]).all.select{|h| h[:id].to_i != hsh[:min].to_i }
+          DB[:refs].where(:id => rs.map{|a| a[:id] }).update(:duplicate_id => hsh[:min])
         end
+      end
+
+      def rework_empty(scope)
         DB[:refs].where(scope).where(is_empty: nil).order(:id).each do |ref|
           puts "rework empty #{ref[:id]}" if ref[:id].to_i % 100 == 0
           # duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { url: ref[:url] }) }.where(scope).order(:id).first
@@ -101,6 +104,11 @@ module SimpleApi
           empty = (Sentimeta::Client.fetch :objects, {"is_empty" => true}.merge("criteria" => [param.delete('criteria')], "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})["is_empty"]
           DB[:refs].where(:id => ref[:id]).update(:is_empty => empty)
         end
+      end
+
+      def rework(scope)
+        rework_doubles(scope)
+        rework_empty(scope)
       end
     end
   end

@@ -34,7 +34,19 @@ namespace :sitemap do
     SimpleApi::Rules.make_index(sphere, sphere, sitemap_id)
   end
 
-  task :test do
+  task :rework_doubles, [:sphere, :sitemap_id] do |t, argv|
+    sphere = argv.with_defaults(sphere: 'movies')[:sphere]
+    sitemap_id = argv.with_defaults(sitemap_id: nil)[:sitemap_id]
+    SimpleApi::Rules.rework_doubles(sitemap_session_id: sitemap_id)
+  end
+
+  task :rework_empty, [:sphere, :sitemap_id] do |t, argv|
+    sphere = argv.with_defaults(sphere: 'movies')[:sphere]
+    sitemap_id = argv.with_defaults(sitemap_id: nil)[:sitemap_id]
+    SimpleApi::Rules.rework_empty(sitemap_session_id: sitemap_id)
+  end
+
+  task :prepare_pathes do
     f = SimpleApi::RuleDefs.from_name('path').load_rule('path', 'any')
     f.class.prepare_list
   end
