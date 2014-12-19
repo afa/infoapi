@@ -8,11 +8,11 @@ module SimpleApi
             {
               name: r.name,
               label: ((JSON.load(r.content) rescue '{}')['h1'] || r.name),
-              links: {
+              links: [{
                 'name' => "Hotel Atlantida Mare",
                 'url' => '/en/hotels/objects/426368-greece-crete-region-chania-hotel-atlantida-mare',
                 'photo' => 'http://r-ec.bstatic.com/images/hotel/840x460/282/28265805.jpg'
-              },
+              }],
               url:"/en/#{sphere}/index/rating,#{r.name}"
             }
         }
@@ -98,11 +98,12 @@ module SimpleApi
       end
 
       def next_links
-        {
+        [{
           'name' => "Hotel Atlantida Mare",
           'url' => '/en/hotels/objects/426368-greece-crete-region-chania-hotel-atlantida-mare',
           'photo' => 'http://r-ec.bstatic.com/images/hotel/840x460/282/28265805.jpg'
-        }
+        }]
+      end
 # "full_id"=>"426368-greece-crete-region-chania-hotel-atlantida-mare",
 #     "id"=>426368,
 #       "is_mapped"=>true,
@@ -114,7 +115,6 @@ module SimpleApi
 #           "type"=>"photo",
 #                "url"=>"http://r-ec.bstatic.com/images/hotel/840x460/282/28265805.jpg"},
 
-      end
 
       def mk_params(sel)
         slctr = sel.dup
