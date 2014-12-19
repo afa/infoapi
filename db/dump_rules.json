@@ -128,11 +128,11 @@
     "path": "non-empty",
     "path.level": null,
     "content": "{\"title\":\"Top rated <% stars %>-star <% location %> hotels | TopRater.com\",\"h1\":\"Best <% stars %> star hotels in <% location %>\",\"annotation\":\"Here you have a top of the best <% stars %> star hotels in <% location %>. You don't need to go further and look for reviews wasting hours and hours reading them. We eager to give you what you want. Toprater analyzes and generates ratings according to your needs whatever they are: \\\"Excellent Sleep\\\", \\\"Large Balcony\\\", \\\"Reasonable Prices\\\". Just search with us!\",\"meta-keywords\":\"best <% stars %> star hotels in <% location %>, top 10 <% stars %> star hotels in <% location %>, top rated <% stars %>-star hotels in <% location %>\",\"meta-description\":\"Here you have a top of the best <% stars %> star hotels in <% location %>.\"}",
-    "filter": "{\"stars\":\"0-4\",\"path\":\"non-empty\",\"criteria\":\"empty\"}",
+    "filter": "{\"path\":\"non-empty\",\"stars\":\"0-4\",\"criteria\":\"empty\"}",
     "extended_types": "{}",
     "name": "1-4-stars",
     "position": 9,
-    "traversal_order": "[\"stars\",\"path\"]"
+    "traversal_order": "[\"path\",\"stars\"]"
   },
   {
     "sphere": "hotels",
@@ -427,7 +427,7 @@
     "design": "std",
     "path": null,
     "path.level": null,
-    "content": "{\"title\":\"Top 10 <% genre %> movies <% year %> | TopRater.com\",\"h1\":\"Best 10 <% genre %> movies of <% year %>\",\"annotation\":\"If you a  <% genre %> fan  you'll be pleased to get familiar with our listing of the Top 10 <% genre %> movies <% year %>. Check out if your favorite movies are included and if you've already seen all these great releases.  We analyze hundreds of thousands of reviews to make our rating objective and informative. And we have done all this tough job to make our users enjoy the best movies, not wasting time searching. Happy watching!\",\"meta-keywords\":\"TopRater.com, <% best_criteria %>, <% object_names %>\",\"meta-description\":\"TopRater.com has prepared a great rating - Top 10 <% genre %> movies of <% year %> for film fans! It contains only the best <% genre %> pictures taken in <% year %>. Accuracy is our priority when creating ratings and we make our listings as objective as possible.\"}",
+    "content": "{\"title\":\"Top 10 <% genre %> movies <% year %> | TopRater.com\",\"h1\":\"Best 10 <% genre %> movies of <% year %>\",\"annotation\":\"If you a  <% genre %> fan  you'll be pleased to get familiar with our listing of the Top 10 <% genre %> movies <% year %>. Check out if your favorite movies are included and if you've already seen all these great releases.  We analyze hundreds of thousands of reviews to make our rating objective and informative. And we have done all this tough job to make our users enjoy the best movies, not wasting time searching. Happy watching!\",\"meta-keywords\":\"TopRater.com, <% best_criteria %>, <% object_names %>\",\"meta-description\":\"TopRater.com has prepared a great rating - Top 10 <% genre %> movies of <% year %> for film fans! It contains only the best <% genre %> pictures taken in <% year %>. Accuracy is our priority when creating ratings and we make our listings as objective as possible.\",\"index\":{\"label\":\"Horror movies of 1920-2015\"}}",
     "filter": "{\"genres\":[\"horror\"],\"years\":\"1920-2015\",\"criteria\":\"movies\"}",
     "extended_types": "{}",
     "name": "genre_year_2-1",
