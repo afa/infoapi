@@ -30,8 +30,10 @@ module SimpleApi
         links = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).all
         if links.present?
           links.map do |ref|
+            lbl = JSON.load(SimpleApi::Rule[ref[:rule_id]][:content])['h1']
             {
-              name: ref[:url],
+              label: lbl,
+              photo: '/en/hotels/objects/426368-greece-crete-region-chania-hotel-atlantida-mare',
               url: ref[:url]
             }
           end
@@ -83,6 +85,22 @@ module SimpleApi
       end
 
       def next_links
+        {
+          'name' => "Hotel Atlantida Mare",
+          'url' => '/en/hotels/objects/426368-greece-crete-region-chania-hotel-atlantida-mare',
+          'photo' => 'http://r-ec.bstatic.com/images/hotel/840x460/282/28265805.jpg'
+        }
+# "full_id"=>"426368-greece-crete-region-chania-hotel-atlantida-mare",
+#     "id"=>426368,
+#       "is_mapped"=>true,
+#         "lang"=>"en",
+#           "name"=>"Hotel Atlantida Mare",
+#             "overall_rating"=>0.92813945,
+#               "photos"=>
+#    [{"kind"=>"cover",
+#           "type"=>"photo",
+#                "url"=>"http://r-ec.bstatic.com/images/hotel/840x460/282/28265805.jpg"},
+
       end
 
       def mk_params(sel)
