@@ -71,7 +71,7 @@ module SimpleApi
             spath = sel.map{|i| i.keys.first }.join(',')
             parm = route.route_to("index/#{['rating', name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
             {
-              'label' => "#{item[:filter]}:#{item[:value]}"
+              'label' => "#{item[:filter]}:#{item[:value]}",
               'name' => item[:filter],
               'url' => parm,
               'links' => next_links
