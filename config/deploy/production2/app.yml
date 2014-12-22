@@ -1,4 +1,4 @@
-production2:
+production:
   db:
     user: rbdev
     host: 0.0.0.0
