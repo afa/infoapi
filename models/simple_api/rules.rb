@@ -113,6 +113,7 @@ module SimpleApi
           Sentimeta.lang  = rule.lang.to_sym
           Sentimeta.sphere = rule.sphere
           root = DB[:roots].where(sphere: rule.sphere).order(:id).last
+          next unless root
           leafs = DB[:refs].select(:index_id).where(scope).where(rule_id: rule.pk, duplicate_id: nil, is_empty: false).order(:rule_id, :index_id).all.map{|i| i[:index_id] }
           parents = []
           leafs.each do |index_id|
@@ -150,8 +151,9 @@ module SimpleApi
               end
             end
           end
+          p root
           links = DB[:object_data_items].where(rule_id: rule.pk, root_id: root[:id]).all.uniq.sample(8).each do |link|
-                DB[:object_data_items].insert(url: link[:url], photo: link[:photo], label: link[:label], index_id: nil, rule_id: rule.pk, root_id: root[:id])
+            DB[:object_data_items].insert(url: link[:url], photo: link[:photo], label: link[:label], index_id: nil, rule_id: rule.pk, root_id: root[:id])
           end
         end
       end

@@ -105,11 +105,12 @@ module SimpleApi
 
       def next_links(id)
         DB[:object_data_items].where(index_id: id).all.sample(4).map do |lnk|
-        [{
-          'name' => lnk[:name],
-          'url' => lnk[:url],
-          'photo' => lnk[:photo]
-        }]
+          {
+            'name' => lnk[:name],
+            'url' => lnk[:url],
+            'photo' => lnk[:photo]
+          }
+        end
       end
 
       # def mk_params(sel)
