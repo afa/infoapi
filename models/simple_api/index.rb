@@ -95,7 +95,7 @@ module SimpleApi
               'label' => "#{item[:filter]}:#{item[:value]}",
               'name' => item[:filter],
               'url' => parm,
-              'links' => next_links(nxt[:id])
+              'links' => next_links(item[:id])
             }
           end
         end
