@@ -150,7 +150,7 @@ module SimpleApi
               end
             end
           end
-          links = DB[:object_data_items].where(rule_id: rule.pk, root_id: root[:id]).uniq.sample(8).each do |link|
+          links = DB[:object_data_items].where(rule_id: rule.pk, root_id: root[:id]).all.uniq.sample(8).each do |link|
                 DB[:object_data_items].insert(url: link[:url], photo: link[:photo], label: link[:label], index_id: nil, rule_id: rule.pk, root_id: root[:id])
           end
         end
