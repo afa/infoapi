@@ -8,7 +8,7 @@ module SimpleApi
             {
               name: r.name,
               label: ((JSON.load(r.content) rescue '{}')['h1'] || r.name),
-              links: DB[:object_data_items].where(rule_id: r.pk, index_id: nil).all.sample(4).shuffle.map do |obj|
+              links: DB[:object_data_items].where(rule_id: r.pk, index_id: nil).all.uniq.sample(4).shuffle.map do |obj|
                 {
                   name: obj[:label],
                   url: obj[:url],
