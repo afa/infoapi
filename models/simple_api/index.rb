@@ -4,7 +4,7 @@ module SimpleApi
       def roots(sphere)
         root = DB[:roots].reverse_order(:id).select(:id).where(sphere: sphere).first
         JSON.dump(
-          next: SimpleApi::Rule.where(sphere: sphere, param: %w(rating rating-annotation)).where('traversal_order is not null').order(:position).all.select{|r| (JSON.load(r.traversal_order) rescue []).present? }.map{|r|
+          next: SimpleApi::Rule.where(sphere: sphere, param: %w(rating rating-annotation)).where('traversal_order is not null').order(:position).all.select{|r| (JSON.load(r.traversal_order) rescue []).present? }.map do |r|
             {
               name: r.name,
               label: ((JSON.load(r.content) rescue '{}')['h1'] || r.name),
@@ -15,7 +15,7 @@ module SimpleApi
               }],
               url:"/en/#{sphere}/index/rating,#{r.name}"
             }
-        }
+          end
         )
       end
 
@@ -37,7 +37,6 @@ module SimpleApi
 
 
       def index_links(bcr, curr, route)
-        p bcr, curr
         sel = bcr # + [{item[:filter] => item[:value]}]
         url = route.route_to('rating', sel.inject({}){|r, h| r.merge(h) })
         links = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).all
@@ -76,7 +75,7 @@ module SimpleApi
           bcr << {curr[:filter] => curr[:value]}
         end
         unless curr
-          return JSON.dump({'links' => index_links(bcr, parent, route)})
+          return JSON.dump({'ratings' => index_links(bcr, parent, route)})
         end
         nxt = idx.where(root_id: root, rule_id: rule.pk, parent_id: curr[:id]).all
         rsp = {}
@@ -104,42 +103,31 @@ module SimpleApi
           'photo' => 'http://r-ec.bstatic.com/images/hotel/840x460/282/28265805.jpg'
         }]
       end
-# "full_id"=>"426368-greece-crete-region-chania-hotel-atlantida-mare",
-#     "id"=>426368,
-#       "is_mapped"=>true,
-#         "lang"=>"en",
-#           "name"=>"Hotel Atlantida Mare",
-#             "overall_rating"=>0.92813945,
-#               "photos"=>
-#    [{"kind"=>"cover",
-#           "type"=>"photo",
-#                "url"=>"http://r-ec.bstatic.com/images/hotel/840x460/282/28265805.jpg"},
 
-
-      def mk_params(sel)
-        slctr = sel.dup
-        # opts = p.dup
-        # flts = p["filter"] || {}
-        crit = slctr.select do |hash|
-          hash.keys.include? 'criteria'
-        end
-        slctr.delete_if do |hash|
-          hash.keys.include? 'criteria'
-        end
-        slctr.sort_by{|i| i.keys.first }
-        data = []
-        list = []
-        list << 'criteria' unless crit.blank?
-        data << 'criteria' unless crit.blank?
-        data << crit.first.values.first if crit.present? && crit.first.values.first.present?
-        data << 'filters' if slctr.present? && slctr.detect{|h| h.values.first.present? }
-        slctr.each do |hsh|
-          list << hsh.keys.first
-          data << hsh.keys.first if hsh.values.first.present?
-          data << hsh.values.first if hsh.values.first.present?
-        end
-        {list: list, path: data}
-      end
+      # def mk_params(sel)
+      #   slctr = sel.dup
+      #   # opts = p.dup
+      #   # flts = p["filter"] || {}
+      #   crit = slctr.select do |hash|
+      #     hash.keys.include? 'criteria'
+      #   end
+      #   slctr.delete_if do |hash|
+      #     hash.keys.include? 'criteria'
+      #   end
+      #   slctr.sort_by{|i| i.keys.first }
+      #   data = []
+      #   list = []
+      #   list << 'criteria' unless crit.blank?
+      #   data << 'criteria' unless crit.blank?
+      #   data << crit.first.values.first if crit.present? && crit.first.values.first.present?
+      #   data << 'filters' if slctr.present? && slctr.detect{|h| h.values.first.present? }
+      #   slctr.each do |hsh|
+      #     list << hsh.keys.first
+      #     data << hsh.keys.first if hsh.values.first.present?
+      #     data << hsh.values.first if hsh.values.first.present?
+      #   end
+      #   {list: list, path: data}
+      # end
 
     end
   end

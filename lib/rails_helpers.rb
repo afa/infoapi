@@ -111,6 +111,14 @@ class NilClass
 end
 
 class Hash
+  def present?
+    !blank?
+  end
+
+  def blank?
+    empty?
+  end
+
   def symbolize_keys
     self.inject({}){|rslt, (k, v)| rslt.merge(k.to_sym => v) }
   end

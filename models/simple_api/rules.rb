@@ -24,8 +24,9 @@ module SimpleApi
             false
           end
         end
-        rls.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] #rescue puts "error in rule #{item.id.to_s}" 
-        }
+        rls.map do |item|
+          SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] #rescue puts "error in rule #{item.id.to_s}" 
+        end
       end
 
       def prepare_params(params)
@@ -64,7 +65,7 @@ module SimpleApi
         SimpleApi::Rule.where(param: ['rating', 'rating-annotation'], sphere: sphere).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.select{|rul| t = JSON.load(rul.traversal_order) rescue []; t.is_a?(::Array) && t.present? }.each do |rule|
           rule.build_index(root)
         end
-        rework(index_id: DB[:indexes].where(root_id: root).map{|i| i[:id] })
+        # rework(index_id: DB[:indexes].where(root_id: root).map{|i| i[:id] })
         root_ids = DB[:roots].where(sphere: sphere, param: 'rating').exclude(id: root).all.map{|r| r[:id] }
         index_ids = DB[:indexes].where(root_id: root_ids).all.map{|i| i[:id] }
         DB[:refs].where(index_id: index_ids).delete
@@ -72,15 +73,15 @@ module SimpleApi
         DB[:roots].where(sphere: sphere, param: 'rating').exclude(id: root).delete
       end
 
-      def generate(sitemap = nil)
-        DB[:refs].where(sitemap_session_id: sitemap).delete
-        SimpleApi::Rule.where(param: ['rating', 'rating-annotation']).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.each do |rule|
-          next if rule.filters.traversal_order.blank?
-          rule.generate(sitemap)
-          # fix for null filters.
-        end
-        rework(sitemap_session_id: sitemap)
-      end
+      # def generate(sitemap = nil)
+      #   DB[:refs].where(sitemap_session_id: sitemap).delete
+      #   SimpleApi::Rule.where(param: ['rating', 'rating-annotation']).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.each do |rule|
+      #     next if rule.filters.traversal_order.blank?
+      #     rule.generate(sitemap)
+      #     # fix for null filters.
+      #   end
+      #   # rework(sitemap_session_id: sitemap)
+      # end
 
       def rework_doubles(scope)
         doubles = DB[:refs].select{[min(id), url]}.where(scope).group([:url]).having('count(*) > 1').all
@@ -101,15 +102,56 @@ module SimpleApi
           Sentimeta.lang  = rule.lang.to_sym
           Sentimeta.sphere = rule.sphere
           path = param.delete("path").to_s.split(',')
-          empty = (Sentimeta::Client.fetch :objects, {"is_empty" => true}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {}).tap{|x| p x}["is_empty"]
-          p empty
+          empty = (Sentimeta::Client.fetch :objects, {"is_empty" => true}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})["is_empty"]
           DB[:refs].where(:id => ref[:id]).update(:is_empty => empty)
+        end
+      end
+
+      def rework_links(scope)
+        leafs = DB[:refs].select(:index_id).where(scope).where(duplicate_id: nil, is_empty: false).order(:rule_id, :index_id).all.map{|i| i[:index_id] }
+        parents = []
+        leafs.each do |index_id|
+          index = DB[:indexes].where(id: index_id).first
+          refs = DB[:refs].where(index_id: index_id).all
+          rule = SimpleApi::Rule[index[:rule_id]]
+          param = JSON.load(index[:json])
+          Sentimeta.env   = CONFIG["fapi_stage"] # :production is default
+          Sentimeta.lang  = rule.lang.to_sym
+          Sentimeta.sphere = rule.sphere
+          path = param.delete("path").to_s.split(',')
+          data = (Sentimeta::Client.fetch :objects, {}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
+          next if data.blank?
+          next if data['objects'].nil?
+          puts "rework links #{rule.pk}:#{index[:id]}=#{data['objects'].size}"
+          parents << index[:parent_id] if index[:parent_id]
+          data['objects'].select{|o| o.has_key?('photos') && o['photos'].present? }.sample(8).each do |obj|
+            DB[:object_data_items].insert( 
+                                            url: "/#{rule.lang}/#{rule.sphere}/objects/#{obj['full_id']}",
+                                            photo: obj['photos'].try(:first).try(:[], 'url'),
+                                            label: obj['name'],
+                                            index_id: index[:id]
+                                         )
+          end
+        end
+        until parents.blank?
+          current = parents.uniq.dup
+          parents.clear
+          current.each do |index_id|
+            index = DB[:indexes].where(id: index_id).first
+            parents << index[:parent_id] if index[:parent_id]
+            links = DB[:object_data_items].where(index_id: DB[:indexes].where(parent_id: index[:id]).all.map{|i| i[:id] }).all
+            puts "propagate #{index[:id]}=#{links.size}"
+            links.sample(8).each do |link|
+              DB[:object_data_items].insert(url: link[:url], photo: link[:photo], label: link[:label], index_id: index[:id])
+            end
+          end
         end
       end
 
       def rework(scope)
         rework_doubles(scope)
         rework_empty(scope)
+        rework_links(scope)
       end
     end
   end

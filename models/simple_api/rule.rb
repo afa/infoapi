@@ -121,9 +121,9 @@ module SimpleApi
       )
     end
 
-    def generate(sitemap = nil, root)
-      prod = build_index(root)
-      prod
-    end
+    # def generate(sitemap = nil, root)
+    #   prod = build_index(root)
+    #   prod
+    # end
   end
 end

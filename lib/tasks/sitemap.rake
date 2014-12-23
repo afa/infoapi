@@ -40,6 +40,12 @@ namespace :sitemap do
     SimpleApi::Rules.rework_doubles(sitemap_session_id: sitemap_id)
   end
 
+  task :rework_links, [:sphere, :sitemap_id] do |t, argv|
+    sphere = argv.with_defaults(sphere: 'movies')[:sphere]
+    sitemap_id = argv.with_defaults(sitemap_id: nil)[:sitemap_id]
+    SimpleApi::Rules.rework_links(sitemap_session_id: sitemap_id)
+  end
+
   task :rework_empty, [:sphere, :sitemap_id] do |t, argv|
     sphere = argv.with_defaults(sphere: 'movies')[:sphere]
     sitemap_id = argv.with_defaults(sitemap_id: nil)[:sitemap_id]
