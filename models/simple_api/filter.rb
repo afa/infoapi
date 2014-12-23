@@ -49,7 +49,7 @@ module SimpleApi
       flt = wlst.shift
       rdef = self[flt]
       values = rdef.fetch_list(rule)
-      values.each do |val|
+      values.sample(2).each do |val|
         hsh = cur_hash.merge(flt => val)
         ix = idx.insert(json: JSON.dump(hsh), root_id: root, parent_id: parent, filter: flt, value: val, rule_id: rule.pk)
         leafs += recurse_index(wlst, hsh, root, ix, idx, rule)

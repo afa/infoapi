@@ -8,11 +8,18 @@ module SimpleApi
             {
               name: r.name,
               label: ((JSON.load(r.content) rescue '{}')['h1'] || r.name),
-              links: [{
-                'name' => "Hotel Atlantida Mare",
-                'url' => '/en/hotels/objects/426368-greece-crete-region-chania-hotel-atlantida-mare',
-                'photo' => 'http://r-ec.bstatic.com/images/hotel/840x460/282/28265805.jpg'
-              }],
+              links: DB[:object_data_items].where(rule_id: r.pk, index_id: nil).sample(4).shuffle.map do |obj|
+                {
+                  name: obj[:name],
+                  url: obj[:url],
+                  photo: obj[:photo]
+                }
+              end,
+              # [{
+              #   'name' => "Hotel Atlantida Mare",
+              #   'url' => '/en/hotels/objects/426368-greece-crete-region-chania-hotel-atlantida-mare',
+              #   'photo' => 'http://r-ec.bstatic.com/images/hotel/840x460/282/28265805.jpg'
+              # }],
               url:"/en/#{sphere}/index/rating,#{r.name}"
             }
           end
@@ -88,7 +95,7 @@ module SimpleApi
               'label' => "#{item[:filter]}:#{item[:value]}",
               'name' => item[:filter],
               'url' => parm,
-              'links' => next_links
+              'links' => next_links(nxt[:id])
             }
           end
         end
@@ -96,11 +103,12 @@ module SimpleApi
         JSON.dump(rsp)
       end
 
-      def next_links
+      def next_links(id)
+        DB[:object_data_items].where(index_id: id).all.sample(4).map do |lnk|
         [{
-          'name' => "Hotel Atlantida Mare",
-          'url' => '/en/hotels/objects/426368-greece-crete-region-chania-hotel-atlantida-mare',
-          'photo' => 'http://r-ec.bstatic.com/images/hotel/840x460/282/28265805.jpg'
+          'name' => lnk[:name],
+          'url' => lnk[:url],
+          'photo' => lnk[:photo]
         }]
       end
 

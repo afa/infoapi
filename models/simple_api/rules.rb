@@ -108,42 +108,50 @@ module SimpleApi
       end
 
       def rework_links(scope)
-        leafs = DB[:refs].select(:index_id).where(scope).where(duplicate_id: nil, is_empty: false).order(:rule_id, :index_id).all.map{|i| i[:index_id] }
-        parents = []
-        leafs.each do |index_id|
-          index = DB[:indexes].where(id: index_id).first
-          refs = DB[:refs].where(index_id: index_id).all
-          rule = SimpleApi::Rule[index[:rule_id]]
-          param = JSON.load(index[:json])
-          Sentimeta.env   = CONFIG["fapi_stage"] # :production is default
+        Sentimeta.env   = CONFIG["fapi_stage"]
+        SimpleApi::Rule.order(:id).all.each do |rule|
           Sentimeta.lang  = rule.lang.to_sym
           Sentimeta.sphere = rule.sphere
-          path = param.delete("path").to_s.split(',')
-          data = (Sentimeta::Client.fetch :objects, {}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
-          next if data.blank?
-          next if data['objects'].nil?
-          puts "rework links #{rule.pk}:#{index[:id]}=#{data['objects'].size}"
-          parents << index[:parent_id] if index[:parent_id]
-          data['objects'].select{|o| o.has_key?('photos') && o['photos'].present? }.sample(8).each do |obj|
-            DB[:object_data_items].insert( 
+          root = DB[:roots].where(sphere: rule.sphere).order(:id).last
+          leafs = DB[:refs].select(:index_id).where(scope).where(rule_id: rule.pk, duplicate_id: nil, is_empty: false).order(:rule_id, :index_id).all.map{|i| i[:index_id] }
+          parents = []
+          leafs.each do |index_id|
+            index = DB[:indexes].where(id: index_id).first
+            refs = DB[:refs].where(index_id: index_id).all
+            # rule = SimpleApi::Rule[index[:rule_id]]
+            param = JSON.load(index[:json])
+            path = param.delete("path").to_s.split(',')
+            data = (Sentimeta::Client.fetch :objects, {}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
+            next if data.blank?
+            next if data['objects'].nil?
+            puts "rework links #{rule.pk}:#{index[:id]}=#{data['objects'].size}"
+            parents << index[:parent_id] if index[:parent_id]
+            data['objects'].select{|o| o.has_key?('photos') && o['photos'].present? }.sample(8).each do |obj|
+              DB[:object_data_items].insert( 
                                             url: "/#{rule.lang}/#{rule.sphere}/objects/#{obj['full_id']}",
                                             photo: obj['photos'].try(:first).try(:[], 'url'),
-                                            label: obj['name'],
-                                            index_id: index[:id]
-                                         )
-          end
-        end
-        until parents.blank?
-          current = parents.uniq.dup
-          parents.clear
-          current.each do |index_id|
-            index = DB[:indexes].where(id: index_id).first
-            parents << index[:parent_id] if index[:parent_id]
-            links = DB[:object_data_items].where(index_id: DB[:indexes].where(parent_id: index[:id]).all.map{|i| i[:id] }).all
-            puts "propagate #{index[:id]}=#{links.size}"
-            links.sample(8).each do |link|
-              DB[:object_data_items].insert(url: link[:url], photo: link[:photo], label: link[:label], index_id: index[:id])
+                                              label: obj['name'],
+                                              rule_id: index[:rule_id],
+                                              root_id: root[:id],
+                                              index_id: index[:id]
+                                           )
             end
+          end
+          until parents.blank?
+            current = parents.uniq.dup
+            parents.clear
+            current.each do |index_id|
+              index = DB[:indexes].where(id: index_id).first
+              parents << index[:parent_id] if index[:parent_id]
+              links = DB[:object_data_items].where(index_id: DB[:indexes].where(parent_id: index[:id]).all.map{|i| i[:id] }).all
+              puts "propagate #{index[:id]}=#{links.size}"
+              links.sample(8).each do |link|
+                DB[:object_data_items].insert(url: link[:url], photo: link[:photo], label: link[:label], index_id: index[:id], rule_id: rule.pk, root_id: root[:id])
+              end
+            end
+          end
+          links = DB[:object_data_items].where(rule_id: rule.pk, root_id: root[:id]).uniq.sample(8).each do |link|
+                DB[:object_data_items].insert(url: link[:url], photo: link[:photo], label: link[:label], index_id: nil, rule_id: rule.pk, root_id: root[:id])
           end
         end
       end
