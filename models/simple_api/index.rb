@@ -10,7 +10,7 @@ module SimpleApi
               label: ((JSON.load(r.content) rescue '{}')['h1'] || r.name),
               links: DB[:object_data_items].where(rule_id: r.pk, index_id: nil).all.sample(4).shuffle.map do |obj|
                 {
-                  name: obj[:name],
+                  name: obj[:label],
                   url: obj[:url],
                   photo: obj[:photo]
                 }
@@ -106,7 +106,7 @@ module SimpleApi
       def next_links(id)
         DB[:object_data_items].where(index_id: id).all.sample(4).map do |lnk|
           {
-            'name' => lnk[:name],
+            'name' => lnk[:label],
             'url' => lnk[:url],
             'photo' => lnk[:photo]
           }
