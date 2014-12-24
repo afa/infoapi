@@ -41,7 +41,7 @@ namespace :sitemap do
   end
 
   task :rework_links, [:sphere, :root_id] do |t, argv|
-    sitemap_id = argv.with_defaults(root_id: nil)[:root_id]
+    root_id = argv.with_defaults(root_id: nil)[:root_id]
     SimpleApi::Rules.rework_links(root_id: root_id)
   end
 
