@@ -5,6 +5,7 @@ module SimpleApi
         root = DB[:roots].reverse_order(:id).select(:id).where(sphere: sphere).first
         # refactor for range limiting
         JSON.dump(
+          {
           next: SimpleApi::Rule.where(sphere: sphere, param: %w(rating rating-annotation)).where('traversal_order is not null').order(:position).all.select{|r| (JSON.load(r.traversal_order) rescue []).present? }.map do |r|
             content = JSON.load(r.content) rescue '{}'
             {
@@ -19,7 +20,8 @@ module SimpleApi
               end,
               url:"/en/#{sphere}/index/rating,#{r.name}"
             }
-          end.tap{|x| x[:total] = x[:next].size }
+          end
+          }.tap{|x| x[:total] = x[:next].size }
         )
       end
 
