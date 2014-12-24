@@ -120,7 +120,7 @@ module SimpleApi
         rslt = str.dup
         str.scan(/(<%([^%]+)%>)/) do |ar|
           key = ar.last.strip
-          rslt.gsub(ar.first, subs[key].to_s)
+          rslt.gsub!(ar.first, subs[key].to_s)
         end
         rslt
       end
