@@ -133,7 +133,7 @@ module SimpleApi
           router = SimpleApiRouter.new(rule.lang, rule.sphere)
           root = DB[:roots].where(sphere: rule.sphere).order(:id).last
           next unless root
-          leafs = DB[:refs].select(:index_id).where(scope).where(rule_id: rule.pk, duplicate_id: nil, is_empty: false).order(:rule_id, :index_id).all.map{|i| i[:index_id] }
+          leafs = DB[:refs].select(:index_id).where(rule_id: rule.pk, duplicate_id: nil, is_empty: false).order(:rule_id, :index_id).all.map{|i| i[:index_id] } #where(scope).
           parents = []
           leafs.each do |index_id|
             index = DB[:indexes].where(id: index_id).first
