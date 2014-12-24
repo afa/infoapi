@@ -107,11 +107,30 @@ module SimpleApi
         end
       end
 
+      def tr_h1_params(str, hash)
+        subs = {}
+        subs.merge!('location' => hash['path'].strip.split(',').last) if hash.has_key?('path')
+        subs.merge!('stars' => hash['stars']) if hash.has_key?('stars')
+        subs.merge!('price-range' => hash['price_range']) if hash.has_key?('price_range')
+        subs.merge!('criterion' => hash['criteria']) if hash.has_key?('criteria')
+        subs.merge!('genre' => hash['genres']) if hash.has_key?('genres')
+        subs.merge!('actor' => hash['actors']) if hash.has_key?('actors')
+        subs.merge!('year' => hash['years']) if hash.has_key?('years')
+
+        rslt = str.dup
+        str.scan(/(<%([^%]+)%>)/) do |ar|
+          key = ar.last.strip
+          rslt.gsub(ar.first, subs[key])
+        end
+        rslt
+      end
+
       def rework_links(scope)
         Sentimeta.env   = CONFIG["fapi_stage"]
         SimpleApi::Rule.order(:id).all.each do |rule|
           Sentimeta.lang  = rule.lang.to_sym
           Sentimeta.sphere = rule.sphere
+          router = SimpleApiRouter.new(rule.lang, rule.sphere)
           root = DB[:roots].where(sphere: rule.sphere).order(:id).last
           next unless root
           leafs = DB[:refs].select(:index_id).where(scope).where(rule_id: rule.pk, duplicate_id: nil, is_empty: false).order(:rule_id, :index_id).all.map{|i| i[:index_id] }
@@ -121,6 +140,10 @@ module SimpleApi
             refs = DB[:refs].where(index_id: index_id).all
             # rule = SimpleApi::Rule[index[:rule_id]]
             param = JSON.load(index[:json])
+            url = router.route_to('rating', param)
+            puts url
+            label = tr_h1_params(JSON.load(rule.content)['h1'], param)
+            puts label
             path = param.delete("path").to_s.split(',')
             data = (Sentimeta::Client.fetch :objects, {}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
             next if data.blank?
@@ -129,10 +152,10 @@ module SimpleApi
             parents << index[:parent_id] if index[:parent_id]
             data['objects'].select{|o| o.has_key?('photos') && o['photos'].present? }.sample(8).each do |obj|
               DB[:object_data_items].insert( 
-                                            url: "/#{rule.lang}/#{rule.sphere}/objects/#{obj['full_id']}",
+                                            url: url, #"/#{rule.lang}/#{rule.sphere}/objects/#{obj['full_id']}",
                                             photo: obj['photos'].try(:first).try(:[], 'url'),
-                                              label: obj['name'],
-                                              rule_id: index[:rule_id],
+                                              label: label, #obj['name'],
+                                              rule_id: rule.pk,
                                               root_id: root[:id],
                                               index_id: index[:id]
                                            )

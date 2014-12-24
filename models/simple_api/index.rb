@@ -3,11 +3,13 @@ module SimpleApi
     class << self
       def roots(sphere)
         root = DB[:roots].reverse_order(:id).select(:id).where(sphere: sphere).first
+        # refactor for range limiting
         JSON.dump(
           next: SimpleApi::Rule.where(sphere: sphere, param: %w(rating rating-annotation)).where('traversal_order is not null').order(:position).all.select{|r| (JSON.load(r.traversal_order) rescue []).present? }.map do |r|
+            content = JSON.load(r.content) rescue '{}'
             {
               name: r.name,
-              label: ((JSON.load(r.content) rescue '{}')['h1'] || r.name),
+              label: (content['index'] || content['h1'] || r.name),
               links: DB[:object_data_items].where(rule_id: r.pk, index_id: nil).all.uniq.sample(4).shuffle.map do |obj|
                 {
                   name: obj[:label],
@@ -15,14 +17,9 @@ module SimpleApi
                   photo: obj[:photo]
                 }
               end,
-              # [{
-              #   'name' => "Hotel Atlantida Mare",
-              #   'url' => '/en/hotels/objects/426368-greece-crete-region-chania-hotel-atlantida-mare',
-              #   'photo' => 'http://r-ec.bstatic.com/images/hotel/840x460/282/28265805.jpg'
-              # }],
               url:"/en/#{sphere}/index/rating,#{r.name}"
             }
-          end
+          end.tap{|x| x[:total] = x[:next].size }
         )
       end
 
@@ -62,11 +59,14 @@ module SimpleApi
       end
 
       def leaf_page(root, rule, name, selector, params)
+        range = 0..99
         idx = DB[:indexes]
         parent = nil
         lded = JSON.load(params['p']) rescue params['p']
         lded ||= {}
         hash = {}
+        range = lded['offset']..(lded['offset']-1) if lded['offset']
+        range = range.first..(lded['limit']-1+range.first) if lded['limit']
         sphere = DB[:roots].where(id: root).first[:sphere]
         route = SimpleApiRouter.new('en', sphere)
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
@@ -87,7 +87,7 @@ module SimpleApi
         nxt = idx.where(root_id: root, rule_id: rule.pk, parent_id: curr[:id]).all
         rsp = {}
         if nxt.present?
-          rsp['next'] = nxt.map do |item|
+          rsp['next'] = nxt[range].map do |item|
             sel = bcr + [{item[:filter] => item[:value]}]
             spath = sel.map{|i| i.keys.first }.join(',')
             parm = route.route_to("index/#{['rating', name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
@@ -98,8 +98,10 @@ module SimpleApi
               'links' => next_links(item[:id])
             }
           end
+          rsp['total'] = nxt.size
         end
         rsp['links'] = index_links(bcr, curr, route)
+        rsp['links_total'] = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).count
         JSON.dump(rsp)
       end
 

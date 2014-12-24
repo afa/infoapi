@@ -40,16 +40,14 @@ namespace :sitemap do
     SimpleApi::Rules.rework_doubles(sitemap_session_id: sitemap_id)
   end
 
-  task :rework_links, [:sphere, :sitemap_id] do |t, argv|
-    sphere = argv.with_defaults(sphere: 'movies')[:sphere]
-    sitemap_id = argv.with_defaults(sitemap_id: nil)[:sitemap_id]
-    SimpleApi::Rules.rework_links(sitemap_session_id: sitemap_id)
+  task :rework_links, [:sphere, :root_id] do |t, argv|
+    sitemap_id = argv.with_defaults(root_id: nil)[:root_id]
+    SimpleApi::Rules.rework_links(root_id: root_id)
   end
 
-  task :rework_empty, [:sphere, :sitemap_id] do |t, argv|
-    sphere = argv.with_defaults(sphere: 'movies')[:sphere]
-    sitemap_id = argv.with_defaults(sitemap_id: nil)[:sitemap_id]
-    SimpleApi::Rules.rework_empty(sitemap_session_id: sitemap_id)
+  task :rework_empty, [:root_id] do |t, argv|
+    root_id = argv.with_defaults(root_id: nil)[:root_id]
+    SimpleApi::Rules.rework_empty(root_id: root_id)
   end
 
   task :prepare_pathes do
