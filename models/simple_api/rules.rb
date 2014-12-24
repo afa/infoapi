@@ -84,6 +84,7 @@ module SimpleApi
       # end
 
       def rework_doubles(scope)
+        # by rules
         doubles = DB[:refs].select{[min(id), url]}.where(scope).group([:url]).having('count(*) > 1').all
         doubles.each do |hsh|
           puts "rework double #{hsh[:min]}"
@@ -93,6 +94,7 @@ module SimpleApi
       end
 
       def rework_empty(scope)
+        # by rule
         DB[:refs].where(is_empty: nil).order(:id).each do |ref| #where(scope).
           puts "rework empty #{ref[:id]}" if ref[:id].to_i % 100 == 0
           # duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { url: ref[:url] }) }.where(scope).order(:id).first
@@ -119,17 +121,14 @@ module SimpleApi
 
         rslt = str.dup
         str.scan(/(<%(.+?)%>)/) do |ar|
-          p hash, subs
-          p rslt, ar
           key = ar.last.strip
-          p key
           rslt.gsub!(ar.first, subs[key].to_s)
-          p rslt
         end
         rslt
       end
 
       def rework_links(scope)
+        # by rules
         Sentimeta.env   = CONFIG["fapi_stage"]
         SimpleApi::Rule.order(:id).all.each do |rule|
           Sentimeta.lang  = rule.lang.to_sym
@@ -137,7 +136,7 @@ module SimpleApi
           router = SimpleApiRouter.new(rule.lang, rule.sphere)
           root = DB[:roots].where(sphere: rule.sphere).order(:id).last
           next unless root
-          leafs = DB[:refs].select(:index_id).where(rule_id: rule.pk, duplicate_id: nil, is_empty: false).order(:rule_id, :index_id).all.map{|i| i[:index_id] } #where(scope).
+          leafs = DB[:refs].select(:index_id).where(rule_id: rule.pk, duplicate_id: nil, is_empty: false).order(:rule_id, :index_id).all.map{|i| i[:index_id] }.uniq #where(scope).
           parents = []
           leafs.each do |index_id|
             index = DB[:indexes].where(id: index_id).first
@@ -146,7 +145,6 @@ module SimpleApi
             param = JSON.load(index[:json])
             url = router.route_to('rating', param.dup)
             puts url
-            p param
             label = tr_h1_params(JSON.load(rule.content)['h1'], param)
             puts label
             path = param.delete("path").to_s.split(',')

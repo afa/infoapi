@@ -102,8 +102,8 @@ module SimpleApi
           end
           rsp['total'] = nxt.size
         end
-        rsp['links'] = index_links(bcr, curr, route)
-        rsp['links_total'] = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).count
+        rsp['ratings'] = index_links(bcr, curr, route)
+        rsp['ratings_total'] = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).count
         JSON.dump(rsp)
       end
 

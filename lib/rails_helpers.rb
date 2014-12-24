@@ -1,3 +1,4 @@
+require 'logger'
 class Enumerator #::Lazy
   def take_until
     if block_given?
@@ -19,6 +20,13 @@ class Enumerator #::Lazy
       return self
     end
   end
+end
+
+module Rails
+  def logger
+    @logger ||= Logger.new('./log/api.log', 'weekly')
+  end
+  module_function :logger
 end
 
 class Object
