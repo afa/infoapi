@@ -144,7 +144,7 @@ module SimpleApi
             refs = DB[:refs].where(index_id: index_id).all
             # rule = SimpleApi::Rule[index[:rule_id]]
             param = JSON.load(index[:json])
-            url = router.route_to('rating', param)
+            url = router.route_to('rating', param.dup)
             puts url
             p param
             label = tr_h1_params(JSON.load(rule.content)['h1'], param)
