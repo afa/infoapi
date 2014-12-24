@@ -93,7 +93,7 @@ module SimpleApi
       end
 
       def rework_empty(scope)
-        DB[:refs].where(scope).where(is_empty: nil).order(:id).each do |ref|
+        DB[:refs].where(is_empty: nil).order(:id).each do |ref| #where(scope).
           puts "rework empty #{ref[:id]}" if ref[:id].to_i % 100 == 0
           # duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { url: ref[:url] }) }.where(scope).order(:id).first
           param = JSON.load(ref[:json])
