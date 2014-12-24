@@ -118,9 +118,12 @@ module SimpleApi
         subs.merge!('year' => hash['years']) if hash.has_key?('years')
 
         rslt = str.dup
-        str.scan(/(<%([^%]+)%>)/) do |ar|
+        str.scan(/(<%(.+?)%>)/) do |ar|
+          p rslt, ar
           key = ar.last.strip
+          p key
           rslt.gsub!(ar.first, subs[key].to_s)
+          p rslt
         end
         rslt
       end
