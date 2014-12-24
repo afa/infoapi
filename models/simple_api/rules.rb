@@ -143,6 +143,7 @@ module SimpleApi
             index = DB[:indexes].where(id: index_id).first
             refs = DB[:refs].where(index_id: index_id).all
             # rule = SimpleApi::Rule[index[:rule_id]]
+            p index[:json], index['json']
             param = JSON.load(index[:json])
             url = router.route_to('rating', param)
             puts url
