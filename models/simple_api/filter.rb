@@ -48,7 +48,7 @@ module SimpleApi
       wlst = flst.dup
       flt = wlst.shift
       rdef = self[flt]
-      values = rdef.fetch_list(rule)
+      values = rdef.fetch_list(rule).sample(2)
       values.each do |val|
         hsh = cur_hash.merge(flt => val)
         ix = idx.insert(json: JSON.dump(hsh), root_id: root, parent_id: parent, filter: flt, value: val, rule_id: rule.pk)
