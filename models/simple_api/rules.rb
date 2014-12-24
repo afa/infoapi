@@ -119,6 +119,7 @@ module SimpleApi
 
         rslt = str.dup
         str.scan(/(<%(.+?)%>)/) do |ar|
+          p hash, subs
           p rslt, ar
           key = ar.last.strip
           p key
