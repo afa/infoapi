@@ -7,7 +7,7 @@ module SimpleApi
     class << self
       def init(config)
         @rules = {}
-        load_rules.each{|rule| rule.place_to(@rules) }
+        load_rules.compact.each{|rule| rule.place_to(@rules) }
       end
 
       def load_rules
@@ -25,7 +25,7 @@ module SimpleApi
           end
         end
         rls.map do |item|
-          SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] #rescue puts "error in rule #{item.id.to_s}" 
+          SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] rescue puts "error in rule #{item.id.to_s}" 
         end
       end
 
