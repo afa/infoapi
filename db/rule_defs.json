@@ -5,7 +5,7 @@
     "fetch_list": "attributes"
   },
   "criteria": {
-    "kind": "string",
+    "kind": "criterion",
     "list": "criteria"
   },
   "stars": {

@@ -1,4 +1,17 @@
 require 'logger'
+
+def json_load(string, default = nil)
+  begin
+    JSON.load(string)
+  rescue => e
+    if default
+      default
+    else
+      raise
+    end
+  end
+end
+
 class Enumerator #::Lazy
   def take_until
     if block_given?

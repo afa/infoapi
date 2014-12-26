@@ -51,6 +51,7 @@ namespace :sitemap do
   end
 
   task :prepare_pathes do
+    SimpleApi::Rules.preload_criteria
     f = SimpleApi::RuleDefs.from_name('path').load_rule('path', 'any')
     f.class.prepare_list
   end

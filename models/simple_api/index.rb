@@ -1,6 +1,9 @@
 module SimpleApi
   class Index
     class << self
+      def breadcrumbs(sphere, param, params)
+        JSON.dump({breadcrumbs: nil})
+      end
       def roots(sphere)
         root = DB[:roots].reverse_order(:id).select(:id).where(sphere: sphere).first
         # refactor for range limiting

@@ -73,6 +73,17 @@ module SimpleApi
         DB[:roots].where(sphere: sphere, param: 'rating').exclude(id: root).delete
       end
 
+      def preload_criteria
+        Sentimeta.env = CONFIG["fapi_stage"] || :production
+        sp_list = ((Sentimeta::Client.spheres rescue []) || []).map{|s| s["name"] }
+        DB[:criteria].delete
+        (SimpleApi::Rule.all.map(&:sphere).uniq & sp_list).each do |sphere|
+          Sentimeta.lang = :en
+          Sentimeta.sphere = sphere
+          DB[:criteria].multi_insert(((Sentimeta::Client.criteria(:subcriteria => true) rescue []) || []).map{|h| h.has_key?('subcriteria') ? h['subcriteria'] : [h] }.flatten.map{|h| {label: h["label"], name: h["name"], sphere: sphere} })
+        end
+      end
+
       # def generate(sitemap = nil)
       #   DB[:refs].where(sitemap_session_id: sitemap).delete
       #   SimpleApi::Rule.where(param: ['rating', 'rating-annotation']).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.each do |rule|
@@ -85,7 +96,7 @@ module SimpleApi
 
       def rework_doubles(scope)
         # by rules
-        doubles = DB[:refs].select{[min(id), url]}.group([:url]).having('count(*) > 1').all #.where(scope)
+        doubles = DB[:refs].select{[min(id), url]}.group([:url]).having('count(*) > 1').where(rule_id: SimpleApi::Rule.where(param: 'group').all.map(&:pk)).all #.where(scope)
         doubles.each do |hsh|
           puts "rework double #{hsh[:min]}"
           rs = DB[:refs].order(:id).where(scope).where(url: hsh[:url]).all.select{|h| h[:id].to_i != hsh[:min].to_i }
@@ -95,10 +106,10 @@ module SimpleApi
 
       def rework_empty(scope)
         # by rule
-        DB[:refs].where(is_empty: nil).order(:id).each do |ref| #where(scope).
+        DB[:refs].where(is_empty: nil).where(rule_id: SimpleApi::Rule.where(param: 'group').all.map(&:pk)).order(:id).each do |ref| #where(scope).
           puts "rework empty #{ref[:id]}" if ref[:id].to_i % 100 == 0
           # duble = DB[:refs].where{ Sequel.&( ( id < ref[:id]), { url: ref[:url] }) }.where(scope).order(:id).first
-          param = JSON.load(ref[:json])
+          param = json_load(ref[:json], {})
           rule = SimpleApi::Rule[ref[:rule_id]]
           Sentimeta.env   = CONFIG["fapi_stage"] # :production is default
           Sentimeta.lang  = rule.lang.to_sym
@@ -130,7 +141,7 @@ module SimpleApi
       def rework_links(scope)
         # by rules
         Sentimeta.env   = CONFIG["fapi_stage"]
-        SimpleApi::Rule.order(:id).all.each do |rule|
+        SimpleApi::Rule.where(param: 'group').order(:id).all.each do |rule|
           Sentimeta.lang  = rule.lang.to_sym
           Sentimeta.sphere = rule.sphere
           router = SimpleApiRouter.new(rule.lang, rule.sphere)
@@ -144,9 +155,7 @@ module SimpleApi
             # rule = SimpleApi::Rule[index[:rule_id]]
             param = JSON.load(index[:json])
             url = router.route_to('rating', param.dup)
-            puts url
             label = tr_h1_params(JSON.load(rule.content)['h1'], param)
-            puts label
             path = param.delete("path").to_s.split(',')
             data = (Sentimeta::Client.fetch :objects, {}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
             next if data.blank?
@@ -177,7 +186,7 @@ module SimpleApi
               end
             end
           end
-          p root
+          # p root
           links = DB[:object_data_items].where(rule_id: rule.pk, root_id: root[:id]).all.uniq.sample(8).each do |link|
             DB[:object_data_items].insert(url: link[:url], photo: link[:photo], label: link[:label], index_id: nil, rule_id: rule.pk, root_id: root[:id])
           end

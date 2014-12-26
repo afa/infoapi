@@ -1,6 +1,6 @@
 module SimpleApi
   module RuleDefs
-    class CatalogRuleItem < ExtendedRuleItem
+    class CriterionRuleItem < ExtendedRuleItem
       attr_accessor :string, :array
       def initialize(flt, data)
         super
@@ -11,37 +11,30 @@ module SimpleApi
         return self.array unless array.blank?
         return [self.string] unless self.string.blank?
         return [nil] if config == 'empty'
-        list = DB[:catalogs].select(:path).all.map{|i| i[:path] }
+        list = DB[:criteria].select(:name).where(sphere: rule.sphere).all.map{|i| i[:name] }
         list << nil if config == 'any'
-        return list
-        # return (array.empty? ? [string] : array) unless s[:meta]
-        return [nil]
+        list
       end
 
-      def self.prepare_list
-        Sentimeta.env = CONFIG['fapi_stage']
-        Sentimeta.lang = :en
-        Sentimeta.sphere = 'hotels'
-        rslt = ['']
-        crnt = rslt.dup
-        4.times.each do
-          # tst = crnt.partition{|item| Sentimeta::Client.catalog(path: item).blank? }
-          # rslt += tst.first
-          # rslt += tst.first.map{|item| Sentimeta::Client.catalog(path: item, limit: 10000).map{|i| i['name'] } }
-          crnt = crnt.map do |item|
-            cat = Sentimeta::Client.catalog(path: item, limit: 10000)
-            cat.present? ? cat.map{|i| [ item.blank? ? nil : item, i['name'] ].compact.join(',') } : nil
-          end
-          .compact
-          .flatten
-          rslt += crnt
-        end
-        DB[:catalogs].delete
-        rslt.delete_if(&:blank?)
-        rslt.each do |item|
-          DB[:catalogs].insert(path: item)
-        end
-      end
+      # def self.prepare_list
+      #   Sentimeta.env = CONFIG['fapi_stage']
+      #   Sentimeta.lang = :en
+      #   Sentimeta.sphere = 'hotels'
+      #   rslt = ['']
+      #   crnt = rslt.dup
+      #   4.times.each do
+      #     # tst = crnt.partition{|item| Sentimeta::Client.catalog(path: item).blank? }
+      #     # rslt += tst.first
+      #     # rslt += tst.first.map{|item| Sentimeta::Client.catalog(path: item, limit: 10000).map{|i| i['name'] } }
+      #     crnt = crnt.select{|item| Sentimeta::Client.catalog(path: item, limit: 10000).present? }.map{|item| Sentimeta::Client.catalog(path: item, limit: 10000).map{|i| [item.blank? ? nil : item, i['name']].compact.join(',') } }.flatten
+      #     rslt += crnt
+      #   end
+      #   DB[:catalogs].delete
+      #   rslt.delete_if(&:blank?)
+      #   rslt.each do |item|
+      #     DB[:catalogs].insert(path: item)
+      #   end
+      # end
 
       def parse_config
         if config.kind_of? ::Array
@@ -56,7 +49,7 @@ module SimpleApi
 
       def check(param)
         return true if super
-        val = JSON.load(param.data[filter]) rescue param.data[filter] # val is request
+        val = json_load(param.data[filter], param.data[filter]) # val is request
         return false if val.nil?
         return true if val.kind_of?(::String) && val == string
         # return true if val.kind_of?(::Array) && ((val & (array || []) == val) || ([string] == val))
@@ -72,9 +65,9 @@ module SimpleApi
       end
     end
 
-    module Catalog
+    module Criterion
       def load_rule(flt, cfg)
-        SimpleApi::RuleDefs::CatalogRuleItem.new(flt, cfg)
+        SimpleApi::RuleDefs::CriterionRuleItem.new(flt, cfg)
       end
 
       module_function :load_rule
