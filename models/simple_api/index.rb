@@ -4,24 +4,25 @@ module SimpleApi
       def breadcrumbs(sphere, param, params)
         JSON.dump({breadcrumbs: nil})
       end
-      def roots(sphere)
+
+      def roots(sphere, param)
         root = DB[:roots].reverse_order(:id).select(:id).where(sphere: sphere).first
         # refactor for range limiting
         JSON.dump(
           {
-          next: SimpleApi::Rule.where(sphere: sphere, param: %w(rating rating-annotation)).where('traversal_order is not null').order(:position).all.select{|r| (JSON.load(r.traversal_order) rescue []).present? }.map do |r|
-            content = JSON.load(r.content) rescue '{}'
+          next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| (JSON.load(r.traversal_order) rescue []).present? }.map do |r|
+            content = json_load(r.content, {})
             {
               name: r.name,
               label: (content['index'] || content['h1'] || r.name),
-              links: DB[:object_data_items].where(rule_id: r.pk, index_id: nil).all.uniq.sample(4).shuffle.map do |obj|
+              links: DB[:object_data_items].where(rule_id: r.pk, index_id: nil).all.map{|o| {label: o[:label], url: o[:url], photo: o[:photo]} }.uniq.sample(4).shuffle.map do |obj|
                 {
                   name: obj[:label],
                   url: obj[:url],
                   photo: obj[:photo]
                 }
               end,
-              url:"/en/#{sphere}/index/rating,#{r.name}"
+              url:"/en/#{sphere}/index/#{param.to_s},#{r.name}"
             }
           end
           }.tap{|x| x[:total] = x[:next].size }
@@ -34,14 +35,14 @@ module SimpleApi
         rat = selector.shift
         # return roots(sphere) unless 'rating' == rat
         if selector.empty?
-          return roots(sphere)
+          return roots(sphere, rat)
         end
         lang = "en"
         name = selector.shift
-        return roots(sphere) unless name.present?
-        return roots(sphere) unless rule = Rule.where(name: name, param: %w(rating rating-annotation)).first
+        return roots(sphere, rat) unless name.present?
+        return roots(sphere, rat) unless rule = Rule.where(name: name, param: rat).first
         fields = selector || []
-        leaf_page(root, rule, name, selector, params)
+        leaf_page(root, rule, name, selector, params, rat)
        end
 
 
@@ -52,18 +53,26 @@ module SimpleApi
         if links.present?
           links.map do |ref|
             lbl = JSON.load(SimpleApi::Rule[ref[:rule_id]][:content])['h1']
+            photo = DB[:object_data_items].where(index_id: ref[:index_id]).all.map{|o| o[:photo] }.shuffle.first
             {
               label: lbl,
-              photo: '/en/hotels/objects/426368-greece-crete-region-chania-hotel-atlantida-mare',
+              photo: photo,
               url: ref[:url]
             }
           end
+              # links: DB[:object_data_items].where(rule_id: r.pk, index_id: nil).all.map{|o| {label: o[:label], url: o[:url], photo: o[:photo]} }.uniq.sample(4).shuffle.map do |obj|
+              #   {
+              #     name: obj[:label],
+              #     url: obj[:url],
+              #     photo: obj[:photo]
+              #   }
+              # end,
         else
           '[]'
         end
       end
 
-      def leaf_page(root, rule, name, selector, params)
+      def leaf_page(root, rule, name, selector, params, param)
         range = 0..99
         idx = DB[:indexes]
         parent = nil

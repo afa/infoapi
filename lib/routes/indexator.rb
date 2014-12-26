@@ -6,7 +6,7 @@ module Sinatra
       module Indexator
         def self.registered(app)
           index_page = lambda do |sphere|
-            SimpleApi::Index.roots(sphere)
+            SimpleApi::Index.roots(sphere, 'group')
           end
           concrete_index = lambda do |sphere, rule_selector, rule_params|
             SimpleApi::Index.tree(sphere, rule_selector, rule_params, params)
