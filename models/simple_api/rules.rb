@@ -154,13 +154,14 @@ module SimpleApi
             refs = DB[:refs].where(index_id: index_id).all
             # rule = SimpleApi::Rule[index[:rule_id]]
             param = JSON.load(index[:json])
-            url = router.route_to(rule.param, param.dup)
+            refs_param = json_load(refs.first[:json], {}).delete_if{|k, v| k == 'rule' || k == 'rule_id' }
+            url = router.route_to(rule.param, refs_param.dup)
             label = tr_h1_params(JSON.load(rule.content)['h1'], param)
             path = param.delete("path").to_s.split(',')
             data = (Sentimeta::Client.fetch :objects, {}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
             next if data.blank?
             next if data['objects'].nil?
-            puts "rework links #{rule.pk}:#{index[:id]}=#{data['objects'].size}"
+            puts "rework links #{rule.pk}:#{index[:id]}=#{data['objects'].size}.#{refs.size}"
             parents << index[:parent_id] if index[:parent_id]
             data['objects'].select{|o| o.has_key?('photos') && o['photos'].present? }.sample(8).each do |obj|
               DB[:object_data_items].insert( 
