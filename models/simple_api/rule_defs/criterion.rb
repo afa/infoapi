@@ -58,7 +58,7 @@ module SimpleApi
       end
 
       def convolution(param)
-        val = JSON.load(param) rescue param
+        val = json_load(param, param)
         return nil if val.nil?
         return val.first if val.is_a?(::Array) && val.size == 1
         val.to_s

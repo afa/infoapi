@@ -31,7 +31,7 @@ namespace :sitemap do
   task :index, [:sphere, :sitemap_id] do |t, argv|
     sphere = argv.with_defaults(sphere: 'movies')[:sphere]
     sitemap_id = argv.with_defaults(sitemap_id: nil)[:sitemap_id]
-    SimpleApi::Rules.make_index(sphere, sphere, sitemap_id)
+    SimpleApi::Rules.make_index(sphere, 'group', sphere, sitemap_id)
   end
 
   task :rework_doubles, [:sphere, :sitemap_id] do |t, argv|

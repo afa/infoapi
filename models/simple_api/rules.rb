@@ -58,11 +58,11 @@ module SimpleApi
         content = found.kind_of?(Array) ? found.try(:first).try(:content) : found.try(:content)
       end
 
-      def make_index(sphere, name = nil, sitemap_id = nil)
+      def make_index(sphere, param, name = nil, sitemap_id = nil)
         raise 'Need sphere to process' unless sphere
         name = sphere unless name
-        root = DB[:roots].insert(sphere: sphere, sitemap_session_id: sitemap_id, name: name, param: 'rating')
-        SimpleApi::Rule.where(param: ['rating', 'rating-annotation'], sphere: sphere).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.select{|rul| t = JSON.load(rul.traversal_order) rescue []; t.is_a?(::Array) && t.present? }.each do |rule|
+        root = DB[:roots].insert(sphere: sphere, sitemap_session_id: sitemap_id, name: name, param: param)
+        SimpleApi::Rule.where(param: param, sphere: sphere).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] }.select{|rul| t = json_load(rul.traversal_order, []); t.is_a?(::Array) && t.present? }.each do |rule|
           rule.build_index(root)
         end
         # rework(index_id: DB[:indexes].where(root_id: root).map{|i| i[:id] })

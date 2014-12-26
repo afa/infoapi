@@ -10,7 +10,7 @@ module SimpleApi
     DEFS = {
       'string' => SimpleApi::RuleDefs::String,
       'catalog' => SimpleApi::RuleDefs::Catalog,
-      'criteria' => SimpleApi::RuleDefs::Criterion,
+      'criterion' => SimpleApi::RuleDefs::Criterion,
       'default' => SimpleApi::RuleDefs::Default,
       'int' => SimpleApi::RuleDefs::Numeric
     }
