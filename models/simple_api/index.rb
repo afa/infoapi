@@ -47,10 +47,11 @@ module SimpleApi
 
 
       def index_links(bcr, curr, route)
+        p curr
         sel = bcr # + [{item[:filter] => item[:value]}]
-        rul = SimpleApi::Rule[curr[:rule_id]]
-        url = route.route_to(rul.param, sel.inject({}){|r, h| r.merge(h) })
         links = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).all
+        rul = SimpleApi::Rule[links.first[:rule_id]]
+        url = route.route_to(rul.param, sel.inject({}){|r, h| r.merge(h) })
         if links.present?
           links.map do |ref|
             lbl = JSON.load(SimpleApi::Rule[ref[:rule_id]][:content])['h1']
