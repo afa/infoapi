@@ -115,7 +115,7 @@ module SimpleApi
       refs.insert(
         rule_id: pk,
         json: JSON.dump(hash),
-        url: route.route_to('rating', hash),
+        url: route.route_to(param, hash),
         sitemap_session_id: roots.where(id: root_id).first[:sitemap_session_id],
         index_id: index_id
       )

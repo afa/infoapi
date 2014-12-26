@@ -48,7 +48,8 @@ module SimpleApi
 
       def index_links(bcr, curr, route)
         sel = bcr # + [{item[:filter] => item[:value]}]
-        url = route.route_to('rating', sel.inject({}){|r, h| r.merge(h) })
+        rul = SimpleApi::Rule[curr[:rule_id]]
+        url = route.route_to(rul.param, sel.inject({}){|r, h| r.merge(h) })
         links = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).all
         if links.present?
           links.map do |ref|
@@ -104,7 +105,7 @@ module SimpleApi
           rsp['next'] = nxt[range].map do |item|
             sel = bcr + [{item[:filter] => item[:value]}]
             spath = sel.map{|i| i.keys.first }.join(',')
-            parm = route.route_to("index/#{['rating', name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
+            parm = route.route_to("index/#{[rule.param, name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
             {
               'label' => "#{item[:filter]}:#{item[:value]}",
               'name' => item[:filter],

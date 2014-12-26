@@ -66,11 +66,11 @@ module SimpleApi
           rule.build_index(root)
         end
         # rework(index_id: DB[:indexes].where(root_id: root).map{|i| i[:id] })
-        root_ids = DB[:roots].where(sphere: sphere, param: 'rating').exclude(id: root).all.map{|r| r[:id] }
+        root_ids = DB[:roots].where(sphere: sphere, param: param).exclude(id: root).all.map{|r| r[:id] }
         index_ids = DB[:indexes].where(root_id: root_ids).all.map{|i| i[:id] }
         DB[:refs].where(index_id: index_ids).delete
         DB[:indexes].where(root_id: root_ids).delete
-        DB[:roots].where(sphere: sphere, param: 'rating').exclude(id: root).delete
+        DB[:roots].where(sphere: sphere, param: param).exclude(id: root).delete
       end
 
       def preload_criteria
@@ -154,7 +154,7 @@ module SimpleApi
             refs = DB[:refs].where(index_id: index_id).all
             # rule = SimpleApi::Rule[index[:rule_id]]
             param = JSON.load(index[:json])
-            url = router.route_to('rating', param.dup)
+            url = router.route_to(rule.param, param.dup)
             label = tr_h1_params(JSON.load(rule.content)['h1'], param)
             path = param.delete("path").to_s.split(',')
             data = (Sentimeta::Client.fetch :objects, {}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
