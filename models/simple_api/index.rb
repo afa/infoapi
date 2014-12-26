@@ -47,10 +47,9 @@ module SimpleApi
 
 
       def index_links(bcr, curr, route)
-        p curr
         sel = bcr # + [{item[:filter] => item[:value]}]
         links = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).all
-        rul = SimpleApi::Rule[links.first[:rule_id]]
+        rul = SimpleApi::Rule[curr[:rule_id]]
         url = route.route_to(rul.param, sel.inject({}){|r, h| r.merge(h) })
         if links.present?
           links.map do |ref|
@@ -87,7 +86,7 @@ module SimpleApi
         route = SimpleApiRouter.new('en', sphere)
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
         hash.merge!(lded["filters"]) if lded.has_key?('filters')
-        curr = {id: nil}
+        curr = {id: nil, rule_id: rule.pk}
 
         bcr = []
         selector.each do |fname|
