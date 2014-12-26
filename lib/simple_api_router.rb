@@ -25,6 +25,7 @@ class SimpleApiRouter
         unless hash_params.values.all?(&:nil?)
           components << 'filters'
           hash_params.keys.sort.each do |param|
+            next if hash_params[param].blank?
             components << param
             components << hash_params[param]
           end
