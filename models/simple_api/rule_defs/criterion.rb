@@ -52,8 +52,8 @@ module SimpleApi
         val = json_load(param.data[filter], param.data[filter]) # val is request
         return false if val.nil?
         return true if val.kind_of?(::String) && val == string
-        # return true if val.kind_of?(::Array) && ((val & (array || []) == val) || ([string] == val))
-        # return true if val.kind_of?(::String) && ((val == string) || ((array || []).include?(val)))
+        return true if val.kind_of?(::Array) && ((val & (array || []) == val) || ([string] == val))
+        return true if val.kind_of?(::String) && ((val == string) || ((array || []).include?(val)))
         false
       end
 
