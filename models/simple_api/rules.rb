@@ -120,24 +120,6 @@ module SimpleApi
         end
       end
 
-      def tr_h1_params(str, hash)
-        subs = {}
-        subs.merge!('location' => hash['path'].strip.split(',').last) if hash.has_key?('path')
-        subs.merge!('stars' => hash['stars']) if hash.has_key?('stars')
-        subs.merge!('price-range' => hash['price_range']) if hash.has_key?('price_range')
-        subs.merge!('criterion' => hash['criteria']) if hash.has_key?('criteria')
-        subs.merge!('genre' => hash['genres']) if hash.has_key?('genres')
-        subs.merge!('actor' => hash['actors']) if hash.has_key?('actors')
-        subs.merge!('year' => hash['years']) if hash.has_key?('years')
-
-        rslt = str.dup
-        str.scan(/(<%(.+?)%>)/) do |ar|
-          key = ar.last.strip
-          rslt.gsub!(ar.first, subs[key].to_s)
-        end
-        rslt
-      end
-
       def rework_links(scope)
         # by rules
         Sentimeta.env   = CONFIG["fapi_stage"]
@@ -153,10 +135,10 @@ module SimpleApi
             index = DB[:indexes].where(id: index_id).first
             refs = DB[:refs].where(index_id: index_id).all
             # rule = SimpleApi::Rule[index[:rule_id]]
-            param = JSON.load(index[:json])
+            param = json_load(index[:json])
             refs_param = json_load(refs.first[:json], {}).delete_if{|k, v| k == 'rule' || k == 'rule_id' }
             url = router.route_to(rule.param, refs_param.dup)
-            label = tr_h1_params(JSON.load(rule.content)['h1'], param)
+            label = tr_h1_params(json_load(rule.content)['h1'], refs_param)
             path = param.delete("path").to_s.split(',')
             data = (Sentimeta::Client.fetch :objects, {}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
             next if data.blank?

@@ -10,19 +10,19 @@ module SimpleApi
         # refactor for range limiting
         JSON.dump(
           {
-          next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| (JSON.load(r.traversal_order) rescue []).present? }.map do |r|
+          next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| json_load(r.traversal_order, []).present? }.map do |r|
             content = json_load(r.content, {})
             {
               name: r.name,
               label: (content['index'] || content['h1'] || r.name),
+              url:"/en/#{sphere}/index/#{param.to_s},#{r.name}",
               links: DB[:object_data_items].where(rule_id: r.pk, index_id: nil).all.map{|o| {label: o[:label], url: o[:url], photo: o[:photo]} }.uniq.sample(4).shuffle.map do |obj|
                 {
                   name: obj[:label],
                   url: obj[:url],
                   photo: obj[:photo]
                 }
-              end,
-              url:"/en/#{sphere}/index/#{param.to_s},#{r.name}"
+              end
             }
           end
           }.tap{|x| x[:total] = x[:next].size }
@@ -46,14 +46,14 @@ module SimpleApi
        end
 
 
-      def index_links(bcr, curr, route)
+      def index_links(bcr, curr, route, param)
         sel = bcr # + [{item[:filter] => item[:value]}]
         links = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).all
         rul = SimpleApi::Rule[curr[:rule_id]]
-        url = route.route_to(rul.param, sel.inject({}){|r, h| r.merge(h) })
+        url = route.route_to(param, sel.inject({}){|r, h| r.merge(h) })
         if links.present?
           links.map do |ref|
-            lbl = JSON.load(SimpleApi::Rule[ref[:rule_id]][:content])['h1']
+            lbl = tr_h1_params(json_load(SimpleApi::Rule[ref[:rule_id]][:content], {})['h1'], json_load(ref[:json], {}))
             photo = DB[:object_data_items].where(index_id: ref[:index_id]).all.map{|o| o[:photo] }.shuffle.first
             {
               label: lbl,
@@ -69,7 +69,7 @@ module SimpleApi
               #   }
               # end,
         else
-          '[]'
+          []
         end
       end
 
@@ -77,11 +77,11 @@ module SimpleApi
         range = 0..99
         idx = DB[:indexes]
         parent = nil
-        lded = JSON.load(params['p']) rescue params['p']
+        lded = json_load(params['p'], params['p'])
         lded ||= {}
         hash = {}
-        range = lded['offset']..(lded['offset']-1) if lded['offset']
-        range = range.first..(lded['limit']-1+range.first) if lded['limit']
+        range = lded['offset']..(lded['offset'] + range.last - range.first) if lded['offset']
+        range = range.first..(lded['limit'] - 1 + range.first) if lded['limit']
         sphere = DB[:roots].where(id: root).first[:sphere]
         route = SimpleApiRouter.new('en', sphere)
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
@@ -97,9 +97,9 @@ module SimpleApi
           bcr << {curr[:filter] => curr[:value]}
         end
         unless curr
-          return JSON.dump({'ratings' => index_links(bcr, parent, route)})
+          return JSON.dump({'ratings' => index_links(bcr, parent, route, 'rating')})
         end
-        nxt = idx.where(root_id: root, rule_id: rule.pk, parent_id: curr[:id]).all
+        nxt = idx.where(root_id: root, rule_id: rule.pk, parent_id: curr[:id]).all.select{|n| next_links(n[:id]).present? }
         rsp = {}
         if nxt.present?
           rsp['next'] = nxt[range].map do |item|
@@ -115,7 +115,7 @@ module SimpleApi
           end
           rsp['total'] = nxt.size
         end
-        rsp['ratings'] = index_links(bcr, curr, route)
+        rsp['ratings'] = index_links(bcr, curr, route, 'rating')
         rsp['ratings_total'] = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).count
         JSON.dump(rsp)
       end

@@ -12,6 +12,24 @@ def json_load(string, default = nil)
   end
 end
 
+def tr_h1_params(str, hash)
+  subs = {}
+  subs.merge!('location' => hash['path'].strip.split(',').last) if hash.has_key?('path')
+  subs.merge!('stars' => hash['stars']) if hash.has_key?('stars')
+  subs.merge!('price-range' => hash['price_range']) if hash.has_key?('price_range')
+  subs.merge!('criterion' => hash['criteria']) if hash.has_key?('criteria')
+  subs.merge!('genre' => hash['genres']) if hash.has_key?('genres')
+  subs.merge!('actor' => hash['actors']) if hash.has_key?('actors')
+  subs.merge!('year' => hash['years']) if hash.has_key?('years')
+
+  rslt = str.dup
+  str.scan(/(<%(.+?)%>)/) do |ar|
+    key = ar.last.strip
+    rslt.gsub!(ar.first, subs[key].to_s)
+  end
+  rslt
+end
+
 class Enumerator #::Lazy
   def take_until
     if block_given?
