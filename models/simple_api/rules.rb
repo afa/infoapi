@@ -170,7 +170,7 @@ module SimpleApi
             end
           end
           # p root
-          links = DB[:object_data_items].where(rule_id: rule.pk, root_id: root[:id]).all..map{|h| h.delete_if{|k, v| %i(id index_id).include? k } }.uniq.sample(8).each do |link|
+          links = DB[:object_data_items].where(rule_id: rule.pk, root_id: root[:id]).all.map{|h| h.delete_if{|k, v| %i(id index_id).include? k } }.uniq.sample(8).each do |link|
             DB[:object_data_items].insert(url: link[:url], photo: link[:photo], label: link[:label], index_id: nil, rule_id: rule.pk, root_id: root[:id])
           end
         end
