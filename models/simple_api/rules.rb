@@ -137,7 +137,7 @@ module SimpleApi
             # rule = SimpleApi::Rule[index[:rule_id]]
             param = json_load(index[:json])
             refs_param = json_load(refs.first[:json], {}).delete_if{|k, v| k == 'rule' || k == 'rule_id' }
-            url = router.route_to(rule.param, refs_param.dup)
+            url = router.route_to('rating', refs_param.dup)
             label = tr_h1_params(json_load(rule.content)['h1'], refs_param)
             path = param.delete("path").to_s.split(',')
             data = (Sentimeta::Client.fetch :objects, {}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
@@ -170,7 +170,7 @@ module SimpleApi
             end
           end
           # p root
-          links = DB[:object_data_items].where(rule_id: rule.pk, root_id: root[:id]).all.uniq.sample(8).each do |link|
+          links = DB[:object_data_items].where(rule_id: rule.pk, root_id: root[:id]).all..map{|h| h.delete_if{|k, v| %i(id index_id).include? k } }.uniq.sample(8).each do |link|
             DB[:object_data_items].insert(url: link[:url], photo: link[:photo], label: link[:label], index_id: nil, rule_id: rule.pk, root_id: root[:id])
           end
         end
