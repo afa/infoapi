@@ -1,3 +1,4 @@
+require 'colored'
 require 'yaml'
 require 'sequel'
 Sequel.extension :inflector
