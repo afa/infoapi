@@ -10,9 +10,9 @@ gem "thin"
 gem "sequel"
 gem "pg"
 gem "json"
+gem 'racksh'
 
 group :development do
-  gem 'racksh'
   gem "capistrano"
   gem "capistrano-rvm"
   gem "capistrano-bundler"
