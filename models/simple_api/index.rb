@@ -52,7 +52,7 @@ module SimpleApi
         if links.present?
           links.map do |ref|
             lbl = tr_h1_params(json_load(ref.rule.content, {})['h1'], json_load(ref.json, {}))
-            photo = ref.index.objects.sample.photo
+            photo = ref.index.parent.try(:objects).try(:sample).try(:photo)
             {
               label: lbl,
               photo: photo,
@@ -106,6 +106,10 @@ module SimpleApi
           rsp['total'] = nxt.size
         end
         rsp['ratings'] = index_links(bcr, curr, route, 'rating')
+        if rsp['ratings'].present?
+          rsp.delete('next')
+          rsp.delete('total')
+        end
         # rsp['ratings_total'] = SimpleApi::Sitemap::Reference.where(index_id: curr[:id], is_empty: false, duplicate_id: nil).count
         JSON.dump(rsp)
       end
