@@ -95,22 +95,18 @@ module SimpleApi
         end
       end
 
-      def rework_forwardable
-        SimpleApi::Sitemap::Reference.where(duplicate_id: nil, is_empty: false).all.each do |ref|
-          index = ref.index
-          parent = index.parent
-          chlds = parent.children
-          unless chlds.size > 1
-          end
-          collapse_singles(index)
+      def rework_forwardable(sphere)
+        root_ids = SimpleApi::Sitemap::Root.where(sphere: sphere).all.map(&:pk)
+        puts "todo: #{SimpleApi::Sitemap::Index.forwardables(root_id: root_ids).size}"
+        loop do
+          break unless fwd = SimpleApi::Sitemap::Index.forwardables(root_id: root_ids).first
+          parent = fwd.parent
+          fwd.update(parent_id: parent.parent_id)
+          parent.delete
         end
+
       end
 
-      def collapse_singles(index)
-        parent = nil
-      end
-
-
-    module_function :rework_doubles, :rework_empty, :preload_criteria, :rework_links
+    module_function :rework_doubles, :rework_empty, :preload_criteria, :rework_links, :rework_forwardable
   end
 end

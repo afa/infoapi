@@ -2,7 +2,10 @@ module SimpleApi
   class Index
     class << self
       def breadcrumbs(sphere, param, params)
-        JSON.dump({breadcrumbs: nil})
+        route = SimpleApiRouter.new(:en, sphere)
+        rat = SimpleApi::Sitemap::Reference.where(duplicate_id: nil, is_empty: false, url: route.route_to({}))
+        return JSON.dump({breadcrumbs: nil}) if params.blank? || params[:p].blank?
+
       end
 
       def roots(sphere, param)
@@ -16,14 +19,7 @@ module SimpleApi
               name: r.name,
               label: (content['index'] || content['h1'] || r.name),
               url:"/en/#{sphere}/index/#{param.to_s},#{r.name}",
-              links: r.objects_dataset.where(index_id: nil).all.map{|o| {name: o.label, url: o.url, photo: o.photo} }.uniq.sample(4).shuffle #.map do |obj|
-                # {
-                #   # clean unneed
-                #   name: obj[:label],
-                #   url: obj[:url],
-                #   photo: obj[:photo]
-                # }
-              # end
+              links: r.objects_dataset.where(index_id: nil).all.map{|o| {name: o.label, url: o.url, photo: o.photo} }.uniq.sample(4).shuffle
             }
           end
           }.tap{|x| x[:total] = x[:next].size }
@@ -49,13 +45,14 @@ module SimpleApi
 
       def index_links(bcr, curr, route, param)
         sel = bcr # + [{item[:filter] => item[:value]}]
-        links = SimpleApi::Sitemap::Reference.where(index_id: curr[:id], is_empty: false, duplicate_id: nil).all
+        index_ids = SimpleApi::Sitemap::Index.where(parent_id: curr[:id]).all.map(&:pk)
+        links = SimpleApi::Sitemap::Reference.where(index_id: index_ids, is_empty: false, duplicate_id: nil).all
         rul = SimpleApi::Rule[curr[:rule_id]]
         url = route.route_to(param, sel.inject({}){|r, h| r.merge(h) })
         if links.present?
           links.map do |ref|
-            lbl = tr_h1_params(json_load(SimpleApi::Rule[ref[:rule_id]][:content], {})['h1'], json_load(ref[:json], {}))
-            photo = DB[:object_data_items].where(index_id: ref[:index_id]).all.map{|o| o[:photo] }.shuffle.first
+            lbl = tr_h1_params(json_load(ref.rule.content, {})['h1'], json_load(ref.json, {}))
+            photo = ref.index.objects.sample.photo
             {
               label: lbl,
               photo: photo,
