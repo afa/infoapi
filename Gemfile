@@ -12,6 +12,7 @@ gem "pg"
 gem "json"
 
 group :development do
+  gem 'racksh'
   gem "capistrano"
   gem "capistrano-rvm"
   gem "capistrano-bundler"

@@ -37,21 +37,21 @@ namespace :sitemap do
   task :rework_doubles, [:sphere, :sitemap_id] do |t, argv|
     sphere = argv.with_defaults(sphere: 'movies')[:sphere]
     sitemap_id = argv.with_defaults(sitemap_id: nil)[:sitemap_id]
-    SimpleApi::Rules.rework_doubles(sitemap_session_id: sitemap_id)
+    SimpleApi::Sitemap.rework_doubles(sitemap_session_id: sitemap_id)
   end
 
   task :rework_links, [:sphere, :root_id] do |t, argv|
     root_id = argv.with_defaults(root_id: nil)[:root_id]
-    SimpleApi::Rules.rework_links(root_id: root_id)
+    SimpleApi::Sitemap.rework_links(root_id: root_id)
   end
 
   task :rework_empty, [:root_id] do |t, argv|
     root_id = argv.with_defaults(root_id: nil)[:root_id]
-    SimpleApi::Rules.rework_empty(root_id: root_id)
+    SimpleApi::Sitemap.rework_empty(root_id: root_id)
   end
 
   task :prepare_pathes do
-    SimpleApi::Rules.preload_criteria
+    SimpleApi::Sitemap.preload_criteria
     f = SimpleApi::RuleDefs.from_name('path').load_rule('path', 'any')
     f.class.prepare_list
   end

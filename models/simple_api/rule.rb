@@ -9,6 +9,10 @@ module SimpleApi
     attr :filter
     attr :filters
 
+    one_to_many :objects, class: 'SimpleApi::Sitemap::ObjectData'
+    one_to_many :references, class: 'SimpleApi::Sitemap::Reference'
+    one_to_many :indexes, class: 'SimpleApi::Sitemap::Index'
+
     def after_initialize
       super
       deserialize
@@ -108,16 +112,13 @@ module SimpleApi
       filters.build_index(root, self)
     end
 
-    def write_ref(root_id, hash, index_id)
-      refs = DB[:refs]
-      roots = DB[:roots]
+    def write_ref(root, hash, index_id)
       route = SimpleApiRouter.new(lang, sphere)
-      refs.insert(
+      SimpleApi::Sitemap::Reference.insert(
         rule_id: pk,
         json: JSON.dump(hash),
-        # url: route.route_to(param, hash),
         url: route.route_to('rating', hash),
-        sitemap_session_id: roots.where(id: root_id).first[:sitemap_session_id],
+        sitemap_session_id: root.sitemap_session_id,
         index_id: index_id
       )
     end

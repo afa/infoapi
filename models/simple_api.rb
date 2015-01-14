@@ -16,6 +16,7 @@ module SimpleApi
   require 'simple_api/rules'
   require 'simple_api/rule_defs'
   require 'simple_api/filter'
+  require 'simple_api/sitemap'
 
 end
 

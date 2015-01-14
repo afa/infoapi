@@ -33,6 +33,9 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
+    racksh (1.0.0)
+      rack (>= 1.0)
+      rack-test (>= 0.5)
     rake (10.3.2)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
@@ -86,6 +89,7 @@ DEPENDENCIES
   fakeweb
   json
   pg
+  racksh
   rake (~> 10.0)
   rspec
   sentimeta (~> 0.0.3)

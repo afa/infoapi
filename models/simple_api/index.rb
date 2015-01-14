@@ -6,7 +6,7 @@ module SimpleApi
       end
 
       def roots(sphere, param)
-        root = DB[:roots].reverse_order(:id).select(:id).where(sphere: sphere).first
+        root = SimpleApi::Sitemap::Root.reverse_order(:id).where(sphere: sphere).first
         # refactor for range limiting
         JSON.dump(
           {
@@ -16,13 +16,14 @@ module SimpleApi
               name: r.name,
               label: (content['index'] || content['h1'] || r.name),
               url:"/en/#{sphere}/index/#{param.to_s},#{r.name}",
-              links: DB[:object_data_items].where(rule_id: r.pk, index_id: nil).all.map{|o| {label: o[:label], url: o[:url], photo: o[:photo]} }.uniq.sample(4).shuffle.map do |obj|
-                {
-                  name: obj[:label],
-                  url: obj[:url],
-                  photo: obj[:photo]
-                }
-              end
+              links: r.objects_dataset.where(index_id: nil).all.map{|o| {name: o.label, url: o.url, photo: o.photo} }.uniq.sample(4).shuffle #.map do |obj|
+                # {
+                #   # clean unneed
+                #   name: obj[:label],
+                #   url: obj[:url],
+                #   photo: obj[:photo]
+                # }
+              # end
             }
           end
           }.tap{|x| x[:total] = x[:next].size }
@@ -30,7 +31,7 @@ module SimpleApi
       end
 
       def tree(sphere, rule_selector, rule_params, params)
-        root = DB[:roots].reverse_order(:id).select(:id).where(sphere: sphere).first[:id]
+        root = SimpleApi::Sitemap::Root.reverse_order(:id).where(sphere: sphere).first
         selector = rule_selector.strip.split(',')
         rat = selector.shift
         # return roots(sphere) unless 'rating' == rat
@@ -40,7 +41,7 @@ module SimpleApi
         lang = "en"
         name = selector.shift
         return roots(sphere, rat) unless name.present?
-        return roots(sphere, rat) unless rule = Rule.where(name: name, param: rat).first
+        return roots(sphere, rat) unless rule = SimpleApi::Rule.where(name: name, param: rat).first
         fields = selector || []
         leaf_page(root, rule, name, selector, params, rat)
        end
@@ -48,7 +49,7 @@ module SimpleApi
 
       def index_links(bcr, curr, route, param)
         sel = bcr # + [{item[:filter] => item[:value]}]
-        links = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).all
+        links = SimpleApi::Sitemap::Reference.where(index_id: curr[:id], is_empty: false, duplicate_id: nil).all
         rul = SimpleApi::Rule[curr[:rule_id]]
         url = route.route_to(param, sel.inject({}){|r, h| r.merge(h) })
         if links.present?
@@ -61,13 +62,6 @@ module SimpleApi
               url: ref[:url]
             }
           end
-              # links: DB[:object_data_items].where(rule_id: r.pk, index_id: nil).all.map{|o| {label: o[:label], url: o[:url], photo: o[:photo]} }.uniq.sample(4).shuffle.map do |obj|
-              #   {
-              #     name: obj[:label],
-              #     url: obj[:url],
-              #     photo: obj[:photo]
-              #   }
-              # end,
         else
           []
         end
@@ -75,14 +69,13 @@ module SimpleApi
 
       def leaf_page(root, rule, name, selector, params, param)
         range = 0..99
-        idx = DB[:indexes]
         parent = nil
         lded = json_load(params['p'], params['p'])
         lded ||= {}
         hash = {}
         range = lded['offset']..(lded['offset'] + range.last - range.first) if lded['offset']
         range = range.first..(lded['limit'] - 1 + range.first) if lded['limit']
-        sphere = DB[:roots].where(id: root).first[:sphere]
+        sphere = root.sphere
         route = SimpleApiRouter.new('en', sphere)
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
         hash.merge!(lded["filters"]) if lded.has_key?('filters')
@@ -92,40 +85,40 @@ module SimpleApi
         selector.each do |fname|
           parent = curr
           flt = SimpleApi::RuleDefs.from_name(fname).load_rule(fname, hash[fname])
-          curr = idx.where(root_id: root, rule_id: rule.pk, parent_id: parent[:id], filter: fname, value: flt.convolution(hash[fname]).to_s).first
+          curr = rule.indexes_dataset.where(root_id: root.pk, parent_id: parent[:id], filter: fname, value: flt.convolution(hash[fname]).to_s).first
           break unless curr
-          bcr << {curr[:filter] => curr[:value]}
+          bcr << {curr.filter => curr.value}
         end
         unless curr
           return JSON.dump({'ratings' => index_links(bcr, parent, route, 'rating')})
         end
-        nxt = idx.where(root_id: root, rule_id: rule.pk, parent_id: curr[:id]).all.select{|n| next_links(n[:id]).present? }
+        nxt = rule.indexes_dataset.where(root_id: root.pk, parent_id: curr[:id]).all.select{|n| next_links(n).present? }
         rsp = {}
         if nxt.present?
           rsp['next'] = nxt[range].map do |item|
-            sel = bcr + [{item[:filter] => item[:value]}]
+            sel = bcr + [{item.filter => item.value}]
             spath = sel.map{|i| i.keys.first }.join(',')
             parm = route.route_to("index/#{[rule.param, name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
             {
-              'label' => "#{item[:filter]}:#{item[:value]}",
-              'name' => item[:filter],
+              'label' => "#{item.filter}:#{item.value}",
+              'name' => item.filter,
               'url' => parm,
-              'links' => next_links(item[:id])
+              'links' => next_links(item)
             }
           end
           rsp['total'] = nxt.size
         end
         rsp['ratings'] = index_links(bcr, curr, route, 'rating')
-        rsp['ratings_total'] = DB[:refs].where(index_id: curr[:id], is_empty: false, duplicate_id: nil).count
+        # rsp['ratings_total'] = SimpleApi::Sitemap::Reference.where(index_id: curr[:id], is_empty: false, duplicate_id: nil).count
         JSON.dump(rsp)
       end
 
-      def next_links(id)
-        DB[:object_data_items].where(index_id: id).all.sample(4).map do |lnk|
+      def next_links(index)
+        index.objects.sample(4).map do |lnk|
           {
-            'name' => lnk[:label],
-            'url' => lnk[:url],
-            'photo' => lnk[:photo]
+            'name' => lnk.label,
+            'url' => lnk.url,
+            'photo' => lnk.photo
           }
         end
       end

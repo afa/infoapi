@@ -35,11 +35,11 @@ module SimpleApi
       (rules.has_key?('default') && self['default']) || (rules.values.all?{|item| item.config == 'any' })
     end
 
-    def write_ref(rule, root_id, hash, index)
-      rule.write_ref(root_id, hash, index)
+    def write_ref(rule, root, hash, index)
+      rule.write_ref(root, hash, index)
     end
 
-    def recurse_index(flst, cur_hash, root, parent, idx, rule)
+    def recurse_index(flst, cur_hash, root, parent, rule)
       leafs = []
       if flst.blank?
         write_ref(rule, root, cur_hash, parent)
@@ -51,16 +51,15 @@ module SimpleApi
       values = rdef.fetch_list(rule)
       values.each do |val|
         hsh = cur_hash.merge(flt => val)
-        ix = idx.insert(json: JSON.dump(hsh), root_id: root, parent_id: parent, filter: flt, value: val, rule_id: rule.pk)
-        leafs += recurse_index(wlst, hsh, root, ix, idx, rule)
+        ix = SimpleApi::Sitemap::Index.insert(json: JSON.dump(hsh), rule_id: rule.pk, root_id: root.pk, parent_id: parent, filter: flt, value: val)
+        leafs += recurse_index(wlst, hsh, root, ix, rule)
       end
       leafs
     end
 
     def build_index(root, rule)
-      idx = DB[:indexes]
       filter_list = traversal_order || []
-      recurse_index(filter_list, {}, root, nil, idx, rule)
+      recurse_index(filter_list, {}, root, nil, rule)
     end
 
   end
