@@ -56,7 +56,11 @@ module SimpleApi
       def index_links(bcr, curr, route, param)
         sel = bcr # + [{item[:filter] => item[:value]}]
         # index_ids = SimpleApi::Sitemap::Index.where(parent_id: curr[:id]).all.map(&:pk)
-        links = SimpleApi::Sitemap::Reference.where(super_index_id: curr[:id], is_empty: false, duplicate_id: nil).all
+        if curr[:id]
+        links = SimpleApi::Sitemap::Reference.where(super_index_id: curr[:id], is_empty: false).all
+        else
+        links = SimpleApi::Sitemap::Reference.where(index_id: curr[:id], is_empty: false).all
+        end
         rul = SimpleApi::Rule[curr[:rule_id]]
         url = route.route_to(param, sel.inject({}){|r, h| r.merge(h) })
         if links.present?
@@ -96,11 +100,22 @@ module SimpleApi
         # selector.each do |fname|
           parent = curr
           flt = SimpleApi::RuleDefs.from_name(fname).load_rule(fname, hash[fname])
+          p 'flt-val', fname, hash[fname]
           curr = rule.indexes_dataset.where(root_id: root.pk, parent_id: parent[:id], filter: fname, value: flt.convolution(hash[fname]).to_s).first
           unless curr && cselector.present?
             puts "skipable #{fname}-#{hash[fname]}"
             pfname = [fname]
             pval = [flt.convolution(hash[fname])]
+            cname = []
+            cval = []
+            cselector.each do |nm|
+              cname << nm
+              f = SimpleApi::RuleDefs.from_name(nm).load_rule(nm, hash[nm])
+              cval << f.convolution(hash[nm])
+              curr = rule.indexes_dataset.where(root_id: root.pk, parent_id: parent[:id], filter: JSON.dump(pfname + cname), value: JSON.dump(pval + cval)).first
+              break if curr
+            end
+            cselector.shift(cname.size) if curr
           end
           break unless curr
           bcr << {curr.filter => curr.value}
