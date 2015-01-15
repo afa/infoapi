@@ -11,7 +11,7 @@ module SimpleApi
       end
 
       def convolution(param)
-        load_json(param, param)
+        json_load(param, param)
       end
 
     end
