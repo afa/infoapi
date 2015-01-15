@@ -123,10 +123,12 @@ module SimpleApi
             bcr << {curr.filter => curr.value}
           end
         end
+        p 'uncurr', curr
         unless curr
           return JSON.dump({'ratings' => index_links(bcr, parent, route, 'rating')})
         end
         nxt = rule.indexes_dataset.where(root_id: root.pk, parent_id: curr[:id]).all.select{|n| next_links(n).present? }
+        p 'nxt', nxt
         rsp = {}
         if nxt.present?
           rsp['next'] = nxt[range].map do |item|
@@ -143,6 +145,7 @@ module SimpleApi
           rsp['total'] = nxt.size
         end
         rsp['ratings'] = index_links(bcr, curr, route, 'rating')
+        p 'rsp', rsp
         # if rsp['ratings'].present?
         #   rsp.delete('next')
         #   rsp.delete('total')
