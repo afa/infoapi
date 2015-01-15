@@ -134,13 +134,14 @@ module SimpleApi
         rsp = {}
         if nxt.present?
           rsp['next'] = nxt[range].map do |item|
-            sel = bcr + [{json_load(item.filter, item.filter) => json_load(item.value, item.value)}].map do |i|
+            sel = []
+            (bcr + [{json_load(item.filter, item.filter) => json_load(item.value, item.value)}]).map do |i|
               if i.keys.first.is_a? ::Array
                 i.keys.first.zip(i.values.first)
               else
                 i
               end
-            end.flatten.tap{|x| p 'sm', x }.each_slice(2){|a, b| Hash[a, b] }.tap{|x| p 'selmap', x }
+            end.flatten.tap{|x| p 'sm', x }.each_slice(2){|a, b| sel << Hash[a, b] }
             spath = sel.map{|i| i.keys.first }.join(',')
             p 'sel', sel
             parm = route.route_to("index/#{[rule.param, name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
