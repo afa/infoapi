@@ -10,6 +10,10 @@ module SimpleApi
         [nil]
       end
 
+      def convolution(param)
+        load_json(param, param)
+      end
+
     end
     module Default
       def parse_params(param, hsh_rule)
