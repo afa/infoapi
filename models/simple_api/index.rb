@@ -52,7 +52,8 @@ module SimpleApi
         if links.present?
           links.map do |ref|
             lbl = tr_h1_params(json_load(ref.rule.content, {})['h1'], json_load(ref.json, {}))
-            photo = ref.index.objects.sample.photo
+            photo = ref.index.objects.sample.try(:photo)
+            next unless photo
             {
               label: lbl,
               photo: photo,
