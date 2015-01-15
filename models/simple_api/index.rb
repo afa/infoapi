@@ -2,7 +2,17 @@ module SimpleApi
   class Index
     class << self
       def breadcrumbs(sphere, param, params)
+        lded = json_load(params['p'], params['p'])
+        lded ||= {}
+        hash = {}
+        # range = lded['offset']..(lded['offset'] + range.last - range.first) if lded['offset']
+        # range = range.first..(lded['limit'] - 1 + range.first) if lded['limit']
+        # sphere = root.sphere
+        # route = SimpleApiRouter.new('en', sphere)
+        hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
+        hash.merge!(lded["filters"]) if lded.has_key?('filters')
         route = SimpleApiRouter.new(:en, sphere)
+        rules = SimpleApi::Rule.where(sphere: sphere, param: param).all
         rat = SimpleApi::Sitemap::Reference.where(duplicate_id: nil, is_empty: false, url: route.route_to('rating', {}))
         return JSON.dump({breadcrumbs: nil}) if params.blank? || params[:p].blank?
 
@@ -80,10 +90,18 @@ module SimpleApi
         curr = {id: nil, rule_id: rule.pk}
 
         bcr = []
-        selector.each do |fname|
+        cselector = selector.dup
+        loop do
+          fname = cselector.shift
+        # selector.each do |fname|
           parent = curr
           flt = SimpleApi::RuleDefs.from_name(fname).load_rule(fname, hash[fname])
           curr = rule.indexes_dataset.where(root_id: root.pk, parent_id: parent[:id], filter: fname, value: flt.convolution(hash[fname]).to_s).first
+          unless curr && cselector.present?
+            puts "skipable #{fname}-#{hash[fname]}"
+            pfname = [fname]
+            pval = [flt.convolution(hash[fname])]
+          end
           break unless curr
           bcr << {curr.filter => curr.value}
         end

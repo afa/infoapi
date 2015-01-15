@@ -60,12 +60,12 @@ module SimpleApi
             url = router.route_to('rating', refs_param.dup)
             label = tr_h1_params(json_load(rule.content)['h1'], refs_param)
             path = param.delete("path").to_s.split(',')
-            data = (Sentimeta::Client.fetch :objects, {'fields' => {'limit_objects' => '4'}}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
+            data = (Sentimeta::Client.fetch :objects, {'fields' => {'limit_objects' => '100'}}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
             next if data.blank?
             next if data['objects'].nil?
             puts "rework links #{rule.pk}:#{index.pk}=#{data['objects'].size}.#{refs.size}"
             parents << index.parent if index.parent
-            data['objects'].select{|o| o.has_key?('photos') && o['photos'].present? }.sample(8).each do |obj|
+            data['objects'].select{|o| o.has_key?('photos') && o['photos'].present? && o['photos']['type'] != 'trailer'}.sample(8).each do |obj|
               index.objects_dataset.insert( 
                                    url: url, #"/#{rule.lang}/#{rule.sphere}/objects/#{obj['full_id']}",
                                    photo: obj['photos'].try(:first).try(:[], 'url'),
@@ -101,7 +101,11 @@ module SimpleApi
         loop do
           break unless fwd = SimpleApi::Sitemap::Index.forwardables(root_id: root_ids).first
           parent = fwd.parent
-          fwd.update(parent_id: parent.parent_id)
+          flt = load_json(parent.filter, parent.filter)
+          val = load_json(parent.value, parent.value)
+          flt = [flt] unless flt.is_a?(::Array)
+          val = [val] unless val.is_a?(::Array)
+          fwd.update(parent_id: parent.parent_id, filter: JSON.dump(flt + [fwd.filter]), value: JSON.dump(val + [fwd.value]))
           parent.delete
         end
         index_ids = SimpleApi::Sitemap::Index.where(root_id: root_ids).all.map(&:pk)

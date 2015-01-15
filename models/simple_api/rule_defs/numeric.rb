@@ -62,7 +62,7 @@ module SimpleApi
       end
 
       def convolution(param)
-        val = JSON.load(param) rescue param
+        val = json_load(param, param)
         return nil if val.nil?
         return range_from_hash(val).first.to_i if val.is_a?(::Hash) && range_from_hash(val).size == 1
         return range_from_string(val).first.to_i if val.is_a?(::String) && range_from_string(val).size == 1
