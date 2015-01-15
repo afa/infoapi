@@ -92,10 +92,11 @@ module SimpleApi
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
         hash.merge!(lded["filters"]) if lded.has_key?('filters')
         curr = {id: nil, rule_id: rule.pk}
-        p curr
+        p curr, hash
 
         bcr = []
         cselector = selector.dup
+        p 'cselector', cselector
         loop do
           break if cselector.blank?
           fname = cselector.shift
@@ -119,8 +120,8 @@ module SimpleApi
               end
               cselector.shift(cname.size) if curr
             end
-            bcr << {curr.filter => curr.value}
             break unless curr
+            bcr << {curr.filter => curr.value}
           end
         end
         p 'uncurr', curr
@@ -147,7 +148,6 @@ module SimpleApi
           rsp['total'] = nxt.size
         end
         rsp['ratings'] = index_links(bcr, curr, route, 'rating')
-        p 'rsp', rsp
         # if rsp['ratings'].present?
         #   rsp.delete('next')
         #   rsp.delete('total')
