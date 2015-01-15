@@ -121,8 +121,8 @@ module SimpleApi
               cselector.shift(cname.size) if curr
             end
             break unless curr
-            bcr << {curr.filter => curr.value}
           end
+          bcr << {curr.filter => curr.value}
         end
         p 'uncurr', curr
         p 'bcr', bcr
