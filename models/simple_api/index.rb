@@ -155,7 +155,7 @@ module SimpleApi
           rsp['total'] = nxt.size
         end
         rsp['ratings'] = index_links(bcr, curr, route, 'rating')
-        p rsp['ratings']
+        p 'rat', rsp['ratings']
         # if rsp['ratings'].present?
         #   rsp.delete('next')
         #   rsp.delete('total')
