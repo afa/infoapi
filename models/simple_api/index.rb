@@ -124,6 +124,7 @@ module SimpleApi
           end
         end
         p 'uncurr', curr
+        p 'bcr', bcr
         unless curr
           return JSON.dump({'ratings' => index_links(bcr, parent, route, 'rating')})
         end
@@ -134,6 +135,7 @@ module SimpleApi
           rsp['next'] = nxt[range].map do |item|
             sel = bcr + [{item.filter => item.value}]
             spath = sel.map{|i| i.keys.first }.join(',')
+            p 'sel', sel
             parm = route.route_to("index/#{[rule.param, name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
             {
               'label' => "#{item.filter}:#{item.value}",
