@@ -57,9 +57,9 @@ module SimpleApi
         sel = bcr # + [{item[:filter] => item[:value]}]
         # index_ids = SimpleApi::Sitemap::Index.where(parent_id: curr[:id]).all.map(&:pk)
         if curr[:id]
-        links = SimpleApi::Sitemap::Reference.where(super_index_id: curr[:id], is_empty: false).all
+          links = SimpleApi::Sitemap::Reference.where(super_index_id: curr[:id], is_empty: false).all
         else
-        links = SimpleApi::Sitemap::Reference.where(index_id: curr[:id], is_empty: false).all
+          links = SimpleApi::Sitemap::Reference.where(index_id: curr[:id], is_empty: false).all
         end
         rul = SimpleApi::Rule[curr[:rule_id]]
         url = route.route_to(param, sel.inject({}){|r, h| r.merge(h) })
@@ -154,6 +154,7 @@ module SimpleApi
           end
           rsp['total'] = nxt.size
         end
+        p 'bcr curr', bcr, curr
         rsp['ratings'] = index_links(bcr, curr, route, 'rating')
         p 'rat', rsp['ratings']
         # if rsp['ratings'].present?
@@ -165,14 +166,13 @@ module SimpleApi
       end
 
       def next_links(index)
-        p 'nl-idx', index
         index.objects.sample(4).map do |lnk|
           {
             'name' => lnk.label,
             'url' => lnk.url,
             'photo' => lnk.photo
           }
-        end.tap{|x| p 'nl-rslt', x }
+        end
       end
 
       # def mk_params(sel)
