@@ -101,8 +101,8 @@ module SimpleApi
         loop do
           break unless fwd = SimpleApi::Sitemap::Index.forwardables(root_id: root_ids).first
           parent = fwd.parent
-          flt = load_json(parent.filter, parent.filter)
-          val = load_json(parent.value, parent.value)
+          flt = json_load(parent.filter, parent.filter)
+          val = json_load(parent.value, parent.value)
           flt = [flt] unless flt.is_a?(::Array)
           val = [val] unless val.is_a?(::Array)
           fwd.update(parent_id: parent.parent_id, filter: JSON.dump(flt + [fwd.filter]), value: JSON.dump(val + [fwd.value]))
