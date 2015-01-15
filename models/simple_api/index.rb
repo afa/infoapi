@@ -102,23 +102,25 @@ module SimpleApi
           flt = SimpleApi::RuleDefs.from_name(fname).load_rule(fname, hash[fname])
           p 'flt-val', fname, hash[fname]
           curr = rule.indexes_dataset.where(root_id: root.pk, parent_id: parent[:id], filter: fname, value: flt.convolution(hash[fname]).to_s).first
-          unless curr && cselector.present?
-            puts "skipable #{fname}-#{hash[fname]}"
-            pfname = [fname]
-            pval = [flt.convolution(hash[fname])]
-            cname = []
-            cval = []
-            cselector.each do |nm|
-              cname << nm
-              f = SimpleApi::RuleDefs.from_name(nm).load_rule(nm, hash[nm])
-              cval << f.convolution(hash[nm])
-              curr = rule.indexes_dataset.where(root_id: root.pk, parent_id: parent[:id], filter: JSON.dump(pfname + cname), value: JSON.dump(pval + cval)).first
-              break if curr
+          unless curr
+            if cselector.present?
+              puts "skipable #{fname}-#{hash[fname]}"
+              pfname = [fname]
+              pval = [flt.convolution(hash[fname])]
+              cname = []
+              cval = []
+              cselector.each do |nm|
+                cname << nm
+                f = SimpleApi::RuleDefs.from_name(nm).load_rule(nm, hash[nm])
+                cval << f.convolution(hash[nm])
+                curr = rule.indexes_dataset.where(root_id: root.pk, parent_id: parent[:id], filter: JSON.dump(pfname + cname), value: JSON.dump(pval + cval)).first
+                break if curr
+              end
+              cselector.shift(cname.size) if curr
             end
-            cselector.shift(cname.size) if curr
+            break unless curr
+            bcr << {curr.filter => curr.value}
           end
-          break unless curr
-          bcr << {curr.filter => curr.value}
         end
         unless curr
           return JSON.dump({'ratings' => index_links(bcr, parent, route, 'rating')})
