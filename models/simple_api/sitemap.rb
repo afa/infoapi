@@ -65,7 +65,7 @@ module SimpleApi
             next if data['objects'].nil?
             puts "rework links #{rule.pk}:#{index.pk}=#{data['objects'].size}.#{refs.size}"
             parents << index.parent if index.parent
-            data['objects'].select{|o| o.has_key?('photos') && o['photos'].present? && o['photos']['type'] != 'trailer'}.sample(8).each do |obj|
+            data['objects'].select{|o| o.has_key?('photos') && o['photos'].present? && o['photos'].select{|p| p['type'] != 'trailer'}.present? }.sample(8).each do |obj|
               index.objects_dataset.insert( 
                                    url: url, #"/#{rule.lang}/#{rule.sphere}/objects/#{obj['full_id']}",
                                    photo: obj['photos'].try(:first).try(:[], 'url'),
