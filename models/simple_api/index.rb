@@ -3,7 +3,7 @@ module SimpleApi
     class << self
       def breadcrumbs(sphere, param, params)
         route = SimpleApiRouter.new(:en, sphere)
-        rat = SimpleApi::Sitemap::Reference.where(duplicate_id: nil, is_empty: false, url: route.route_to({}))
+        rat = SimpleApi::Sitemap::Reference.where(duplicate_id: nil, is_empty: false, url: route.route_to('rating', {}))
         return JSON.dump({breadcrumbs: nil}) if params.blank? || params[:p].blank?
 
       end
@@ -45,8 +45,8 @@ module SimpleApi
 
       def index_links(bcr, curr, route, param)
         sel = bcr # + [{item[:filter] => item[:value]}]
-        index_ids = SimpleApi::Sitemap::Index.where(parent_id: curr[:id]).all.map(&:pk)
-        links = SimpleApi::Sitemap::Reference.where(index_id: index_ids, is_empty: false, duplicate_id: nil).all
+        # index_ids = SimpleApi::Sitemap::Index.where(parent_id: curr[:id]).all.map(&:pk)
+        links = SimpleApi::Sitemap::Reference.where(super_index_id: curr[:id], is_empty: false, duplicate_id: nil).all
         rul = SimpleApi::Rule[curr[:rule_id]]
         url = route.route_to(param, sel.inject({}){|r, h| r.merge(h) })
         if links.present?
@@ -106,10 +106,10 @@ module SimpleApi
           rsp['total'] = nxt.size
         end
         rsp['ratings'] = index_links(bcr, curr, route, 'rating')
-        if rsp['ratings'].present?
-          rsp.delete('next')
-          rsp.delete('total')
-        end
+        # if rsp['ratings'].present?
+        #   rsp.delete('next')
+        #   rsp.delete('total')
+        # end
         # rsp['ratings_total'] = SimpleApi::Sitemap::Reference.where(index_id: curr[:id], is_empty: false, duplicate_id: nil).count
         JSON.dump(rsp)
       end

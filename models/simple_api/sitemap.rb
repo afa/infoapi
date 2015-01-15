@@ -104,7 +104,14 @@ module SimpleApi
           fwd.update(parent_id: parent.parent_id)
           parent.delete
         end
-
+        index_ids = SimpleApi::Sitemap::Index.where(root_id: root_ids).all.map(&:pk)
+        refs = SimpleApi::Sitemap::Reference.where(index_id: index_ids, super_index_id: nil).order(:id).all
+        puts "todo: #{refs.size} refs"
+        refs.each do |ref|
+          ref.update(super_index_id: ref.index.parent_id)
+          print '.' if ref.pk % 100 == 0
+        end
+        puts '', 'done'
       end
 
     module_function :rework_doubles, :rework_empty, :preload_criteria, :rework_links, :rework_forwardable
