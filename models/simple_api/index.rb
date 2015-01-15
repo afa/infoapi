@@ -92,12 +92,13 @@ module SimpleApi
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
         hash.merge!(lded["filters"]) if lded.has_key?('filters')
         curr = {id: nil, rule_id: rule.pk}
+        p curr
 
         bcr = []
         cselector = selector.dup
         loop do
+          break if cselector.blank?
           fname = cselector.shift
-        # selector.each do |fname|
           parent = curr
           flt = SimpleApi::RuleDefs.from_name(fname).load_rule(fname, hash[fname])
           p 'flt-val', fname, hash[fname]
