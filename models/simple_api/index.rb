@@ -140,7 +140,7 @@ module SimpleApi
               else
                 i
               end
-            end.flatten.tap{|x| p 'sm', x }.each_slice(2){|a| Hash[a] }.tap{|x| p 'selmap', x }
+            end.flatten.tap{|x| p 'sm', x }.each_slice(2){|a, b| Hash[a, b] }.tap{|x| p 'selmap', x }
             spath = sel.map{|i| i.keys.first }.join(',')
             p 'sel', sel
             parm = route.route_to("index/#{[rule.param, name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
