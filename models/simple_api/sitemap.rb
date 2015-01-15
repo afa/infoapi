@@ -68,7 +68,7 @@ module SimpleApi
             data['objects'].select{|o| o.has_key?('photos') && o['photos'].present? && o['photos'].select{|p| p['type'] != 'trailer'}.present? }.sample(8).each do |obj|
               index.objects_dataset.insert( 
                                    url: url, #"/#{rule.lang}/#{rule.sphere}/objects/#{obj['full_id']}",
-                                   photo: obj['photos'].try(:first).try(:[], 'url'),
+                                   photo: obj['photos'].select{|p| p['type'] != 'trailer'}.try(:first).try(:[], 'url'),
                                    label: label, #obj['name'],
                                    rule_id: rule.pk,
                                    root_id: root.pk,
