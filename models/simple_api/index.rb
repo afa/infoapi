@@ -122,7 +122,7 @@ module SimpleApi
             end
             break unless curr
           end
-          bcr << {curr.filter => curr.value}
+          bcr << {json_load(curr.filter,curr.filter) => json_load(curr.value, curr.value)}
         end
         p 'uncurr', curr
         p 'bcr', bcr
@@ -134,7 +134,13 @@ module SimpleApi
         rsp = {}
         if nxt.present?
           rsp['next'] = nxt[range].map do |item|
-            sel = bcr + [{item.filter => item.value}]
+            sel = bcr + [{json_load(item.filter, item.filter) => json_load(item.value, item.value)}].map do |i|
+              if i.keys.first.is_a? ::Array
+                i.keys.first.zip(i.values.first)
+              else
+                i
+              end
+            end.flatten.tap{|x| p 'selmap', x }
             spath = sel.map{|i| i.keys.first }.join(',')
             p 'sel', sel
             parm = route.route_to("index/#{[rule.param, name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
