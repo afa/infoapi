@@ -151,13 +151,14 @@ module SimpleApi
       end
 
       def next_links(index)
+        p 'nl-idx', index
         index.objects.sample(4).map do |lnk|
           {
             'name' => lnk.label,
             'url' => lnk.url,
             'photo' => lnk.photo
           }
-        end
+        end.tap{|x| p 'nl-rslt', x }
       end
 
       # def mk_params(sel)
