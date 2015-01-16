@@ -139,11 +139,13 @@ module SimpleApi
         if nxt.present?
           rsp['next'] = nxt[range].map do |item|
             sel = []
+            p 'bcr-p', bcr
             (bcr + [{json_load(item.filter, item.filter) => json_load(item.value, item.value)}]).map do |i|
+              p i
               if i.keys.first.is_a? ::Array
                 i.keys.first.zip(i.values.first)
               else
-                i
+                [i.keys.first, i.values.first]
               end
             end.flatten.tap{|x| p 'sm', x }.each_slice(2){|a, b| sel << Hash[a, b] }
             spath = sel.map{|i| i.keys.first }.join(',')
