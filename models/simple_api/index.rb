@@ -55,13 +55,16 @@ module SimpleApi
 
       def index_links(bcr, curr, route, param)
         sel = bcr # + [{item[:filter] => item[:value]}]
+        p 'bcr', bcr
+        rul = SimpleApi::Rule[curr[:rule_id]]
         # index_ids = SimpleApi::Sitemap::Index.where(parent_id: curr[:id]).all.map(&:pk)
         if curr[:id]
           links = SimpleApi::Sitemap::Reference.where(super_index_id: curr[:id], is_empty: false).all
         else
-          links = SimpleApi::Sitemap::Reference.where(index_id: curr[:id], is_empty: false).all
+
+          links = SimpleApi::Sitemap::Reference.where(super_index_id: nil, rule_id: rul.pk, is_empty: false).all
         end
-        rul = SimpleApi::Rule[curr[:rule_id]]
+        p 'lnks', links
         url = route.route_to(param, sel.inject({}){|r, h| r.merge(h) })
         if links.present?
           links.map do |ref|
@@ -127,6 +130,7 @@ module SimpleApi
         p 'uncurr', curr
         p 'bcr', bcr
         unless curr
+          puts 'nocurr'
           return JSON.dump({'ratings' => index_links(bcr, parent, route, 'rating')})
         end
         nxt = rule.indexes_dataset.where(root_id: root.pk, parent_id: curr[:id]).all.select{|n| next_links(n).present? }
@@ -157,10 +161,10 @@ module SimpleApi
         p 'bcr curr', bcr, curr
         rsp['ratings'] = index_links(bcr, curr, route, 'rating')
         p 'rat', rsp['ratings']
-        # if rsp['ratings'].present?
-        #   rsp.delete('next')
-        #   rsp.delete('total')
-        # end
+        if rsp['ratings'].present?
+          rsp.delete('next')
+          rsp.delete('total')
+        end
         # rsp['ratings_total'] = SimpleApi::Sitemap::Reference.where(index_id: curr[:id], is_empty: false, duplicate_id: nil).count
         JSON.dump(rsp)
       end
