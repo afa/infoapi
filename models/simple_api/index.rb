@@ -5,16 +5,24 @@ module SimpleApi
         lded = json_load(params['p'], params['p'])
         lded ||= {}
         hash = {}
-        # range = lded['offset']..(lded['offset'] + range.last - range.first) if lded['offset']
-        # range = range.first..(lded['limit'] - 1 + range.first) if lded['limit']
-        # sphere = root.sphere
-        # route = SimpleApiRouter.new('en', sphere)
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
-        hash.merge!(lded["filters"]) if lded.has_key?('filters')
+        hash.merge!(lded.delete("filters")) if lded.has_key?('filters')
+        p hash
         route = SimpleApiRouter.new(:en, sphere)
-        rules = SimpleApi::Rule.where(sphere: sphere, param: param).all
-        rat = SimpleApi::Sitemap::Reference.where(duplicate_id: nil, is_empty: false, url: route.route_to('rating', {}))
-        return JSON.dump({breadcrumbs: nil}) if params.blank? || params[:p].blank?
+        rules = SimpleApi::Rule.where(sphere: sphere, param: param).order(%i(position id)).all
+        p route.route_to('rating', hash.dup)
+        p hash
+        rat = SimpleApi::Sitemap::Reference.where(is_empty: false, rule_id: rules.map(&:pk), url: route.route_to('rating', hash.dup)).first
+        p 'rat', rat
+        return JSON.dump({breadcrumbs: nil}) unless rat
+        bcr = []
+        idx = rat.index
+        p index.path_to_root
+        while idx do
+          bcr << idx
+          idx = idx.parent
+        end
+        JSON.dump({breadcrumbs: bcr.reverse.map{|i| {name: [i.filter, i.value].join(':'), url: i.url} }})
 
       end
 
@@ -95,17 +103,14 @@ module SimpleApi
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
         hash.merge!(lded["filters"]) if lded.has_key?('filters')
         curr = {id: nil, rule_id: rule.pk}
-        p curr, hash
 
         bcr = []
         cselector = selector.dup
-        p 'cselector', cselector
         loop do
           break if cselector.blank?
           fname = cselector.shift
           parent = curr
           flt = SimpleApi::RuleDefs.from_name(fname).load_rule(fname, hash[fname])
-          p 'flt-val', fname, hash[fname]
           curr = rule.indexes_dataset.where(root_id: root.pk, parent_id: parent[:id], filter: fname, value: flt.convolution(hash[fname]).to_s).first
           unless curr
             if cselector.present?
@@ -127,21 +132,15 @@ module SimpleApi
           end
           bcr << {json_load(curr.filter,curr.filter) => json_load(curr.value, curr.value)}
         end
-        p 'uncurr', curr
-        p 'bcr', bcr
         unless curr
-          puts 'nocurr'
           return JSON.dump({'ratings' => index_links(bcr, parent, route, 'rating')})
         end
         nxt = rule.indexes_dataset.where(root_id: root.pk, parent_id: curr[:id]).all.select{|n| next_links(n).present? }
-        p 'nxt', nxt
         rsp = {}
         if nxt.present?
           rsp['next'] = nxt[range].map do |item|
             sel = []
-            p 'bcr-p', bcr
             (bcr + [{json_load(item.filter, item.filter) => json_load(item.value, item.value)}]).map do |i|
-              p i
               if i.keys.first.is_a? ::Array
                 i.keys.first.zip(i.values.first)
               else
@@ -149,10 +148,9 @@ module SimpleApi
               end
             end.flatten.tap{|x| p 'sm', x }.each_slice(2){|a, b| sel << Hash[a, b] }
             spath = sel.map{|i| i.keys.first }.join(',')
-            p 'sel', sel
             parm = route.route_to("index/#{[rule.param, name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
             {
-              'label' => "#{item.filter}:#{item.value}",
+              'label' => json_load(item.filter, item.filter).is_a?(::Array) ? json_load(item.filter, []).zip(json_load(item.value, [])).map{|a| a.join(':') }.join(',') : "#{item.filter}:#{item.value}",
               'name' => item.filter,
               'url' => parm,
               'links' => next_links(item)
@@ -160,14 +158,12 @@ module SimpleApi
           end
           rsp['total'] = nxt.size
         end
-        p 'bcr curr', bcr, curr
         rsp['ratings'] = index_links(bcr, curr, route, 'rating')
-        p 'rat', rsp['ratings']
+        rsp.delete('ratings') unless rsp['ratings'].present?
         if rsp['ratings'].present?
           rsp.delete('next')
           rsp.delete('total')
         end
-        # rsp['ratings_total'] = SimpleApi::Sitemap::Reference.where(index_id: curr[:id], is_empty: false, duplicate_id: nil).count
         JSON.dump(rsp)
       end
 
@@ -180,32 +176,6 @@ module SimpleApi
           }
         end
       end
-
-      # def mk_params(sel)
-      #   slctr = sel.dup
-      #   # opts = p.dup
-      #   # flts = p["filter"] || {}
-      #   crit = slctr.select do |hash|
-      #     hash.keys.include? 'criteria'
-      #   end
-      #   slctr.delete_if do |hash|
-      #     hash.keys.include? 'criteria'
-      #   end
-      #   slctr.sort_by{|i| i.keys.first }
-      #   data = []
-      #   list = []
-      #   list << 'criteria' unless crit.blank?
-      #   data << 'criteria' unless crit.blank?
-      #   data << crit.first.values.first if crit.present? && crit.first.values.first.present?
-      #   data << 'filters' if slctr.present? && slctr.detect{|h| h.values.first.present? }
-      #   slctr.each do |hsh|
-      #     list << hsh.keys.first
-      #     data << hsh.keys.first if hsh.values.first.present?
-      #     data << hsh.values.first if hsh.values.first.present?
-      #   end
-      #   {list: list, path: data}
-      # end
-
     end
   end
 end
