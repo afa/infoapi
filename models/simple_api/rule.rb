@@ -54,7 +54,8 @@ module SimpleApi
     end
 
     def deserialize
-      self.filters = Filter.new(JSON.load(self.filter || "{}"))
+      p 'deser', pk
+      self.filters = Filter.new(json_load(self.filter, {}))
       # (SERIALIZED).each{|attr| send("#{attr.to_s}=".to_sym, self.filters.try(:[], attr.to_s)) if self.filters.try(:[], attr.to_s) }
       self.filters.postprocess_init
       self.filters.traversal_order = self.traversal_order
