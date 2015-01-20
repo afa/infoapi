@@ -54,7 +54,6 @@ module SimpleApi
     end
 
     def deserialize
-      p 'deser', pk
       self.filters = Filter.new(json_load(self.filter, {}))
       # (SERIALIZED).each{|attr| send("#{attr.to_s}=".to_sym, self.filters.try(:[], attr.to_s)) if self.filters.try(:[], attr.to_s) }
       self.filters.postprocess_init
@@ -122,6 +121,13 @@ module SimpleApi
         sitemap_session_id: root.sitemap_session_id,
         index_id: index_id
       )
+    end
+
+    def breadcrumbs
+      [{
+        label: name,
+        url: "/en/#{sphere}/index/#{param},#{name}"
+      }]
     end
 
     # def generate(sitemap = nil, root)

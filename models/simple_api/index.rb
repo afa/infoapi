@@ -7,23 +7,12 @@ module SimpleApi
         hash = {}
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
         hash.merge!(lded.delete("filters")) if lded.has_key?('filters')
-        p hash
         route = SimpleApiRouter.new(:en, sphere)
         rules = SimpleApi::Rule.where(sphere: sphere, param: param).order(%i(position id)).all
-        p route.route_to('rating', hash.dup)
-        p hash
         rat = SimpleApi::Sitemap::Reference.where(is_empty: false, rule_id: rules.map(&:pk), url: route.route_to('rating', hash.dup)).first
-        p 'rat', rat
         return JSON.dump({breadcrumbs: nil}) unless rat
-        bcr = []
         idx = rat.index
-        p index.path_to_root
-        while idx do
-          bcr << idx
-          idx = idx.parent
-        end
-        JSON.dump({breadcrumbs: bcr.reverse.map{|i| {name: [i.filter, i.value].join(':'), url: i.url} }})
-
+        JSON.dump({breadcrumbs: idx.breadcrumbs})
       end
 
       def roots(sphere, param)
@@ -31,15 +20,16 @@ module SimpleApi
         # refactor for range limiting
         JSON.dump(
           {
-          next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| json_load(r.traversal_order, []).present? }.map do |r|
-            content = json_load(r.content, {})
-            {
-              name: r.name,
-              label: (content['index'] || content['h1'] || r.name),
-              url:"/en/#{sphere}/index/#{param.to_s},#{r.name}",
-              links: r.objects_dataset.where(index_id: nil).all.map{|o| {name: o.label, url: o.url, photo: o.photo} }.uniq.sample(4).shuffle
-            }
-          end
+            breadcrumbs: nil,
+            next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| json_load(r.traversal_order, []).present? }.map do |r|
+              content = json_load(r.content, {})
+              {
+                name: r.name,
+                label: (content['index'] || content['h1'] || r.name),
+                url:"/en/#{sphere}/index/#{param.to_s},#{r.name}",
+                links: r.objects_dataset.where(index_id: nil).all.map{|o| {name: o.label, url: o.url, photo: o.photo} }.uniq.sample(4).shuffle
+              }
+            end
           }.tap{|x| x[:total] = x[:next].size }
         )
       end
@@ -63,7 +53,6 @@ module SimpleApi
 
       def index_links(bcr, curr, route, param)
         sel = bcr # + [{item[:filter] => item[:value]}]
-        p 'bcr', bcr
         rul = SimpleApi::Rule[curr[:rule_id]]
         # index_ids = SimpleApi::Sitemap::Index.where(parent_id: curr[:id]).all.map(&:pk)
         if curr[:id]
@@ -72,7 +61,6 @@ module SimpleApi
 
           links = SimpleApi::Sitemap::Reference.where(super_index_id: nil, rule_id: rul.pk, is_empty: false).all
         end
-        p 'lnks', links
         url = route.route_to(param, sel.inject({}){|r, h| r.merge(h) })
         if links.present?
           links.map do |ref|
@@ -82,7 +70,7 @@ module SimpleApi
             {
               label: lbl,
               photo: photo,
-              url: ref[:url]
+              url: ref.url
             }
           end
         else
@@ -146,11 +134,13 @@ module SimpleApi
               else
                 [i.keys.first, i.values.first]
               end
-            end.flatten.tap{|x| p 'sm', x }.each_slice(2){|a, b| sel << Hash[a, b] }
+            end.flatten.each_slice(2){|a, b| sel << Hash[a, b] }
             spath = sel.map{|i| i.keys.first }.join(',')
             parm = route.route_to("index/#{[rule.param, name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
             {
-              'label' => json_load(item.filter, item.filter).is_a?(::Array) ? json_load(item.filter, []).zip(json_load(item.value, [])).map{|a| a.join(':') }.join(',') : "#{item.filter}:#{item.value}",
+              'label' => item.label,
+              # json_load(item.filter, item.filter).is_a?(::Array) ? json_load(item.filter, [item.filter]).zip(json_load(item.value, [item.value])).map{|a| a.join(':') }.join(',') : "#{item.filter}:#{item.value}",
+              # 'label' => json_load(item.filter, item.filter).is_a?(::Array) ? json_load(item.filter, []).zip(json_load(item.value, [])).map{|a| a.join(':') }.join(',') : "#{item.filter}:#{item.value}",
               'name' => item.filter,
               'url' => parm,
               'links' => next_links(item)
@@ -163,6 +153,8 @@ module SimpleApi
         if rsp['ratings'].present?
           rsp.delete('next')
           rsp.delete('total')
+        else
+          rsp['breadcrumbs'] = curr[:id] ? curr.breadcrumbs : rule.breadcrumbs
         end
         JSON.dump(rsp)
       end
