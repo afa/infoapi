@@ -20,7 +20,7 @@ module SimpleApi
         # refactor for range limiting
         JSON.dump(
           {
-            breadcrumbs: nil,
+            breadcrumbs: root.breadcrumbs,
             next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| json_load(r.traversal_order, []).present? }.map do |r|
               content = json_load(r.content, {})
               {
@@ -153,9 +153,8 @@ module SimpleApi
         if rsp['ratings'].present?
           rsp.delete('next')
           rsp.delete('total')
-        else
-          rsp['breadcrumbs'] = curr[:id] ? curr.breadcrumbs : rule.breadcrumbs
         end
+        rsp['breadcrumbs'] = curr[:id] ? curr.breadcrumbs : rule.breadcrumbs
         JSON.dump(rsp)
       end
 

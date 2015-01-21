@@ -45,7 +45,8 @@ module SimpleApi
     end
 
     def self.from_param(sphere, param)
-      @@param_map[sphere].try(:[], map_param(param))
+      @@param_map[map_param(param)]
+      # @@param_map[sphere].try(:[], map_param(param))
     end
 
     def initialize(hash)
@@ -92,8 +93,9 @@ module SimpleApi
           unless class_variable_defined? :@@param_map
             class_variable_set :@@param_map, {}
           end
-          class_variable_get(:@@param_map).merge!(rcrd['sphere'] => {}) unless class_variable_get(:@@param_map)[rcrd['sphere']]
-          class_variable_get(:@@param_map)[rcrd['sphere']][rcrd['param']] ||= rcrd['klass'].constantize
+          class_variable_get(:@@param_map)[rcrd['param']] ||= rcrd['klass'].constantize
+          # class_variable_get(:@@param_map).merge!(rcrd['sphere'] => {}) unless class_variable_get(:@@param_map)[rcrd['sphere']]
+          # class_variable_get(:@@param_map)[rcrd['sphere']][rcrd['param']] ||= rcrd['klass'].constantize
         end
       end
     end
@@ -124,8 +126,10 @@ module SimpleApi
     end
 
     def breadcrumbs
-      [{
-        label: name,
+      root = SimpleApi::Sitemap::Root.reverse_order(:id).where(sphere: sphere).first
+      root.breadcrumbs + [
+        {
+        label: json_load(content, {})['index'] || name,
         url: "/en/#{sphere}/index/#{param},#{name}"
       }]
     end
