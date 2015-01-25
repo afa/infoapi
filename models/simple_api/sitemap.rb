@@ -109,7 +109,7 @@ module SimpleApi
         #   parent.delete
         # end
         loop do
-          break if SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root_id).empty?
+          break if SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root_ids).empty?
           SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root_ids).each do |fwd_idx|
             fwd = SimpleApi::Sitemap::Index[fwd_idx[:id]]
             next unless fwd
