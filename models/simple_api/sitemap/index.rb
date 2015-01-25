@@ -9,8 +9,12 @@ module SimpleApi
       one_to_many :children, class: 'SimpleApi::Sitemap::Index', key: :parent_id
       one_to_many :references, class: 'SimpleApi::Sitemap::Reference'
 
+      def self.forwardable_indexes(scope)
+        SimpleApi::Sitemap::Index.select{min(:id).as(:id)}.where(scope).group(:parent_id).having{count(:id) < 2}.all
+      end
+
       def self.forwardables(scope)
-        SimpleApi::Sitemap::Index.select{min(:id).as(:id)}.where(scope).group(:parent_id).having{count(:id) < 2}.all.map{|s| SimpleApi::Sitemap::Index[s.id] }
+        forwardable_indexes(scope).all.map{|s| SimpleApi::Sitemap::Index[s.id] }
       end
 
       def preprocess_filter # return array of hashes

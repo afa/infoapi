@@ -98,15 +98,29 @@ module SimpleApi
       def rework_forwardable(sphere)
         root_ids = SimpleApi::Sitemap::Root.where(sphere: sphere).all.map(&:pk)
         puts "todo: #{SimpleApi::Sitemap::Index.forwardables(root_id: root_ids).size}"
+        # loop do
+        #   break unless fwd = SimpleApi::Sitemap::Index.forwardables(root_id: root_ids).first
+        #   parent = fwd.parent
+        #   flt = json_load(parent.filter, parent.filter)
+        #   val = json_load(parent.value, parent.value)
+        #   flt = [flt] unless flt.is_a?(::Array)
+        #   val = [val] unless val.is_a?(::Array)
+        #   fwd.update(parent_id: parent.parent_id, filter: JSON.dump(flt + [json_load(fwd.filter, fwd.filter)].flatten), value: JSON.dump(val + [json_load(fwd.value,fwd.value)]))
+        #   parent.delete
+        # end
         loop do
-          break unless fwd = SimpleApi::Sitemap::Index.forwardables(root_id: root_ids).first
-          parent = fwd.parent
-          flt = json_load(parent.filter, parent.filter)
-          val = json_load(parent.value, parent.value)
-          flt = [flt] unless flt.is_a?(::Array)
-          val = [val] unless val.is_a?(::Array)
-          fwd.update(parent_id: parent.parent_id, filter: JSON.dump(flt + [json_load(fwd.filter, fwd.filter)].flatten), value: JSON.dump(val + [json_load(fwd.value,fwd.value)]))
-          parent.delete
+          break if SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root_id).empty?
+          SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root_ids).each do |fwd_idx|
+            fwd = SimpleApi::Sitemap::Index[fwd_idx[:id]]
+            next unless fwd
+            parent = fwd.parent
+            flt = json_load(parent.filter, parent.filter)
+            val = json_load(parent.value, parent.value)
+            flt = [flt] unless flt.is_a?(::Array)
+            val = [val] unless val.is_a?(::Array)
+            fwd.update(parent_id: parent.parent_id, filter: JSON.dump(flt + [json_load(fwd.filter, fwd.filter)].flatten), value: JSON.dump(val + [json_load(fwd.value,fwd.value)]))
+            parent.delete
+          end
         end
         index_ids = SimpleApi::Sitemap::Index.where(root_id: root_ids).all.map(&:pk)
         refs = SimpleApi::Sitemap::Reference.where(index_id: index_ids, super_index_id: nil).order(:id).all
