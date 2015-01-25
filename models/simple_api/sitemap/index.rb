@@ -14,7 +14,7 @@ module SimpleApi
       end
 
       def self.forwardables(scope)
-        forwardable_indexes(scope).all.map{|s| SimpleApi::Sitemap::Index[s.id] }
+        forwardable_indexes(scope).map{|s| SimpleApi::Sitemap::Index[s.id] }
       end
 
       def preprocess_filter # return array of hashes
