@@ -65,7 +65,7 @@ module SimpleApi
         if links.present?
           links.map do |ref|
             lbl = tr_h1_params(json_load(ref.rule.content, {})['h1'], json_load(ref.json, {}))
-            photo = ref.index.objects.sample.try(:photo)
+            photo = ref.index.objects.sample.try(:photo) #check for null obj
             next unless photo
             {
               label: lbl,
@@ -139,8 +139,6 @@ module SimpleApi
             parm = route.route_to("index/#{[rule.param, name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
             {
               'label' => item.label,
-              # json_load(item.filter, item.filter).is_a?(::Array) ? json_load(item.filter, [item.filter]).zip(json_load(item.value, [item.value])).map{|a| a.join(':') }.join(',') : "#{item.filter}:#{item.value}",
-              # 'label' => json_load(item.filter, item.filter).is_a?(::Array) ? json_load(item.filter, []).zip(json_load(item.value, [])).map{|a| a.join(':') }.join(',') : "#{item.filter}:#{item.value}",
               'name' => item.filter,
               'url' => parm,
               'links' => next_links(item)

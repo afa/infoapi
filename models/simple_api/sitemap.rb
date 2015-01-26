@@ -51,7 +51,8 @@ module SimpleApi
           router = SimpleApiRouter.new(rule.lang, rule.sphere)
           root = SimpleApi::Sitemap::Root.where(sphere: rule.sphere).order(:id).last
           next unless root
-          leafs = rule.references_dataset.where(duplicate_id: nil, is_empty: false).order(:rule_id, :index_id).all.map{|i| i.index }.uniq #where(scope).
+          leafs = rule.references_dataset.where(is_empty: false).order(:rule_id, :index_id).all.map{|i| i.index }.uniq #where(scope).
+          # leafs = rule.references_dataset.where(duplicate_id: nil, is_empty: false).order(:rule_id, :index_id).all.map{|i| i.index }.uniq #where(scope).
           parents = []
           leafs.each do |index|
             refs = index.references
