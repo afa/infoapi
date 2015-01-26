@@ -13,9 +13,8 @@ module SimpleApi
 
       def clean_index
         SimpleApi::Sitemap::ObjectData.where(root_id: pk).delete
-        SimpleApi::Sitemap::Index.where(root_id: pk).all.each do |index|
-          index.references.each{|r| r.delete }
-        end
+        idxs = SimpleApi::Sitemap::Index.where(root_id: pk).all.map(&:pk)
+        SimpleApi::Sitemap::Reference.where(index_id: idxs).delete
         SimpleApi::Sitemap::Index.where(root_id: pk).delete
         delete
       end
