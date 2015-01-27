@@ -90,6 +90,7 @@ module SimpleApi
         route = SimpleApiRouter.new('en', sphere)
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
         hash.merge!(lded["filters"]) if lded.has_key?('filters')
+        hash.merge!('catalog' => hash.delete("path")) if hash.has_key?('path')
         curr = {id: nil, rule_id: rule.pk}
 
         bcr = []
@@ -97,6 +98,7 @@ module SimpleApi
         loop do
           break if cselector.blank?
           fname = cselector.shift
+          fname = 'catalog' if fname == 'path'
           parent = curr
           flt = SimpleApi::RuleDefs.from_name(fname).load_rule(fname, hash[fname])
           curr = rule.indexes_dataset.where(root_id: root.pk, parent_id: parent[:id], filter: fname, value: flt.convolution(hash[fname]).to_s).first
@@ -108,6 +110,7 @@ module SimpleApi
               cname = []
               cval = []
               cselector.each do |nm|
+                nm = 'catalog' if nm == 'path'
                 cname << nm
                 f = SimpleApi::RuleDefs.from_name(nm).load_rule(nm, hash[nm])
                 cval << f.convolution(hash[nm])
@@ -118,7 +121,7 @@ module SimpleApi
             end
             break unless curr
           end
-          bcr << {json_load(curr.filter,curr.filter) => json_load(curr.value, curr.value)}
+          bcr << {json_load(curr.filter, curr.filter) => json_load(curr.value, curr.value)}
         end
         unless curr
           return JSON.dump({'ratings' => index_links(bcr, parent, route, 'rating')})
@@ -140,7 +143,8 @@ module SimpleApi
             {
               'label' => item.label,
               'name' => item.filter,
-              'url' => parm,
+              'url' => item,
+              # 'url' => parm,
               'links' => next_links(item)
             }
           end

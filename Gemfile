@@ -12,6 +12,8 @@ gem "sequel"
 gem "pg"
 gem "json"
 gem 'racksh'
+gem 'sidekiq'
+gem 'state_machine'
 
 group :development do
   gem "capistrano"

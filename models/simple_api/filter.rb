@@ -40,18 +40,23 @@ module SimpleApi
     end
 
     def recurse_index(flst, cur_hash, root, parent, rule)
+      whash = cur_hash.dup
+      whash.merge!('catalog' => whash.delete('path')) if whash.has_key?('path')
       leafs = []
       if flst.blank?
-        write_ref(rule, root, cur_hash, parent)
-        return [cur_hash]
+        write_ref(rule, root, whash, parent)
+        return [whash]
       end
       wlst = flst.dup
       flt = wlst.shift
+      flt = 'catalog' if flt == 'path'
       rdef = self[flt]
+      rdef = self['path'] if flt == 'catalog' && self['path']
       values = rdef.fetch_list(rule)
+      route = SimpleApiRouter.new(rule.lang, rule.sphere)
       values.each do |val|
-        hsh = cur_hash.merge(flt => val)
-        ix = SimpleApi::Sitemap::Index.insert(json: JSON.dump(hsh), rule_id: rule.pk, root_id: root.pk, parent_id: parent, filter: flt, value: val)
+        hsh = whash.merge(flt => val)
+        ix = SimpleApi::Sitemap::Index.insert(json: JSON.dump(hsh), rule_id: rule.pk, root_id: root.pk, parent_id: parent, filter: flt, value: val, url: route.route_to(rule.param, hsh), label: "#{flt}:#{val}")
         leafs += recurse_index(wlst, hsh, root, ix, rule)
       end
       leafs

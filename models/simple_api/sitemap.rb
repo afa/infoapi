@@ -25,7 +25,7 @@ module SimpleApi
           Sentimeta.lang  = rule.lang.to_sym
           Sentimeta.sphere = rule.sphere
           path = param.delete("path").to_s.split(',')
-          empty = (Sentimeta::Client.fetch :objects, {"is_empty" => true}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})["is_empty"]
+          empty = (Sentimeta::Client.fetch :objects, {"is_empty" => 4}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})["is_empty"]
           obj.update(:is_empty => empty)
         end
       end
