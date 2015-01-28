@@ -24,7 +24,9 @@ module SimpleApi
           Sentimeta.env   = CONFIG["fapi_stage"] # :production is default
           Sentimeta.lang  = rule.lang.to_sym
           Sentimeta.sphere = rule.sphere
-          path = param.delete("path").to_s.split(',')
+            path = param.delete('catalog').to_s.split(',') if param.has_key?('catalog')
+            path = param.delete("path").to_s.split(',') if param.has_key?('path')
+          # path = param.delete("path").to_s.split(',')
           empty = (Sentimeta::Client.fetch :objects, {"is_empty" => 4}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})["is_empty"]
           obj.update(:is_empty => empty)
         end
@@ -60,7 +62,8 @@ module SimpleApi
             refs_param = json_load(refs.first.json, {}).delete_if{|k, v| k == 'rule' || k == 'rule_id' }
             url = router.route_to('rating', refs_param.dup)
             label = tr_h1_params(json_load(rule.content)['h1'], refs_param)
-            path = param.delete("path").to_s.split(',')
+            path = param.delete('catalog').to_s.split(',') if param.has_key?('catalog')
+            path = param.delete("path").to_s.split(',') if param.has_key?('path')
             data = (Sentimeta::Client.fetch :objects, {'fields' => {'limit_objects' => '100'}}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
             next if data.blank?
             next if data['objects'].nil?
