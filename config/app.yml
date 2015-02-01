@@ -2,6 +2,8 @@ development:
   db:
     host: 0.0.0.0
     database: sentimeta_simple_api
+    max_connections: 30
+    pool_timeout: 60
   fapi_stage: staging
   fapi_prefix: 'http://5.9.0.5/api/v1'
   token: '123'
@@ -9,6 +11,8 @@ test:
   db:
     host: 0.0.0.0
     database: sentimeta_simple_api_test
+    max_connections: 30
+    pool_timeout: 60
   fapi_stage: staging
   fapi_prefix: 'http://5.9.0.5/api/v1'
   token: '123'

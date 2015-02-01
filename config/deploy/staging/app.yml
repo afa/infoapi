@@ -3,6 +3,8 @@ staging:
     host: 0.0.0.0
     user: rbdev
     database: sentimeta_simple_api  
+    max_connections: 30
+    pool_timeout: 60
   fapi_stage: staging  
   fapi_prefix: 'http://5.9.0.5/api/v1'
   token: 'b0bd2295366d192a087942b5fa5d0117'    

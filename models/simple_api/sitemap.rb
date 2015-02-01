@@ -4,6 +4,7 @@ require 'simple_api/sitemap/root'
 require 'simple_api/sitemap/reference'
 require 'simple_api/sitemap/production'
 require 'simple_api/sitemap/sitemap_session'
+require 'workers'
 module SimpleApi
   module Sitemap
     # def rework_doubles(scope)

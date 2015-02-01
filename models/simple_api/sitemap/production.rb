@@ -4,7 +4,10 @@ module SimpleApi
 
       set_dataset :productions
 
-      one_to_many :sitemap_session, class: 'SimpleApi::Sitemap::SitemapSession'
+      many_to_one :sitemap_session, class: 'SimpleApi::Sitemap::SitemapSession'
+      many_to_one :root, class: 'SimpleApi::Sitemap::Root'
+      many_to_one :rule, class: 'SimpleApi::Rule'
+      # many_to_one :sitemap_session, class: 'SimpleApi::Sitemap::SitemapSession'
       many_to_one :parent, class: 'SimpleApi::Sitempa::Production'
       one_to_many :children, class: 'SimpleApi::Sitemap::Production', key: :parent_id
 
@@ -33,8 +36,8 @@ module SimpleApi
         event :split_roots do
           transition caches_ready: :root_prepared
         end
-        before_transition caches_ready: :root_prepared, do: :sm_split_roots
-        after_transition caches_ready: :root_prepared, do: :fire_split_rules
+        before_transition [:caches_ready, :new_session] => :root_prepared, do: :sm_split_roots
+        after_transition [:caches_ready, :new_session] => :root_prepared, do: :fire_split_rules
 
         event :split_rules do
           transition root_prepared: :rule_prepared
@@ -105,13 +108,15 @@ module SimpleApi
         f = SimpleApi::RuleDefs.from_name('path').load_rule('path', 'any')
         f.class.prepare_list
       end
+
       def fire_split_roots
         WorkerSplitRoots.perform_async(pk)
       end
+
       def sm_split_roots
         slist = json_load(step_params, {})['spheres'] || []
         slist.each do |sp|
-          rt = SimpleApi::Sitemap::Root.create(sitemap_session_id: sitemap_session.pk, sphere: sphere, name: sphere, active: false)
+          rt = SimpleApi::Sitemap::Root.create(sitemap_session_id: sitemap_session.pk, sphere: sp, name: sp, active: false)
           child = SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, root_id: rt.pk, sphere: sp, parent_id: pk, state: 'root_prepared')
         end
       end
@@ -130,7 +135,7 @@ module SimpleApi
       end
 
       def fire_build_indexes
-        children.each{|c| WorkerBuildIndex.perform_async(c.pk) }
+        children.each{|c| WorkerBuildIndexes.perform_async(c.pk) }
       end
       def sm_build_indexes
         rule.build_index(root)
@@ -140,7 +145,7 @@ module SimpleApi
       end
       def sm_mark_empty
         Sentimeta.env   = CONFIG["fapi_stage"] || :production # :production is default
-        rule.references_dataset.where(is_empty: nil, root_id: pk).order(:id).all.each do |obj|
+        rule.references_dataset.where(is_empty: nil, sitemap_session_id: sitemap_session.pk).order(:id).all.each do |obj|
           puts "rework empty #{rule.pk}:#{obj.pk}" if obj.pk % 100 == 0
           param = json_load(obj.json, {})
           Sentimeta.lang  = rule.lang.to_sym
@@ -158,7 +163,7 @@ module SimpleApi
         doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.group([:url]).having('count(*) > 1').where(rule_id: rule.pk, sitemap_session_id: sitemap_session.pk)
         doubles.each do |dble|
           puts "rework double #{dble[:min_id]}"
-          rs = SimpleApi::Sitemap::Reference.order(:id).where(scope).where(url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
+          rs = SimpleApi::Sitemap::Reference.order(:id).where(rule_id: rule.pk, sitemap_session_id: sitemap_session.pk, url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
           SimpleApi::Sitemap::Reference.where(:id => rs.map(&:pk)).update(:duplicate_id => dble[:min_id])
         end
       end
@@ -166,13 +171,14 @@ module SimpleApi
         WorkerMergeForwardable.perform_async(pk)
       end
       def sm_merge_forwardable
-        puts "todo: #{SimpleApi::Sitemap::Index.forwardables(root_id: root_id).size}"
+        puts "todo: #{SimpleApi::Sitemap::Index.forwardables(root_id: root_id, rule_id: rule.pk).size}"
         loop do
-          break if SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule.pk).empty?
+          break if SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk).empty?
           SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk).each do |fwd_idx|
             fwd = SimpleApi::Sitemap::Index[fwd_idx[:id]]
             next unless fwd
             parent = fwd.parent
+            next unless parent
             flt = json_load(parent.filter, parent.filter)
             val = json_load(parent.value, parent.value)
             flt = [flt] unless flt.is_a?(::Array)
@@ -198,7 +204,7 @@ module SimpleApi
         Sentimeta.lang  = rule.lang.to_sym
         Sentimeta.sphere = rule.sphere
         router = SimpleApiRouter.new(rule.lang, rule.sphere)
-        leafs = rule.references_dataset.where(is_empty: false, root_id: root.pk).order(:index_id).all.map(&:index).uniq
+        leafs = rule.references_dataset.where(is_empty: false, sitemap_session_id: sitemap_session.pk).order(:index_id).all.map(&:index).uniq
         parents = []
         leafs.each do |index|
           refs = index.references
@@ -246,9 +252,9 @@ module SimpleApi
       def sm_test_link_avail
         invalid = []
         SimpleApi::Sitemap::ObjectData.where(root_id: root.pk, rule_id: rule.pk).all.each do |obj|
-          invalid << obj.photo unless obj.check_photo
+          invalid << obj.photo if obj.check_photo.is_a?(FalseClass)
         end
-        File.open('./log/invalud_photo.log'){|f| invalid.each{|s| f.puts s } }
+        File.open('./log/invalud_photo.log', 'w+'){|f| invalid.each{|s| f.puts s } }
       end
       def fire_finish
         WorkerFinish.perform_async(pk)
