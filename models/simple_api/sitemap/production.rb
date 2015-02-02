@@ -89,12 +89,16 @@ module SimpleApi
 
         event :finish do
           transition rule_prepared: :ready, if: lambda { rule && children.all?{|child| child.ready? } }
+          transition rule_prepared: :rule_prepared
           transition root_prepared: :ready, if: lambda { root && children.all?{|child| child.ready? } }
+          transition root_prepared: :root_prepared
           transition link_tested: :ready
         end
         before_transition link_tested: :ready, do: :sm_finish
-        after_transition root_prepared: :ready, do: :fire_parent_root_finish
-        after_transition rule_prepared: :ready, do: :fire_parent_rule_finish
+        after_transition link_tested: :ready, do: :fire_parent_rule_finish
+        after_transition rule_prepared: :ready, do: :fire_parent_root_finish
+        before_transition root_prepared: :ready, do: :sm_parent_root_finish
+        before_transition rule_prepared: :ready, do: :sm_parent_rule_finish
 
         event :stop do
           transition any - [:failed] => :stopped
@@ -264,14 +268,17 @@ module SimpleApi
       end
       def sm_finish
       end
+      def sm_parent_root_finish
+        root.update(active: true)
+      end
+      def sm_parent_rule_finish
+      end
       def fire_parent_rule_finish
-        WorkerParentRuleFinish.perform_async(pk)
+        WorkerParentRuleFinish.perform_async(parent.pk)
       end
       def fire_parent_root_finish
-        WorkerParentRootFinish.perform_async(pk)
+        WorkerParentRootFinish.perform_async(parent.pk)
       end
-
-
     end
   end
 end
