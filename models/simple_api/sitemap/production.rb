@@ -256,8 +256,8 @@ module SimpleApi
       def sm_test_link_avail
         invalid = []
         SimpleApi::Sitemap::ObjectData.where(root_id: root.pk, rule_id: rule.pk).all.each do |obj|
-          if obj.check_photo.is_a?(FalseClass)
-            invalid << obj.photo 
+          unless cod = obj.check_photo.is_a?(TrueClass)
+            invalid << "#{cod.to_s} #{obj.photo}"
             obj.delete
           end
         end
@@ -270,6 +270,7 @@ module SimpleApi
       end
       def sm_parent_root_finish
         root.update(active: true)
+        (SimpleApi::Sitemap::Root.where(active: true, sphere: sphere).all - [self]).each{|r| r.update(active: false) }
       end
       def sm_parent_rule_finish
       end

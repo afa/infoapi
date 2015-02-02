@@ -58,20 +58,22 @@ module SimpleApi
         if curr[:id]
           links = SimpleApi::Sitemap::Reference.where(super_index_id: curr[:id], is_empty: false).all
         else
-
           links = SimpleApi::Sitemap::Reference.where(super_index_id: nil, rule_id: rul.pk, is_empty: false).all
         end
-        url = route.route_to(param, sel.inject({}){|r, h| r.merge(h) })
+        # url = route.route_to(param, sel.inject({}){|r, h| r.merge(h) })
         if links.present?
-          links.map do |ref|
+          links.select{|r| r.objects_dataset.exists }.map do |ref|
             lbl = tr_h1_params(json_load(ref.rule.content, {})['h1'], json_load(ref.json, {}))
             photo = ref.index.objects.sample.try(:photo) #check for null obj
-            next unless photo
-            {
-              label: lbl,
-              photo: photo,
-              url: ref.url
-            }
+            if photo
+              {
+                label: lbl,
+                photo: photo,
+                url: ref.url
+              }
+            else
+              {}
+            end
           end
         else
           []
