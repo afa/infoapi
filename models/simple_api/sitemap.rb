@@ -140,5 +140,6 @@ module SimpleApi
     #   end
 
     # module_function :rework_doubles, :rework_empty, :preload_criteria, :rework_links, :rework_forwardable
+    module_function :preload_criteria
   end
 end
