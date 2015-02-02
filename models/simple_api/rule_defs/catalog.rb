@@ -29,7 +29,7 @@ module SimpleApi
           # rslt += tst.first
           # rslt += tst.first.map{|item| Sentimeta::Client.catalog(path: item, limit: 10000).map{|i| i['name'] } }
           crnt = crnt.map do |item|
-            cat = Sentimeta::Client.catalog(path: item, limit: 10000)
+            cat = Sentimeta::Client.catalog(path: item, limit: 10000) rescue []
             cat.present? ? cat.map{|i| [ item.blank? ? nil : item, i['name'] ].compact.join(',') } : nil
           end
           .compact
