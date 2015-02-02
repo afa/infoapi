@@ -16,6 +16,7 @@ module Sinatra
           end
           app.get '/api/v1/:sphere/index/breadcrumbs/:param', &breadcrumbs
           app.get '/api/v1/:sphere/index', &index_page
+          app.get '/api/v1/:sphere/index/', &index_page
           app.get '/api/v1/:sphere/index/:rule_selector/*', &concrete_index
           app.get '/api/v1/:sphere/index/:rule_selector*', &concrete_index
         end
