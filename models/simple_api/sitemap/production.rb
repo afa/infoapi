@@ -106,8 +106,8 @@ module SimpleApi
       end
 
       def sm_renew_caches
-        DB[:criteria].dataset.delete
-        DB[:catalogs].dataset.delete
+        DB[:criteria].where(1 => 1).delete
+        DB[:catalogs].where(1 => 1).delete
         SimpleApi::Sitemap.preload_criteria
         f = SimpleApi::RuleDefs.from_name('path').load_rule('path', 'any')
         f.class.prepare_list
