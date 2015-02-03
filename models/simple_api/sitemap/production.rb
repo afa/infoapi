@@ -175,9 +175,14 @@ module SimpleApi
         WorkerMergeForwardable.perform_async(pk)
       end
       def sm_merge_forwardable
-        puts "todo: #{SimpleApi::Sitemap::Index.forwardables(root_id: root_id, rule_id: rule.pk).size}"
+        puts "todo: #{SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root_id, rule_id: rule.pk).size}"
+        prev = []
         loop do
           break if SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk).empty?
+          if prev.sort_by{|o| o[:id] } == SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk).sort_by{|o| o[:id] }
+            puts "cicle #{pk.to_s}"
+            break
+          end
           SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk).each do |fwd_idx|
             fwd = SimpleApi::Sitemap::Index[fwd_idx[:id]]
             next unless fwd
