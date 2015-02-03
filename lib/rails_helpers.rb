@@ -53,12 +53,12 @@ class Enumerator #::Lazy
   end
 end
 
-module Rails
-  def logger
-    @logger ||= Logger.new('./log/api.log', 'weekly')
-  end
-  module_function :logger
-end
+# module Rails
+#   def logger
+#     @logger ||= Logger.new('./log/api.log', 'weekly')
+#   end
+#   module_function :logger
+# end
 
 class Object
   def try(*a, &b)
