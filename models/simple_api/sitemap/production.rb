@@ -183,6 +183,7 @@ module SimpleApi
             puts "cicle #{pk.to_s}"
             break
           end
+          prev = SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk)
           SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk).each do |fwd_idx|
             fwd = SimpleApi::Sitemap::Index[fwd_idx[:id]]
             next unless fwd
