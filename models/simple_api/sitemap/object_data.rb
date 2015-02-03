@@ -9,7 +9,7 @@ module SimpleApi
       def check_photo
         begin
           uri = URI(photo)
-          resp = Net::HTTP.get(uri)
+          resp = Net::HTTP.get_response(uri)
           resp.is_a?(Net::HTTPSuccess) ? true : resp.code
         rescue => e
           nil
