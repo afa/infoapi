@@ -62,7 +62,7 @@ module SimpleApi
         end
         # url = route.route_to(param, sel.inject({}){|r, h| r.merge(h) })
         if links.present?
-          links.select{|r| r.objects_dataset.exists }.map do |ref|
+          links.select{|r| !r.index.try(:objects_dataset).try(:empty?) }.map do |ref|
             lbl = tr_h1_params(json_load(ref.rule.content, {})['h1'], json_load(ref.json, {}))
             photo = ref.index.objects.sample.try(:photo) #check for null obj
             if photo
