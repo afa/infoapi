@@ -145,7 +145,7 @@ module SimpleApi
             {
               'label' => item.label,
               'name' => item.filter,
-              'url' => item,
+              'url' => item.url,
               # 'url' => parm,
               'links' => next_links(item)
             }

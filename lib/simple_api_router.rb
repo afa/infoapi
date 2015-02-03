@@ -7,7 +7,8 @@ class SimpleApiRouter
   end
 
   def route_to(action, hash_params={})
-    criteria = hash_params.delete('criteria')
+    hsh = hash_params.dup
+    criteria = hsh.delete('criteria')
     if criteria.is_a?(::Array)
       criteria.sort!
     end
@@ -19,15 +20,15 @@ class SimpleApiRouter
         components << 'criteria'
         components << (criteria.is_a?(::Array) ? criteria.join(',') : criteria)
       end
-      unless hash_params.empty?
-        path = hash_params.delete("path")
-        hash_params["catalog"] = path if path
-        unless hash_params.values.all?(&:nil?)
+      unless hsh.empty?
+        path = hsh.delete("path")
+        hsh["catalog"] = path if path
+        unless hsh.values.all?(&:nil?)
           components << 'filters'
-          hash_params.keys.sort.each do |param|
-            next if hash_params[param].blank?
+          hsh.keys.sort.each do |param|
+            next if hsh[param].blank?
             components << param
-            components << hash_params[param]
+            components << hsh[param]
           end
         end
       end

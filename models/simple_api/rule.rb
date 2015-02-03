@@ -115,7 +115,8 @@ module SimpleApi
     end
 
     def write_ref(root, hash, index_id)
-      hash.merge!('catalog' => hash['path']) if hash.has_key?('path')
+      hsh = hash.dup
+      hsh.merge!('catalog' => hsh.delete('path')) if hash.has_key?('path')
       route = SimpleApiRouter.new(lang, sphere)
       SimpleApi::Sitemap::Reference.insert(
         rule_id: pk,
