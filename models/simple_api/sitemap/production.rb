@@ -258,7 +258,7 @@ module SimpleApi
         SimpleApi::Sitemap::ObjectData.where(root_id: root.pk, rule_id: rule.pk).all.each do |obj|
           unless cod = obj.check_photo.is_a?(TrueClass)
             invalid << "#{cod.to_s} #{obj.photo}"
-            obj.delete
+            # obj.delete
           end
         end
         File.open('./log/invalud_photo.log', 'w+'){|f| invalid.each{|s| f.puts s } }
