@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'colored'
-gem 'sentimeta', "~> 0.0.8"
+gem 'sentimeta', "~> 0.1.3"
 
 gem "bundler", "~> 1.6"
 gem "rake", "~> 10.0"
