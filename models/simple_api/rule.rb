@@ -128,8 +128,8 @@ module SimpleApi
     end
 
     def breadcrumbs
-      root = SimpleApi::Sitemap::Root.reverse_order(:id).where(sphere: sphere).first
-      root.breadcrumbs + [
+      root = SimpleApi::Sitemap::Root.where(sphere: sphere).reverse_order(:id).first
+      (root ? root.breadcrumbs : []) + [
         {
         label: json_load(content, {})['index'] || name,
         url: "/en/#{sphere}/index/#{param},#{name}"
