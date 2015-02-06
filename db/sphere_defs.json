@@ -10,7 +10,8 @@
   { "param": "best_criteria", "klass": "SimpleApi::DesignRule"},
   { "param": "main_spheres", "klass": "SimpleApi::DesignRule"},
   { "param": "test-rule", "klass": "SimpleApi::TestRule"},
-  { "param": "hints", "klass": "SimpleApi::DesignRule"}
+  { "param": "hints", "klass": "SimpleApi::DesignRule"},
+  { "param": "landing", "klass": "SimpleApi::DesignRule"}
   // {"sphere": "hotels", "param": "about", "klass": "SimpleApi::DesignRule"},
   // {"sphere": "hotels", "param": "catalog-annotation", "klass": "SimpleApi::HotelsCatalogAnnotationRule"},
   // {"sphere": "hotels", "param": "catalog", "klass": "SimpleApi::HotelsCatalogAnnotationRule"},
