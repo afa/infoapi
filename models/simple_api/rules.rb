@@ -13,7 +13,7 @@ module SimpleApi
       def load_rules
         Sentimeta.env = CONFIG["fapi_stage"] || :production
         # Sentimeta.lang = :en
-        sp_list = (Sentimeta::Client.spheres rescue []).map{|s| s["name"] } << "test"
+        sp_list = (Sentimeta::Client.spheres rescue []).map{|s| s["name"] } + ["test", 'alien']
         # spheres = SimpleApi::Rule.take_spheres << "test"
         rls = Rule.order(:position).all.select do|rl|
           if sp_list.include?(rl.sphere)
@@ -27,6 +27,13 @@ module SimpleApi
         rls.map do |item|
           SimpleApi::Rule.from_param(item.sphere, item.param)[item.id] rescue puts "error in rule #{item.id.to_s}" 
         end
+      end
+
+      def rule_list(param)
+      end
+
+      def rule_item(id)
+        SimpleApi::Rule[id].try(:to_json)
       end
 
       def prepare_params(params)

@@ -21,7 +21,7 @@ module SimpleApi
       def self.prepare_list
         Sentimeta.env = CONFIG['fapi_stage']
         Sentimeta.lang = :en
-        Sentimeta.sphere = 'hotels'
+        # Sentimeta.sphere = 'hotels'
         rslt = ['']
         crnt = rslt.dup
         4.times.each do
@@ -29,8 +29,8 @@ module SimpleApi
           # rslt += tst.first
           # rslt += tst.first.map{|item| Sentimeta::Client.catalog(path: item, limit: 10000).map{|i| i['name'] } }
           crnt = crnt.map do |item|
-            cat = Sentimeta::Client.catalog(path: item, limit: 10000) rescue []
-            cat.present? ? cat.map{|i| [ item.blank? ? nil : item, i['name'] ].compact.join(',') } : nil
+            cat = Sentimeta::Client.catalog(sphere: 'hotels', path: item, limit: 10000) rescue OpenStruct.new(body: [])
+            cat.ok? && cat.body.present? ? cat.body.map{|i| [ item.blank? ? nil : item, i['name'] ].compact.join(',') } : nil
           end
           .compact
           .flatten

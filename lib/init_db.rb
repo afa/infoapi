@@ -1,3 +1,4 @@
+require 'ostruct'
 require 'colored'
 require 'yaml'
 require 'sequel'

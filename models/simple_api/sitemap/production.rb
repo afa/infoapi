@@ -1,3 +1,4 @@
+require 'ostruct'
 module SimpleApi
   module Sitemap
     class Production < Sequel::Model
@@ -152,11 +153,11 @@ module SimpleApi
         rule.references_dataset.where(is_empty: nil, sitemap_session_id: sitemap_session.pk).order(:id).all.each do |obj|
           puts "rework empty #{rule.pk}:#{obj.pk}" if obj.pk % 100 == 0
           param = json_load(obj.json, {})
-          Sentimeta.lang  = rule.lang.to_sym
-          Sentimeta.sphere = rule.sphere
+          # Sentimeta.lang  = rule.lang.to_sym
+          # Sentimeta.sphere = rule.sphere
           path = param.delete('catalog').to_s.split(',') if param.has_key?('catalog')
           path = param.delete("path").to_s.split(',') if param.has_key?('path')
-          empty = (Sentimeta::Client.fetch :objects, {"is_empty" => 4}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})["is_empty"]
+          empty = (Sentimeta::Client.fetch :objects, {sphere: rule.sphere, lang: rule.lang.to_sym, "is_empty" => 4}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue OpenStruct.new(body: {})).body["is_empty"]
           obj.update(:is_empty => empty)
         end
       end
@@ -211,8 +212,8 @@ module SimpleApi
       end
       def sm_prepare_links
         Sentimeta.env   = CONFIG["fapi_stage"]
-        Sentimeta.lang  = rule.lang.to_sym
-        Sentimeta.sphere = rule.sphere
+        # Sentimeta.lang  = rule.lang.to_sym
+        # Sentimeta.sphere = rule.sphere
         router = SimpleApiRouter.new(rule.lang, rule.sphere)
         leafs = rule.references_dataset.where(is_empty: false, sitemap_session_id: sitemap_session.pk).order(:index_id).all.map(&:index).uniq
         parents = []
@@ -224,7 +225,7 @@ module SimpleApi
           label = tr_h1_params(json_load(rule.content)['h1'], refs_param)
           path = param.delete('catalog').to_s.split(',') if param.has_key?('catalog')
           path ||= param.delete("path").to_s.split(',') if param.has_key?('path')
-          data = (Sentimeta::Client.fetch :objects, {'fields' => {'limit_objects' => '100'}}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue {})
+          data = (Sentimeta::Client.fetch :objects, {lang: rule.lang.to_sym, sphere: rule.sphere, 'fields' => {'limit_objects' => '100'}}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue OpenStruct.new(body: {})).body
           next if data.blank?
           next if data['objects'].nil?
           puts "rework links #{index.pk}=#{data['objects'].size}.#{refs.size}"

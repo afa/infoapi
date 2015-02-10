@@ -3,6 +3,7 @@ require 'simple_api'
 Dir["./lib/**/*.rb"].each {|file| require file }
 require 'yaml'
 require_relative 'routes/indexator'
+require_relative 'routes/rules'
 
 class SimpleApiTester < Sinatra::Base
   register Sinatra::Namespace
@@ -18,6 +19,7 @@ class SimpleApiTester < Sinatra::Base
   end
 
   register Sinatra::Custom::Routing::Indexator
+  register Sinatra::Custom::Routing::Rules
   namespace '/api/v1' do
     namespace '/:sphere/infoapi' do
       post '/reload' do
