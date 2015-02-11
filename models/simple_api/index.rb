@@ -11,9 +11,8 @@ module SimpleApi
         rules = SimpleApi::Rule.where(sphere: sphere, param: param).order(%i(position id)).all
         rat = SimpleApi::Sitemap::Reference.where(is_empty: false, rule_id: rules.map(&:pk), url: route.route_to('rating', hash.dup)).first
         return JSON.dump({breadcrumbs: nil}) unless rat
-        idx = rat.super_index
-        idx ||= rat.index
-        JSON.dump({breadcrumbs: idx.breadcrumbs})
+        idx = rat.super_index || rat.index
+        JSON.dump({breadcrumbs: idx.try(:breadcrumbs)})
       end
 
       def roots(sphere, param)
