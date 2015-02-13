@@ -15,5 +15,13 @@ Sequel.migration do
     add_index :sitemap_rules, [:sphere]
     add_index :sitemap_rules, [:param]
     add_index :sitemap_rules, [:lang]
+    alter_table :productions do
+      add_column :param, String
+    end
+    add_index :productions, [:param]
+    alter_table :refs do
+      add_foreign_key :root_id, :roots
+    end
+    add_index :refs, [:root_id]
   end
 end

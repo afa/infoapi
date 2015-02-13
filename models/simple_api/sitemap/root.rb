@@ -6,7 +6,7 @@ module SimpleApi
         [
           {
             label: sphere,
-            url: "/en/#{sphere}/index/group" #change when param added to self
+            url: "/en/#{sphere}/index/#{param || 'group'}" #change when param added to self
           }
         ]
       end

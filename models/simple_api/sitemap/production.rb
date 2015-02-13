@@ -133,7 +133,7 @@ module SimpleApi
       end
 
       def sm_split_rules
-        rlist = SimpleApi::Rule.where(sphere: sphere, param: 'group')
+        rlist = SimpleApi::Rule.where(sphere: sphere, param: (param || 'group'))
         rlist.each do |rul|
           SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, root_id: root.pk, sphere: sphere, rule_id: rul.pk, parent_id: pk, state: 'rule_prepared')
         end

@@ -28,11 +28,6 @@ module SimpleApi
       TYPES.delete_if{|i| true }.merge! hash
     end
 
-    # def default?(rule)
-    #   rule.filters.has_key?('default') && rule.filters['default']
-    # end
-
     module_function :from_name, :load_definitions
-    # , :default?
   end
 end

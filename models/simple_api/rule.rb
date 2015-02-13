@@ -140,5 +140,10 @@ module SimpleApi
     #   prod = build_index(root)
     #   prod
     # end
+
+    def export_data
+      deletable = %i(stars path path.level criteria genres extended_types order_traversal)
+      to_hash.delete_if{|k, v| deletable.include? k }
+    end
   end
 end

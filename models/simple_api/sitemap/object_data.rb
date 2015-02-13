@@ -13,7 +13,7 @@ module SimpleApi
           resp.is_a?(Net::HTTPSuccess) ? true : resp.code
         rescue => e
           nil
-        end.tap{|x| puts "chkresp #{x.inspect}" }
+        end
       end
     end
   end
