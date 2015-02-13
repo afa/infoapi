@@ -121,8 +121,8 @@ module SimpleApi
       def sm_split_roots
         slist = json_load(step_params, {})['spheres'] || []
         slist.each do |sp|
-          rt = SimpleApi::Sitemap::Root.create(sitemap_session_id: sitemap_session.pk, sphere: sp, name: sp, active: false)
-          child = SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, root_id: rt.pk, sphere: sp, parent_id: pk, state: 'root_prepared')
+          rt = SimpleApi::Sitemap::Root.create(sitemap_session_id: sitemap_session.pk, param: param, sphere: sp, name: sp, active: false)
+          child = SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, param: param, root_id: rt.pk, sphere: sp, parent_id: pk, state: 'root_prepared')
         end
       end
 
