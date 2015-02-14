@@ -135,7 +135,7 @@ module SimpleApi
       def sm_split_rules
         rlist = SimpleApi::Rule.where(sphere: sphere, param: (param || 'group'))
         rlist.each do |rul|
-          SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, root_id: root.pk, sphere: sphere, rule_id: rul.pk, parent_id: pk, state: 'rule_prepared')
+          SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, param: param, root_id: root.pk, sphere: sphere, rule_id: rul.pk, parent_id: pk, state: 'rule_prepared')
         end
       end
 
@@ -165,10 +165,10 @@ module SimpleApi
         WorkerMarkDuplicates.perform_async(pk)
       end
       def sm_mark_duplicates
-        doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.group([:url]).having('count(*) > 1').where(rule_id: rule.pk, sitemap_session_id: sitemap_session.pk)
+        doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.group([:url]).having('count(*) > 1').where(rule_id: rule.pk, root_id: root.pk)
         doubles.each do |dble|
           puts "rework double #{dble[:min_id]}"
-          rs = SimpleApi::Sitemap::Reference.order(:id).where(rule_id: rule.pk, sitemap_session_id: sitemap_session.pk, url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
+          rs = SimpleApi::Sitemap::Reference.order(:id).where(rule_id: rule.pk, root_id: root.pk, url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
           SimpleApi::Sitemap::Reference.where(:id => rs.map(&:pk)).update(:duplicate_id => dble[:min_id])
         end
       end
@@ -199,7 +199,7 @@ module SimpleApi
           end
         end
         index_ids = SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: rule.pk).all.map(&:pk)
-        refs = SimpleApi::Sitemap::Reference.where(index_id: index_ids, super_index_id: nil).order(:id).all
+        refs = SimpleApi::Sitemap::Reference.where(root_id: root.pk, index_id: index_ids, super_index_id: nil).order(:id).all
         puts "todo: #{refs.size} refs"
         refs.each do |ref|
           ref.update(super_index_id: ref.index.parent_id)
@@ -215,7 +215,7 @@ module SimpleApi
         # Sentimeta.lang  = rule.lang.to_sym
         # Sentimeta.sphere = rule.sphere
         router = SimpleApiRouter.new(rule.lang, rule.sphere)
-        leafs = rule.references_dataset.where(is_empty: false, sitemap_session_id: sitemap_session.pk).order(:index_id).all.map(&:index).uniq
+        leafs = rule.references_dataset.where(is_empty: false, root_id: root.pk).order(:index_id).all.map(&:index).uniq
         parents = []
         leafs.each do |index|
           refs = index.references

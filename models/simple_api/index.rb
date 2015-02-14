@@ -88,6 +88,8 @@ module SimpleApi
         hash = {}
         range = lded['offset']..(lded['offset'] + range.last - range.first) if lded['offset']
         range = range.first..(lded['limit'] - 1 + range.first) if lded['limit']
+        r_range = lded['offset_ratings']..(lded['offset_ratings'] + r_range.last - r_range.first) if lded['offset_ratings']
+        r_range = r_range.first..(lded['limit_ratings'] - 1 + r_range.first) if lded['limit_ratings']
         sphere = root.sphere
         route = SimpleApiRouter.new('en', sphere)
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
@@ -126,7 +128,10 @@ module SimpleApi
           bcr << {json_load(curr.filter, curr.filter) => json_load(curr.value, curr.value)}
         end
         unless curr
-          return JSON.dump({'ratings' => index_links(bcr, parent, route, 'rating')})
+          rtngs = index_links(bcr, parent, route, 'rating')
+          rsp['ratings'] = rtngs[r_range]
+          rsp['ratings_total'] = rtngs.size
+          return JSON.dump({'ratings' => rtngs[r_range], 'ratings_total' => rtngs.size})
         end
         nxt = rule.indexes_dataset.where(root_id: root.pk, parent_id: curr[:id]).all.select{|n| next_links(n).present? }
         rsp = {}
@@ -152,11 +157,13 @@ module SimpleApi
           end
           rsp['total'] = nxt.size
         end
-        rsp['ratings'] = index_links(bcr, curr, route, 'rating')
+        rtngs = index_links(bcr, curr, route, 'rating')
+        rsp['ratings'] = rtngs[r_range]
         rsp.delete('ratings') unless rsp['ratings'].present?
         if rsp['ratings'].present?
           rsp.delete('next')
           rsp.delete('total')
+          rsp['ratings_total'] = rtngs.size
         end
         rsp['breadcrumbs'] = curr[:id] ? curr.breadcrumbs : rule.breadcrumbs
         JSON.dump(rsp)
