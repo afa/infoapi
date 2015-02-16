@@ -15,6 +15,7 @@ end
 def tr_h1_params(str, hash)
   subs = {}
   subs.merge!('location' => hash['path'].strip.split(',').last) if hash.has_key?('path')
+  subs.merge!('location' => hash['catalog'].strip.split(',').last) if hash.has_key?('catalog')
   subs.merge!('stars' => hash['stars']) if hash.has_key?('stars')
   subs.merge!('price-range' => hash['price_range']) if hash.has_key?('price_range')
   subs.merge!('criterion' => hash['criteria']) if hash.has_key?('criteria')
