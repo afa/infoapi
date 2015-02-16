@@ -30,10 +30,11 @@ module SimpleApi
       end
 
       def rule_list(param)
+        SimpleApi::Rule.where(param).all.map(&:export_data)
       end
 
       def rule_item(id)
-        SimpleApi::Rule[id].try(:to_json)
+        SimpleApi::Rule[id].try(:export_data)
       end
 
       def prepare_params(params)
