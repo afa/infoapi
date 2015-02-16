@@ -131,8 +131,8 @@ module SimpleApi
         unless curr
           rtngs = index_links(bcr, parent, route, 'rating')
           rsp['ratings'] = rtngs[r_range]
-          rsp['ratings_total'] = rtngs.size
-          return JSON.dump({'ratings' => rtngs[r_range], 'ratings_total' => rtngs.size})
+          rsp['total_ratings'] = rtngs.size
+          return JSON.dump({'ratings' => rtngs[r_range], 'total_ratings' => rtngs.size})
         end
         nxt = rule.indexes_dataset.where(root_id: root.pk, parent_id: curr[:id]).all.select{|n| next_links(n).present? }
         rsp = {}
@@ -164,7 +164,7 @@ module SimpleApi
         if rsp['ratings'].present?
           rsp.delete('next')
           rsp.delete('total')
-          rsp['ratings_total'] = rtngs.size
+          rsp['total_ratings'] = rtngs.size
         end
         rsp['breadcrumbs'] = curr[:id] ? curr.breadcrumbs : rule.breadcrumbs
         JSON.dump(rsp)
