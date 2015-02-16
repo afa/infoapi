@@ -128,6 +128,7 @@ module SimpleApi
           end
           bcr << {json_load(curr.filter, curr.filter) => json_load(curr.value, curr.value)}
         end
+        rsp = {}
         unless curr
           rtngs = index_links(bcr, parent, route, 'rating')
           rsp['ratings'] = rtngs[r_range]
@@ -135,7 +136,6 @@ module SimpleApi
           return JSON.dump({'ratings' => rtngs[r_range], 'total_ratings' => rtngs.size})
         end
         nxt = rule.indexes_dataset.where(root_id: root.pk, parent_id: curr[:id]).all.select{|n| next_links(n).present? }
-        rsp = {}
         if nxt.present?
           rsp['next'] = nxt[range].map do |item|
             sel = []
