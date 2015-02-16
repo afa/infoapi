@@ -82,6 +82,7 @@ module SimpleApi
 
       def leaf_page(root, rule, name, selector, params, param)
         range = 0..99
+        r_range = 0..99
         parent = nil
         lded = json_load(params['p'], params['p'])
         lded ||= {}
