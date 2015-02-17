@@ -165,10 +165,12 @@ module SimpleApi
         WorkerMarkDuplicates.perform_async(pk)
       end
       def sm_mark_duplicates
-        doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.group([:url]).having('count(*) > 1').where(rule_id: rule.pk, root_id: root.pk)
+        doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.group([:url]).having('count(*) > 1')
+        #.where(rule_id: rule.pk, root_id: root.pk)
         doubles.each do |dble|
           puts "rework double #{dble[:min_id]}"
-          rs = SimpleApi::Sitemap::Reference.order(:id).where(rule_id: rule.pk, root_id: root.pk, url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
+          rs = SimpleApi::Sitemap::Reference.order(:id).where(url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
+          # rs = SimpleApi::Sitemap::Reference.order(:id).where(rule_id: rule.pk, root_id: root.pk, url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
           SimpleApi::Sitemap::Reference.where(:id => rs.map(&:pk)).update(:duplicate_id => dble[:min_id])
         end
       end
