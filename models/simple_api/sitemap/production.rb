@@ -169,7 +169,7 @@ module SimpleApi
         #.where(rule_id: rule.pk, root_id: root.pk)
         doubles.each do |dble|
           puts "rework double #{dble[:min_id]}"
-          rs = SimpleApi::Sitemap::Reference.order(:id).where(url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
+          rs = SimpleApi::Sitemap::Reference.where(url: dble.url).order('duplicate_id nulls first, id').all.select{|h| h.id != dble[:min_id].to_i }
           # rs = SimpleApi::Sitemap::Reference.order(:id).where(rule_id: rule.pk, root_id: root.pk, url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
           SimpleApi::Sitemap::Reference.where(:id => rs.map(&:pk)).update(:duplicate_id => dble[:min_id])
         end
@@ -192,14 +192,20 @@ module SimpleApi
             next unless fwd
             parent = fwd.parent
             next unless parent
-            flt = json_load(parent.filter, parent.filter)
-            val = json_load(parent.value, parent.value)
-            flt = [flt] unless flt.is_a?(::Array)
-            val = [val] unless val.is_a?(::Array)
-            fwd.update(parent_id: parent.parent_id, filter: JSON.dump(flt + [json_load(fwd.filter, fwd.filter)].flatten), value: JSON.dump(val + [json_load(fwd.value,fwd.value)].flatten))
+            fwd.update({parent_id: parent.parent_id}.merge(make_merged_values(parent, fwd)))
             parent.delete
           end
         end
+        idxs = SimpleApi::Sitemap::Index.select(:rule_id).group(:rule_id).having{count(:id) < 2}.all.map{|i| SimpleApi::Sitemap::Index.where(parent_id: nil, rule_id: i.rule_id).first }
+        puts "todo #{idxs.size} heads"
+        idxs.each do |idx|
+          idx.children.each do |child|
+            child.update({parent_id: nil}.merge(make_merged_values(idx, child)))
+          end
+          idx.delete
+        end
+        # idxs = SimpleApi::Sitemap::Index.where(rule_id: rule.pk, parent_id: nil, root_id: root.pk).all.select{|i| i.children.size <= 1 }
+        # puts 
         index_ids = SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: rule.pk).all.map(&:pk)
         refs = SimpleApi::Sitemap::Reference.where(root_id: root.pk, index_id: index_ids, super_index_id: nil).order(:id).all
         puts "todo: #{refs.size} refs"
@@ -209,6 +215,15 @@ module SimpleApi
         end
         puts '', 'done'
       end
+
+      def make_merged_values(left, right)
+        flt = json_load(left.filter, left.filter)
+        val = json_load(left.value, left.value)
+        flt = [flt] unless flt.is_a?(::Array)
+        val = [val] unless val.is_a?(::Array)
+        {filter: JSON.dump(flt + [json_load(right.filter, right.filter)].flatten), value: JSON.dump(val + [json_load(right.value,right.value)].flatten), label: [left.label, right.label].join(',')}
+      end
+
       def fire_prepare_links
         WorkerPrepareLinks.perform_async(pk)
       end
