@@ -165,7 +165,7 @@ module SimpleApi
         WorkerMarkDuplicates.perform_async(pk)
       end
       def sm_mark_duplicates
-        doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.group([:url]).having('count(*) > 1')
+        doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.where(duplicate_id: nil).group([:url]).having('count(*) > 1')
         #.where(rule_id: rule.pk, root_id: root.pk)
         doubles.each do |dble|
           puts "rework double #{dble[:min_id]}"
@@ -234,6 +234,7 @@ module SimpleApi
         router = SimpleApiRouter.new(rule.lang, rule.sphere)
         leafs = rule.references_dataset.where(is_empty: false, root_id: root.pk).order(:index_id).all.map(&:index).uniq
         parents = []
+        puts "links todo leafs #{leafs.size}"
         leafs.each do |index|
           refs = index.references
           param = json_load(index.json)
@@ -242,7 +243,8 @@ module SimpleApi
           label = tr_h1_params(json_load(rule.content)['h1'], refs_param)
           path = param.delete('catalog').to_s.split(',') if param.has_key?('catalog')
           path ||= param.delete("path").to_s.split(',') if param.has_key?('path')
-          data = (Sentimeta::Client.fetch :objects, {lang: rule.lang.to_sym, sphere: rule.sphere, 'fields' => {'limit_objects' => '100'}}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue OpenStruct.new(body: {})).body
+          p rule.sphere
+          data = (Sentimeta::Client.objects, {lang: rule.lang.to_sym, sphere: rule.sphere, 'fields' => {'limit_objects' => '100'}}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue [])
           next if data.blank?
           next if data['objects'].nil?
           puts "rework links #{index.pk}=#{data['objects'].size}.#{refs.size}"
