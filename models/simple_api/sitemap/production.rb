@@ -244,7 +244,7 @@ module SimpleApi
           path = param.delete('catalog').to_s.split(',') if param.has_key?('catalog')
           path ||= param.delete("path").to_s.split(',') if param.has_key?('path')
           p rule.sphere
-          data = (Sentimeta::Client.objects, {lang: rule.lang.to_sym, sphere: rule.sphere, 'fields' => {'limit_objects' => '100'}}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue [])
+          data = Sentimeta::Client.objects, {lang: rule.lang.to_sym, sphere: rule.sphere, 'fields' => {'limit_objects' => '100'}}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue []
           next if data.blank?
           next if data['objects'].nil?
           puts "rework links #{index.pk}=#{data['objects'].size}.#{refs.size}"
