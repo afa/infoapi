@@ -237,14 +237,14 @@ module SimpleApi
         puts "links todo leafs #{leafs.size}"
         leafs.each do |index|
           refs = index.references
-          param = json_load(index.json)
+          parm = json_load(index.json)
           refs_param = json_load(refs.first.json, {}).delete_if{|k, v| k == 'rule' || k == 'rule_id' }
           url = router.route_to('rating', refs_param.dup)
-          label = tr_h1_params(json_load(rule.content)['h1'], refs_param)
-          path = param.delete('catalog').to_s.split(',') if param.has_key?('catalog')
-          path ||= param.delete("path").to_s.split(',') if param.has_key?('path')
+          label = tr_h1_params(json_load(rule.content)['h1'], refs_param.dup)
+          path = parm.delete('catalog').to_s.split(',') if parm.has_key?('catalog')
+          path ||= parm.delete("path").to_s.split(',') if parm.has_key?('path')
           p rule.sphere
-          data = Sentimeta::Client.objects, {lang: rule.lang.to_sym, sphere: rule.sphere, 'fields' => {'limit_objects' => '100'}}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue []
+          data = Sentimeta::Client.objects({lang: rule.lang.to_sym, sphere: rule.sphere, 'fields' => {'limit_objects' => '100'}}.merge("criteria" => [parm.delete('criteria')].compact, "filters" => parm.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)}))) rescue []
           next if data.blank?
           # next if data['objects'].nil?
           puts "rework links #{index.pk}=#{data.size}.#{refs.size}"
