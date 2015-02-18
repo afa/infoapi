@@ -123,6 +123,7 @@ module SimpleApi
         json: JSON.dump(hash),
         url: route.route_to('rating', hash),
         sitemap_session_id: root.sitemap_session_id,
+        root_id: root.pk,
         index_id: index_id
       )
     end
