@@ -247,9 +247,9 @@ module SimpleApi
           data = Sentimeta::Client.objects, {lang: rule.lang.to_sym, sphere: rule.sphere, 'fields' => {'limit_objects' => '100'}}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue []
           next if data.blank?
           # next if data['objects'].nil?
-          puts "rework links #{index.pk}=#{data['objects'].size}.#{refs.size}"
+          puts "rework links #{index.pk}=#{data.size}.#{refs.size}"
           parents << index.parent if index.parent
-          data['objects'].select{|o| o.has_key?('photos') && o['photos'].present? && o['photos'].select{|p| p['type'] != 'trailer'}.present? }.sample(8).each do |obj|
+          data.select{|o| o.has_key?('photos') && o['photos'].present? && o['photos'].select{|p| p['type'] != 'trailer'}.present? }.sample(8).each do |obj|
             index.objects_dataset.insert( 
                                          url: url,
                                          photo: obj['photos'].select{|p| p['type'] != 'trailer'}.try(:first).try(:[], 'url'),
