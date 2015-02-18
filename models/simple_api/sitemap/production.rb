@@ -169,7 +169,7 @@ module SimpleApi
         #.where(rule_id: rule.pk, root_id: root.pk)
         doubles.each do |dble|
           puts "rework double #{dble[:min_id]}"
-          rs = SimpleApi::Sitemap::Reference.where(url: dble.url).order('duplicate_id nulls first, id').all.select{|h| h.id != dble[:min_id].to_i }
+          rs = SimpleApi::Sitemap::Reference.where(url: dble.url).order(Sequel.asc(:duplicate_id, nulls: :first), :id).all.select{|h| h.id != dble[:min_id].to_i }
           # rs = SimpleApi::Sitemap::Reference.order(:id).where(rule_id: rule.pk, root_id: root.pk, url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
           SimpleApi::Sitemap::Reference.where(:id => rs.map(&:pk)).update(:duplicate_id => dble[:min_id])
         end
