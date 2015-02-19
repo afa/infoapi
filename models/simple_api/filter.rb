@@ -63,6 +63,29 @@ module SimpleApi
       leafs
     end
 
+    def build_junk(rule)
+      junk = []
+      ars = []
+      order = json_load(traversal_order, traversal_order)
+      order.each do |flt|
+        flt = 'catalog' if flt == 'path'
+        rdef = self[flt]
+        rdef = self['path'] if flt == 'catalog' && self['path']
+        values = rdef.fetch_list(rule)
+        keyz = [flt] * values.size
+        ars << keyz.zip(values).map{|a| Hash[*a] }
+      end
+      return [] if ars.empty? 
+      junk += ars.shift
+      while ars.present?
+        junk = junk.product(ars.shift).map(&:flatten)
+      end
+      rslt = junk.map do |ah|
+        ah.inject({}){|r, h| r.merge(h) }
+      end
+      rslt.each{|h| write_ref(rule, OpenStruct.new(sitemap_session_id: nil), h, nil) }
+    end
+
     def build_index(root, rule)
       filter_list = traversal_order || []
       recurse_index(filter_list, {}, root, nil, rule)
