@@ -81,7 +81,7 @@ module SimpleApi
         junk = junk.product(ars.shift).map(&:flatten)
       end
       rslt = junk.map do |ah|
-        ah.inject({}){|r, h| r.merge(h.is_a?(Hash) ? h : Hash[h]) }
+        ah.inject({}){|r, h| r.merge(h.is_a?(Hash) ? h : Hash[*h]) }
       end
       rslt.each{|h| write_ref(rule, OpenStruct.new(sitemap_session_id: nil), h, nil) }
     end
