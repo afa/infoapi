@@ -98,6 +98,9 @@ module SimpleApi
         hash.merge!('catalog' => hash.delete("path")) if hash.has_key?('path')
         curr = {id: nil, rule_id: rule.pk}
 
+        ccr = route.route_to(([param, rule.name] + selector).join(','), hash)
+        p ccr
+        p SimpleApi::Sitemap::Index.where(url: ccr).first
         bcr = []
         cselector = selector.dup
         loop do
