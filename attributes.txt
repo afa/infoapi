@@ -1,0 +1,18 @@
+companies:
+   top
+   industries
+
+movies:
+   genres
+   countries
+   directors
+   actors
+   producers
+   writers
+
+hotels:
+   location
+   country
+   admin1
+   city
+   amenities
