@@ -116,7 +116,6 @@ module SimpleApi
         r_range = 0..99
         parent = nil
         lded = json_load(params['p'])
-        lded.delete_if{|k, v| !selector.include?(k) }
         # lded = json_load(params['p'], params['p'])
         lded ||= {}
         hash = {}
@@ -128,6 +127,7 @@ module SimpleApi
         route = SimpleApiRouter.new('en', sphere)
         hash.merge!('criteria' => lded.delete('criteria')) if lded.has_key?('criteria')
         hash.merge!(lded["filters"]) if lded.has_key?('filters')
+        hash.delete_if{|k, v| !selector.include?(k) }
         hash.merge!('catalog' => hash.delete("path")) if hash.has_key?('path')
         # curr = {id: nil, rule_id: rule.pk}
 
