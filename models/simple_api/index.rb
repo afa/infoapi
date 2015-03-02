@@ -79,14 +79,21 @@ module SimpleApi
 
       def index_links(curr, route, param, range)
         # sel = bcr # + [{item[:filter] => item[:value]}]
-        rul = curr.rule
+        # rul = curr.rule
         # rul = SimpleApi::Rule[curr[:rule_id]]
         # index_ids = SimpleApi::Sitemap::Index.where(parent_id: curr[:id]).all.map(&:pk)
         # if curr[:id]
         p 'indexlinks'
-        cnt = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__super_index_id: curr.pk).count
+        if curr.children_dataset.count > 0
+        cnt = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__super_index_id: curr.try(:pk)).count
         p 'icnt', cnt
-        SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__label, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__super_index_id: curr.pk).offset(range.first).limit(range.size).all.map do |ref|
+        chld = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__label, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__super_index_id: curr.try(:pk)).offset(range.first).limit(range.size).all
+        else
+        cnt = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__super_index_id: nil).count
+        p 'icnt', cnt
+        chld = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__label, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__super_index_id: nil).offset(range.first).limit(range.size).all
+        end
+        chld.map do |ref|
           # links = SimpleApi::Sitemap::Reference.where(super_index_id: curr[:id], is_empty: false).all
 
         # else
