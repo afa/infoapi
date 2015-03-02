@@ -22,6 +22,7 @@ module SimpleApi
         p nxt.size
         p nxt.first
         # refactor for range limiting
+        route = SimpleApiRouter.new('en', sphere)
         rtngs = index_links(nil, route, 'rating', r_rng)
         rsp = {
             breadcrumbs: rule.breadcrumbs,
