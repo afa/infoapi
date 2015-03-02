@@ -25,26 +25,26 @@ module SimpleApi
         route = SimpleApiRouter.new('en', sphere)
         rtngs = index_links(nil, route, 'rating', rule, r_rng)
         rsp = {
-            breadcrumbs: rule.breadcrumbs,
-            # next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| json_load(r.traversal_order, []).present? }.map do |r|
-            next: nxt.map do |r|
-              # content = json_load(r.content, {})
-              {
-                name: r.filter,
-                label: r.label,  #(content['index'] || content['h1'] || r.name),
-                url: r.url, #"/en/#{sphere}/index/#{param.to_s},#{r.name}",
-                links: next_links(r)
-                # links: r.objects_dataset.where(index_id: r.pk).all.map{|o| {name: o.label, url: o.url, photo: o.photo} }.uniq.sample(4).shuffle
-              }
-            end
-          }.tap{|x| x[:total] = x[:next].size }
+          breadcrumbs: rule.breadcrumbs,
+          # next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| json_load(r.traversal_order, []).present? }.map do |r|
+          next: nxt.map do |r|
+            # content = json_load(r.content, {})
+            {
+              name: r.filter,
+              label: r.label,  #(content['index'] || content['h1'] || r.name),
+              url: r.url, #"/en/#{sphere}/index/#{param.to_s},#{r.name}",
+              links: next_links(r)
+              # links: r.objects_dataset.where(index_id: r.pk).all.map{|o| {name: o.label, url: o.url, photo: o.photo} }.uniq.sample(4).shuffle
+            }
+          end
+        }.tap{|x| x[:total] = x[:next].size }
         p 'rtngs', rtngs
         rsp['ratings'] = rtngs #[r_range]
         rsp.delete('ratings') unless rsp['ratings'].present?
         if rsp['ratings'].present?
-          rsp.delete('next')
-          rsp.delete('total')
-          rsp['total_ratings'] = rtngs.size
+          rsp.delete(:next)
+          rsp.delete(:total)
+          rsp[:total_ratings] = rtngs.size
         end
         JSON.dump(rsp)
 
