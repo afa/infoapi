@@ -23,7 +23,7 @@ module SimpleApi
         p nxt.first
         # refactor for range limiting
         route = SimpleApiRouter.new('en', sphere)
-        rtngs = index_links(nil, route, 'rating', r_rng)
+        rtngs = index_links(nil, route, 'rating', rule, r_rng)
         rsp = {
             breadcrumbs: rule.breadcrumbs,
             # next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| json_load(r.traversal_order, []).present? }.map do |r|
@@ -96,7 +96,7 @@ module SimpleApi
        end
 
 
-      def index_links(curr, route, param, range)
+      def index_links(curr, route, param, rule, range)
         # sel = bcr # + [{item[:filter] => item[:value]}]
         # rul = curr.rule
         # rul = SimpleApi::Rule[curr[:rule_id]]
@@ -230,7 +230,7 @@ module SimpleApi
           end
           rsp['total'] = nxt_size
         end
-        rtngs = index_links(curr, route, 'rating', r_range)
+        rtngs = index_links(curr, route, 'rating', curr.rule, r_range)
         p 'rtngs', rtngs
         rsp['ratings'] = rtngs #[r_range]
         rsp.delete('ratings') unless rsp['ratings'].present?
