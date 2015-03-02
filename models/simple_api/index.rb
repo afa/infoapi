@@ -95,9 +95,9 @@ module SimpleApi
         #   links.select{|r| !r.index.try(:objects_dataset).try(:empty?) }.map do |ref|
             # photo = ref.index.objects.sample.try(:photo) #check for null obj
             # if photo
-              lbl = tr_h1_params(json_load(ref.rule.content, {})['h1'], json_load(ref.json, {}))
+              # lbl = tr_h1_params(json_load(ref.rule.content, {})['h1'], json_load(ref.json, {}))
               {
-                label: lbl,
+                label: ref.label,
                 photo: ref.photo,
                 url: ref.url
               }
