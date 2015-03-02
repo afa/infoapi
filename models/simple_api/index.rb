@@ -15,15 +15,15 @@ module SimpleApi
         JSON.dump({breadcrumbs: idx.try(:breadcrumbs)})
       end
 
-      def rules(sphere, param, rule)
+      def rules(sphere, param, rule, rng, r_rng)
         root = SimpleApi::Sitemap::Root.reverse_order(:id).where(sphere: sphere).first
-        nxt = rule.indexes_dataset.where(parent_id: nil, root_id: root.pk).all
+        nxt = rule.indexes_dataset.where(parent_id: nil, root_id: root.pk).offset(rng.first).limit(rng.size).all
         p 'rules'
         p nxt.size
         p nxt.first
         # refactor for range limiting
-        JSON.dump(
-          {
+        rtngs = index_links(nil, route, 'rating', r_rng)
+        rsp = {
             breadcrumbs: rule.breadcrumbs,
             # next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| json_load(r.traversal_order, []).present? }.map do |r|
             next: nxt.map do |r|
@@ -37,7 +37,16 @@ module SimpleApi
               }
             end
           }.tap{|x| x[:total] = x[:next].size }
-        )
+        p 'rtngs', rtngs
+        rsp['ratings'] = rtngs #[r_range]
+        rsp.delete('ratings') unless rsp['ratings'].present?
+        if rsp['ratings'].present?
+          rsp.delete('next')
+          rsp.delete('total')
+          rsp['total_ratings'] = rtngs.size
+        end
+        JSON.dump(rsp)
+
       end
 
       def roots(sphere, param)
