@@ -69,6 +69,15 @@ module SimpleApi
       end
 
       def tree(sphere, rule_selector, rule_params, params)
+        range = 0..99
+        r_range = 0..99
+        lded = json_load(params['p'])
+        lded ||= {}
+        hash = {}
+        range = lded['offset']..(lded['offset'] + range.last - range.first) if lded['offset']
+        range = range.first..(lded['limit'] - 1 + range.first) if lded['limit']
+        r_range = lded['offset_ratings']..(lded['offset_ratings'] + r_range.last - r_range.first) if lded['offset_ratings']
+        r_range = r_range.first..(lded['limit_ratings'] - 1 + r_range.first) if lded['limit_ratings']
         root = SimpleApi::Sitemap::Root.reverse_order(:id).where(sphere: sphere).first
         selector = rule_selector.strip.split(',')
         rat = selector.shift
@@ -81,7 +90,7 @@ module SimpleApi
         return roots(sphere, rat) unless name.present?
         return roots(sphere, rat) unless rule = SimpleApi::Rule.where(name: name, param: rat, sphere: sphere).first
         fields = selector || []
-        return rules(sphere, rat, rule) if fields.empty?
+        return rules(sphere, rat, rule, range, r_range) if fields.empty?
         leaf_page(root, rule, name, selector, params, rat)
        end
 
