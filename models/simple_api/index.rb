@@ -116,6 +116,7 @@ module SimpleApi
         r_range = 0..99
         parent = nil
         lded = json_load(params['p'])
+        lded.delete_if{|k, v| !selector.include?(k) }
         # lded = json_load(params['p'], params['p'])
         lded ||= {}
         hash = {}
