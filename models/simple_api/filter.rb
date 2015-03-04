@@ -92,7 +92,7 @@ module SimpleApi
     def build_index(root, rule)
       parent = SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: rule.pk, url:"/en/#{root.sphere}/index/#{root.param},#{rule.name}").first
       filter_list = traversal_order || []
-      recurse_index(filter_list, {}, root, parent, rule)
+      recurse_index(filter_list, {}, root, parent.pk, rule)
     end
 
   end
