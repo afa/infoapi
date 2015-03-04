@@ -122,6 +122,7 @@ module SimpleApi
         slist = json_load(step_params, {})['spheres'] || []
         slist.each do |sp|
           rt = SimpleApi::Sitemap::Root.create(sitemap_session_id: sitemap_session.pk, param: param, sphere: sp, name: sp, active: false)
+          SimpleApi::Sitemap::Index.create(root_id: rt.pk, rule_id: nil, label: sp, filter: '[]', value: '[]', url: "/en/#{sp}/index/#{rt.param}", json: '{}', parent_id: nil)
           child = SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, param: param, root_id: rt.pk, sphere: sp, parent_id: pk, state: 'root_prepared')
         end
       end
@@ -135,6 +136,7 @@ module SimpleApi
       def sm_split_rules
         rlist = SimpleApi::Rule.where(sphere: sphere, param: (param || 'group'))
         rlist.each do |rul|
+          SimpleApi::Sitemap::Index.create(root_id: root.pk, rule_id: rul.pk, label: json_load(rul.content, {})['index'] || json_load(rul.content, {})['h1'], filter: '[]', value: '[]', url: "/en/#{root.sphere}/index/#{root.param},#{rul.name}", json: '{}', parent_id: SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: nil).try(:pk))
           SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, param: param, root_id: root.pk, sphere: sphere, rule_id: rul.pk, parent_id: pk, state: 'rule_prepared')
         end
       end
@@ -174,9 +176,11 @@ module SimpleApi
           SimpleApi::Sitemap::Reference.where(:id => rs.map(&:pk)).update(:duplicate_id => dble[:min_id])
         end
       end
+
       def fire_merge_forwardable
         WorkerMergeForwardable.perform_async(pk)
       end
+
       def sm_merge_forwardable
         puts "todo: #{SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root_id, rule_id: rule.pk).size}"
         prev = []
@@ -227,8 +231,9 @@ module SimpleApi
       def fire_prepare_links
         WorkerPrepareLinks.perform_async(pk)
       end
+
       def sm_prepare_links
-        Sentimeta.env   = CONFIG["fapi_stage"]
+        Sentimeta.env = CONFIG["fapi_stage"]
         # Sentimeta.lang  = rule.lang.to_sym
         # Sentimeta.sphere = rule.sphere
         router = SimpleApiRouter.new(rule.lang, rule.sphere)
@@ -243,7 +248,6 @@ module SimpleApi
           label = tr_h1_params(json_load(rule.content)['h1'], refs_param.dup)
           path = parm.delete('catalog').to_s.split(',') if parm.has_key?('catalog')
           path ||= parm.delete("path").to_s.split(',') if parm.has_key?('path')
-          p rule.sphere
           data = Sentimeta::Client.objects({lang: rule.lang.to_sym, sphere: rule.sphere, 'fields' => {'limit_objects' => '100'}}.merge("criteria" => [parm.delete('criteria')].compact, "filters" => parm.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)}))) rescue []
           next if data.blank?
           # next if data['objects'].nil?
@@ -253,6 +257,7 @@ module SimpleApi
             index.objects_dataset.insert( 
                                          url: url,
                                          photo: obj['photos'].select{|p| p['type'] != 'trailer'}.try(:first).try(:[], 'url'),
+                                         crypto_hash: obj['photos'].select{|p| p['type'] != 'trailer' }.try(:first).try(:[], 'hash'),
                                          label: label,
                                          rule_id: rule.pk,
                                          root_id: root.pk,
@@ -276,9 +281,11 @@ module SimpleApi
           rule.objects_dataset.insert(url: link.url, rule_id: rule.pk, photo: link.photo, label: link.label, index_id: nil, root_id: root.pk)
         end
       end
+
       def fire_test_link_avail
         WorkerTestLinkAvail.perform_async(pk)
       end
+
       def sm_test_link_avail
         invalid = []
         SimpleApi::Sitemap::ObjectData.where(root_id: root.pk, rule_id: rule.pk).all.each do |obj|
@@ -289,20 +296,26 @@ module SimpleApi
         end
         File.open('./log/invalud_photo.log', 'w+'){|f| invalid.each{|s| f.puts s } }
       end
+
       def fire_finish
         WorkerFinish.perform_async(pk)
       end
+
       def sm_finish
       end
+
       def sm_parent_root_finish
         root.update(active: true)
         (SimpleApi::Sitemap::Root.where(active: true, sphere: sphere).all - [self]).each{|r| r.update(active: false) }
       end
+
       def sm_parent_rule_finish
       end
+
       def fire_parent_rule_finish
         WorkerParentRuleFinish.perform_async(parent.pk)
       end
+
       def fire_parent_root_finish
         WorkerParentRootFinish.perform_async(parent.pk)
       end
