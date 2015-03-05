@@ -35,7 +35,8 @@ module SimpleApi
       # end
 
       def breadcrumbs
-        rule.breadcrumbs + path_to_root.map do |idx|
+        # rule.breadcrumbs + 
+        path_to_root.map do |idx|
         {
           'label' => idx.label,
           'url' => idx.url

@@ -88,10 +88,10 @@ module SimpleApi
         end
         lang = "en"
         name = selector.shift
-        return roots(sphere, rat) unless name.present?
-        return roots(sphere, rat) unless rule = SimpleApi::Rule.where(name: name, param: rat, sphere: sphere).first
+        # return roots(sphere, rat) unless name.present?
+        # return roots(sphere, rat) unless rule = SimpleApi::Rule.where(name: name, param: rat, sphere: sphere).first
         fields = selector || []
-        return rules(sphere, rat, rule, range, r_range) if fields.empty?
+        # return rules(sphere, rat, rule, range, r_range) if fields.empty?
         leaf_page(root, rule, name, selector, params, rat)
        end
 
@@ -110,7 +110,7 @@ module SimpleApi
         else
         cnt = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__super_index_id: nil, refs__rule_id: rule.pk).count
         p 'icnt', cnt
-        chld = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__label, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__super_index_id: nil, refs__rule_id: rule.pk).offset(range.first).limit(range.size).all
+        chld = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__label, :object_data_items__crypto_hash, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__super_index_id: nil, refs__rule_id: rule.pk).offset(range.first).limit(range.size).all
         end
         chld.map do |ref|
           # links = SimpleApi::Sitemap::Reference.where(super_index_id: curr[:id], is_empty: false).all
@@ -126,7 +126,7 @@ module SimpleApi
               # lbl = tr_h1_params(json_load(ref.rule.content, {})['h1'], json_load(ref.json, {}))
               {
                 label: ref.label,
-                photo: ref.photo,
+                photo: ref.crypto_hash ? "/api/v1/picture/#{ref.crypto_hash}" : ref.photo,
                 url: ref.url
               }
             # else
