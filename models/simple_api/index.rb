@@ -90,6 +90,7 @@ module SimpleApi
         name = selector.shift
         # return roots(sphere, rat) unless name.present?
         # return roots(sphere, rat) unless rule = SimpleApi::Rule.where(name: name, param: rat, sphere: sphere).first
+        rule = SimpleApi::Rule.where(name: name, param: rat, sphere: sphere).first
         fields = selector || []
         # return rules(sphere, rat, rule, range, r_range) if fields.empty?
         leaf_page(root, rule, name, selector, params, rat)
