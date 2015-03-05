@@ -136,7 +136,7 @@ module SimpleApi
       def sm_split_rules
         rlist = SimpleApi::Rule.where(sphere: sphere, param: (param || 'group'))
         rlist.each do |rul|
-          SimpleApi::Sitemap::Index.create(root_id: root.pk, rule_id: rul.pk, label: json_load(rul.content, {})['index'] || json_load(rul.content, {})['h1'], filter: '[]', value: '[]', url: "/en/#{root.sphere}/index/#{root.param},#{rul.name}", json: '{}', parent_id: SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: nil).try(:pk))
+          SimpleApi::Sitemap::Index.create(root_id: root.pk, rule_id: rul.pk, label: json_load(rul.content, {})['index'] || json_load(rul.content, {})['h1'], filter: '[]', value: '[]', url: "/en/#{root.sphere}/index/#{root.param},#{rul.name}", json: '{}', parent_id: SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: nil, parent_id: nil).first.try(:pk))
           SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, param: param, root_id: root.pk, sphere: sphere, rule_id: rul.pk, parent_id: pk, state: 'rule_prepared')
         end
       end
