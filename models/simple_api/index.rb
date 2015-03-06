@@ -196,7 +196,7 @@ module SimpleApi
         # end
         rsp = {}
         p 'curr-err?', curr
-        return rules(sphere, root.param, rule) unless curr
+        return rules(sphere, root.param, rule, range, r_range) unless curr
           # rtngs = index_links({id: nil, rule_id: rule.pk}, route, 'rating')
           # rsp['ratings'] = rtngs[r_range]
           # rsp['total_ratings'] = rtngs.size
