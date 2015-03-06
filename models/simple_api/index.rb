@@ -240,7 +240,7 @@ module SimpleApi
           rsp.delete('total')
           rsp['total_ratings'] = rtngs.size
         end
-        rsp['breadcrumbs'] = curr[:id] ? curr.breadcrumbs : rule.breadcrumbs
+        rsp['breadcrumbs'] = curr.try(:breadcrumbs)
         JSON.dump(rsp)
       end
 

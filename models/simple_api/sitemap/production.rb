@@ -9,7 +9,7 @@ module SimpleApi
       many_to_one :root, class: 'SimpleApi::Sitemap::Root'
       many_to_one :rule, class: 'SimpleApi::Rule'
       # many_to_one :sitemap_session, class: 'SimpleApi::Sitemap::SitemapSession'
-      many_to_one :parent, class: 'SimpleApi::Sitempa::Production'
+      many_to_one :parent, class: 'SimpleApi::Sitemap::Production'
       one_to_many :children, class: 'SimpleApi::Sitemap::Production', key: :parent_id
 
       state_machine :state, initial: :new_session do
