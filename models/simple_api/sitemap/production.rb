@@ -147,12 +147,15 @@ module SimpleApi
       def fire_build_indexes
         children.each{|c| WorkerBuildIndexes.perform_async(c.pk) }
       end
+
       def sm_build_indexes
         rule.build_index(root)
       end
+
       def fire_mark_empty
         WorkerMarkEmpty.perform_async(pk)
       end
+
       def sm_mark_empty
         Sentimeta.env   = CONFIG["fapi_stage"] || :production # :production is default
         rule.references_dataset.where(is_empty: nil, sitemap_session_id: sitemap_session.pk).order(:id).all.each do |obj|
@@ -166,9 +169,11 @@ module SimpleApi
           obj.update(:is_empty => empty)
         end
       end
+
       def fire_mark_duplicates
         WorkerMarkDuplicates.perform_async(pk)
       end
+
       def sm_mark_duplicates
         doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.where(duplicate_id: nil).group([:url]).having('count(*) > 1')
         #.where(rule_id: rule.pk, root_id: root.pk)
@@ -203,15 +208,15 @@ module SimpleApi
             parent.delete
           end
         end
-        idxs = SimpleApi::Sitemap::Index.select(:rule_id).group(:rule_id).having{count(:id) < 2}.all.map{|i| SimpleApi::Sitemap::Index.where(parent_id: nil, rule_id: i.rule_id).first }
-        puts "todo #{idxs.size} heads"
-        idxs.each do |idx|
-          idx.children.each do |child|
-            child.update({parent_id: nil}.merge(make_merged_values(idx, child)))
-          end
-          idx.delete
-        end
-        # idxs = SimpleApi::Sitemap::Index.where(rule_id: rule.pk, parent_id: nil, root_id: root.pk).all.select{|i| i.children.size <= 1 }
+        # idxs = SimpleApi::Sitemap::Index.select(:rule_id).group(:rule_id).having{count(:id) < 2}.all.map{|i| SimpleApi::Sitemap::Index.where(parent_id: nil, rule_id: i.rule_id).first }
+        # puts "todo #{idxs.size} heads"
+        # idxs.each do |idx|
+        #   idx.children.each do |child|
+        #     child.update({parent_id: nil}.merge(make_merged_values(idx, child)))
+        #   end
+        #   idx.delete
+        # end
+        # # idxs = SimpleApi::Sitemap::Index.where(rule_id: rule.pk, parent_id: nil, root_id: root.pk).all.select{|i| i.children.size <= 1 }
         # puts 
         index_ids = SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: rule.pk).all.map(&:pk)
         refs = SimpleApi::Sitemap::Reference.where(root_id: root.pk, index_id: index_ids, super_index_id: nil).order(:id).all
