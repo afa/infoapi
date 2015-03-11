@@ -96,9 +96,9 @@ module SimpleApi
         end
 
         event :finish do
-          transition rule_prepared: :ready, if: lambda { rule && children.all?{|child| child.ready? } }
+          transition rule_prepared: :ready, if: :rule_ready?
           transition rule_prepared: :rule_prepared
-          transition root_prepared: :ready, if: lambda { root && children.all?{|child| child.ready? } }
+          transition root_prepared: :ready, if: :root_ready?
           transition root_prepared: :root_prepared
           transition link_tested: :ready
         end
@@ -111,6 +111,14 @@ module SimpleApi
         event :stop do
           transition any - [:failed] => :stopped
         end
+      end
+
+      def rule_ready?
+        rule && children.all?{|child| child.ready? } 
+      end
+
+      def root_ready?
+        root && children.all?{|child| child.ready? } 
       end
 
       def sm_renew_caches
