@@ -264,7 +264,7 @@ module SimpleApi
         val = json_load(left.value, left.value)
         flt = [flt] unless flt.is_a?(::Array)
         val = [val] unless val.is_a?(::Array)
-        {filter: JSON.dump(flt + [json_load(right.filter, right.filter)].flatten), value: JSON.dump(val + [json_load(right.value,right.value)].flatten), label: [left.label, right.label].join(',')}
+        {filter: JSON.dump(flt + [json_load(right.filter, right.filter)].flatten), value: JSON.dump(val + [json_load(right.value,right.value)].flatten), label: [left.label, right.label].join(',')}.tap{|x| p 'prep', left, right, x }
       end
 
       def fire_prepare_links
