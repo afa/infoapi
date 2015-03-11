@@ -1,6 +1,7 @@
 require 'sidekiq'
 require 'workers/start_generator'
 require 'workers/worker_build_indexes'
+require 'workers/worker_build_references'
 require 'workers/worker_prepare_links'
 require 'workers/worker_finish'
 require 'workers/worker_mark_duplicates'

@@ -44,7 +44,7 @@ module SimpleApi
       whash.merge!('catalog' => whash.delete('path')) if whash.has_key?('path')
       leafs = []
       if flst.blank?
-        write_ref(rule, root, whash, parent)
+        # write_ref(rule, root, whash, parent)
         return [whash]
       end
       wlst = flst.dup
@@ -55,11 +55,12 @@ module SimpleApi
       values = rdef.fetch_list(rule)
       route = SimpleApiRouter.new(rule.lang, rule.sphere)
       values.each do |val|
+        leaf = wlst.empty?
         hsh = whash.merge(flt => val)
         sel = rule.filters.traversal_order[0..(-hsh.size + 1)].map{|n| n == 'path' ? 'catalog' : n }
         h = hsh.dup
         h.delete_if{|k, v| !sel.include?(k) } #!!
-        ix = SimpleApi::Sitemap::Index.insert(json: JSON.dump(h), rule_id: rule.pk, root_id: root.pk, parent_id: parent, filter: flt, value: val, url: route.route_to("index/#{[rule.param, rule.name, sel.blank? ? nil : sel].compact.join(',')}", h), label: "#{flt}:#{val}")
+        ix = SimpleApi::Sitemap::Index.insert(json: JSON.dump(h), rule_id: rule.pk, root_id: root.pk, parent_id: parent, filter: flt, value: val, url: route.route_to("index/#{[rule.param, rule.name, sel.blank? ? nil : sel].compact.join(',')}", h), label: "#{flt}:#{val}", leaf: leaf)
         # ix = SimpleApi::Sitemap::Index.insert(json: JSON.dump(hsh), rule_id: rule.pk, root_id: root.pk, parent_id: parent, filter: flt, value: val, url: route.route_to("index/#{[rule.param, rule.name, sel.blank? ? nil : sel].compact.join(',')}", hsh), label: "#{flt}:#{val}")
         leafs += recurse_index(wlst, hsh, root, ix, rule)
       end

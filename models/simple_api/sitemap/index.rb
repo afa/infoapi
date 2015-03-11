@@ -8,7 +8,7 @@ module SimpleApi
       many_to_one :parent, class: 'SimpleApi::Sitemap::Index'
       one_to_many :children, class: 'SimpleApi::Sitemap::Index', key: :parent_id
       one_to_many :references, class: 'SimpleApi::Sitemap::Reference'
-      one_to_many :super_references, class: 'SimpleApi::Sitemap::Reference', key: :super_index_id
+      # one_to_many :super_references, class: 'SimpleApi::Sitemap::Reference', key: :super_index_id
 
       def self.forwardable_indexes(scope)
         SimpleApi::Sitemap::Index.select{min(:id).as(:id)}.where(scope).group(:parent_id).having{count(:id) < 2}.all

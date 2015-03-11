@@ -18,6 +18,7 @@ module SimpleApi
         state :root_prepared
         state :rule_prepared
         state :indexed
+        state :refered
         state :emptied
         state :doubles_marked
         state :merged_forwardables
@@ -50,13 +51,19 @@ module SimpleApi
           transition rule_prepared: :indexed
         end
         before_transition rule_prepared: :indexed, do: :sm_build_indexes
-        after_transition rule_prepared: :indexed, do: :fire_mark_empty
+        after_transition rule_prepared: :indexed, do: :fire_build_references
+
+        event :build_references do
+          transition indexed: :refered
+        end
+        before_transition indexed: :refered, do: :sm_build_references
+        after_transition indexed: :refered, do: :fire_mark_empty
 
         event :mark_empty do
-          transition indexed: :emptied
+          transition refered: :emptied
         end
-        before_transition indexed: :emptied, do: :sm_mark_empty
-        after_transition indexed: :emptied, do: :fire_mark_duplicates
+        before_transition refered: :emptied, do: :sm_mark_empty
+        after_transition refered: :emptied, do: :fire_mark_duplicates
 
         event :mark_duplicates do
           transition emptied: :doubles_marked
@@ -152,6 +159,18 @@ module SimpleApi
         rule.build_index(root)
       end
 
+      def fire_build_references
+        WorkerBuildReferences.perform_async(pk)
+      end
+
+      def sm_build_references
+        rule.indexes_dataset.where(leaf: true, root_id: root.pk).all.each do |idx|
+          rule.write_ref(root, json_load(idx.json), idx.parent_id)
+          idx.delete
+        end
+        # rule.build_index(root)
+      end
+
       def fire_mark_empty
         WorkerMarkEmpty.perform_async(pk)
       end
@@ -167,6 +186,10 @@ module SimpleApi
           path = param.delete("path").to_s.split(',') if param.has_key?('path')
           empty = (Sentimeta::Client.fetch :objects, {sphere: rule.sphere, lang: rule.lang.to_sym, "is_empty" => 4}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue OpenStruct.new(body: {})).body["is_empty"]
           obj.update(:is_empty => empty)
+        end
+        puts 'mark indexes'
+        rule.references_dataset.where(sitemap_session_id: sitemap_session.pk).order(:id).all.each do |obj|
+          obj.index.update(empty: obj.is_empty)
         end
       end
 
@@ -218,13 +241,13 @@ module SimpleApi
         # end
         # # idxs = SimpleApi::Sitemap::Index.where(rule_id: rule.pk, parent_id: nil, root_id: root.pk).all.select{|i| i.children.size <= 1 }
         # puts 
-        index_ids = SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: rule.pk).all.map(&:pk)
-        refs = SimpleApi::Sitemap::Reference.where(root_id: root.pk, index_id: index_ids, super_index_id: nil).order(:id).all
-        puts "todo: #{refs.size} refs"
-        refs.each do |ref|
-          ref.update(super_index_id: ref.index.parent_id)
-          print '.' if ref.pk % 100 == 0
-        end
+        # index_ids = SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: rule.pk).all.map(&:pk)
+        # refs = SimpleApi::Sitemap::Reference.where(root_id: root.pk, index_id: index_ids, super_index_id: nil).order(:id).all
+        # puts "todo: #{refs.size} refs"
+        # refs.each do |ref|
+        #   ref.update(super_index_id: ref.index.parent_id)
+        #   print '.' if ref.pk % 100 == 0
+        # end
         puts '', 'done'
       end
 
