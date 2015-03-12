@@ -73,6 +73,7 @@ module SimpleApi
       def tree(sphere, rule_selector, rule_params, params)
         range = 0..99
         r_range = 0..99
+        p params['p']
         lded = json_load(params['p'])
         lded ||= {}
         hash = {}
@@ -110,9 +111,20 @@ module SimpleApi
         p 'icnt', cnt
         chld = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__label, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: curr.try(:pk)).offset(range.first).limit(range.size).all
         else
-        cnt = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: nil, refs__rule_id: rule.pk).count
-        p 'icnt', cnt
-        chld = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__label, :object_data_items__crypto_hash, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: nil, refs__rule_id: rule.pk).offset(range.first).limit(range.size).all
+          cnt = 0
+          chld = []
+        # cnt = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: nil, refs__rule_id: rule.try(:pk)).count
+        # p 'icnt', cnt
+        # chld = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__label, :object_data_items__crypto_hash, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: nil, refs__rule_id: rule.try(:pk)).offset(range.first).limit(range.size).all
+        end
+        if chld.empty? && curr
+          return curr.references_dataset.offset(range.first).limit(range.size).all.map do |ref|
+            {
+              label: ref.label,
+              photo: ref.crypto_hash ? "/api/v1/picture/#{ref.crypto_hash}" : ref.photo,
+              url: ref.url
+            }
+          end
         end
         chld.map do |ref|
           # links = SimpleApi::Sitemap::Reference.where(super_index_id: curr[:id], is_empty: false).all

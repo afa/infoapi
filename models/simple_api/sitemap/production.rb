@@ -137,7 +137,7 @@ module SimpleApi
         slist = json_load(step_params, {})['spheres'] || []
         slist.each do |sp|
           rt = SimpleApi::Sitemap::Root.create(sitemap_session_id: sitemap_session.pk, param: param, sphere: sp, name: sp, active: false)
-          SimpleApi::Sitemap::Index.create(root_id: rt.pk, rule_id: nil, label: sp, filter: '[]', value: '[]', url: "/en/#{sp}/index/#{rt.param}", json: '{}', parent_id: nil)
+          # SimpleApi::Sitemap::Index.create(root_id: rt.pk, rule_id: nil, label: sp, filter: '[]', value: '[]', url: "/en/#{sp}/index/#{rt.param}", json: '{}', parent_id: nil)
           child = SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, param: param, root_id: rt.pk, sphere: sp, parent_id: pk, state: 'root_prepared')
         end
       end
@@ -151,9 +151,9 @@ module SimpleApi
       def sm_split_rules
         rlist = SimpleApi::Rule.where(sphere: sphere, param: (param || 'group'))
         rlist.each do |rul|
-          pidx = SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: nil, parent_id: nil).first
-          p pidx
-          idx = SimpleApi::Sitemap::Index.create(root_id: root.pk, rule_id: rul.pk, label: json_load(rul.content, {})['index'] || json_load(rul.content, {})['h1'], filter: '[]', value: '[]', url: "/en/#{root.sphere}/index/#{root.param},#{rul.name}", json: '{}', parent_id: pidx.try(:pk))
+          # pidx = SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: nil, parent_id: nil).first
+          # p pidx
+          idx = SimpleApi::Sitemap::Index.create(root_id: root.pk, rule_id: rul.pk, label: json_load(rul.content, {})['index'] || json_load(rul.content, {})['h1'], filter: '[]', value: '[]', url: "/en/#{root.sphere}/index/#{root.param},#{rul.name}", json: '{}', parent_id: nil)
           p idx
           SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, param: param, root_id: root.pk, sphere: sphere, rule_id: rul.pk, parent_id: pk, state: 'rule_prepared')
         end
@@ -173,8 +173,8 @@ module SimpleApi
 
       def sm_build_references
         rule.indexes_dataset.where(leaf: true, root_id: root.pk).all.each do |idx|
-          rule.write_ref(root, json_load(idx.json), idx.parent_id)
-          idx.delete
+          rule.write_ref(root, json_load(idx.json), idx.id)
+          # idx.delete
         end
         # rule.build_index(root)
       end
@@ -221,7 +221,22 @@ module SimpleApi
       end
 
       def sm_merge_forwardable
-        puts "todo: #{SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root_id, rule_id: rule.pk).size}"
+        rule.indexes_dataset.where(leaf: true, root_id: root.pk).all.map(&:parent).compact.uniq.each do |idx|
+          if idx.children.all?(&:empty)
+            idx.update(empty: true)
+          end
+        end
+        curr = []
+        par = rule.indexes_dataset.where(empty: true, root_id: root.pk).all
+        loop do
+          curr = par.compact.uniq
+          par = []
+          break if curr.empty?
+          curr.each do |ix|
+            par << ix.parent.update(empty: true) if ix.parent && ix.parent.children.all?(&:empty)
+          end
+        end
+        puts "todo: #{SimpleApi::Sitemap::Index.forwardable_indexes_dataset(root_id: root_id, rule_id: rule.pk).count}"
         prev = []
         loop do
           break if SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk).empty?
@@ -234,8 +249,9 @@ module SimpleApi
             fwd = SimpleApi::Sitemap::Index[fwd_idx[:id]]
             next unless fwd
             parent = fwd.parent
+            p 'fwd-par', fwd, parent
             next unless parent
-            fwd.update({parent_id: parent.parent_id}.merge(make_merged_values(parent, fwd)))
+            p 'upd-fwd', fwd.update({parent_id: parent.parent_id, root_id: parent.root_id, rule_id: parent.rule_id}.merge(make_merged_values(parent, fwd)))
             parent.delete
           end
         end
@@ -276,7 +292,7 @@ module SimpleApi
         # Sentimeta.lang  = rule.lang.to_sym
         # Sentimeta.sphere = rule.sphere
         router = SimpleApiRouter.new(rule.lang, rule.sphere)
-        leafs = rule.references_dataset.where(is_empty: false, root_id: root.pk).order(:index_id).all.map(&:index).uniq
+        leafs = rule.references_dataset.where(is_empty: false, root_id: root.pk).order(:index_id).all.map(&:index).uniq.compact
         parents = []
         puts "links todo leafs #{leafs.size}"
         leafs.each do |index|
@@ -293,10 +309,11 @@ module SimpleApi
           puts "rework links #{index.pk}=#{data.size}.#{refs.size}"
           parents << index.parent if index.parent
           data.select{|o| o.has_key?('photos') && o['photos'].present? && o['photos'].select{|p| p['type'] != 'trailer'}.present? }.sample(8).each do |obj|
+            obj_ph = obj['photos'].select{|p| p['type'] != 'trailer'}.try(:first)
             index.objects_dataset.insert( 
                                          url: url,
-                                         photo: obj['photos'].select{|p| p['type'] != 'trailer'}.try(:first).try(:[], 'url'),
-                                         crypto_hash: obj['photos'].select{|p| p['type'] != 'trailer' }.try(:first).try(:[], 'hash'),
+                                         photo: obj_ph.try(:[], 'url'),
+                                         crypto_hash: obj_ph.try(:[], 'hash'),
                                          label: label,
                                          rule_id: rule.pk,
                                          root_id: root.pk,
@@ -318,6 +335,12 @@ module SimpleApi
         end
         rule.objects_dataset.where(root_id: root.pk, rule_id: rule.pk).all.uniq.sample(8).each do |link|
           rule.objects_dataset.insert(url: link.url, rule_id: rule.pk, photo: link.photo, label: link.label, index_id: nil, root_id: root.pk)
+        end
+        rule.indexes_dataset.where(leaf: true, root_id: root.pk).all.each do |idx|
+          unless idx.references_dataset.empty?
+            idx.references.each{|r| r.update(photo: idx.photo, crypto_hash: idx.crypto_hash, index_id: idx.parent_id, label: idx.label) }
+          end
+          idx.delete
         end
       end
 
