@@ -338,7 +338,7 @@ module SimpleApi
         end
         rule.indexes_dataset.where(leaf: true, root_id: root.pk).all.each do |idx|
           unless idx.references_dataset.empty?
-            idx.references.each{|r| r.update(photo: idx.objects.first.try(:photo), crypto_hash: idx.objects.first.try(:crypto_hash), index_id: idx.parent_id) } #, label: idx.label
+            idx.references.each{|r| r.update(photo: idx.objects.first.try(:photo), crypto_hash: idx.objects.first.try(:crypto_hash), index_id: idx.parent_id, label: idx.objects.first.try(:label)) } #, label: idx.label
           end
           idx.delete
         end
