@@ -356,8 +356,8 @@ module SimpleApi
             invalid << "#{cod.to_s} #{obj.photo}"
             # obj.delete
           end
-          puts "", "test links done for #{invalid.size} bads"
         end
+        puts "", "test links done for #{invalid.size} bads"
         File.open('./log/invalud_photo.log', 'w+'){|f| invalid.each{|s| f.puts s } }
       end
 
