@@ -350,11 +350,13 @@ module SimpleApi
 
       def sm_test_link_avail
         invalid = []
-        SimpleApi::Sitemap::ObjectData.where(root_id: root.pk, rule_id: rule.pk).all.each do |obj|
+        SimpleApi::Sitemap::ObjectData.where(root_id: root.pk, rule_id: rule.pk).all.each_with_index do |obj, i|
+          print '.' if i % 100 == 0
           unless cod = obj.check_photo.is_a?(TrueClass)
             invalid << "#{cod.to_s} #{obj.photo}"
             # obj.delete
           end
+          puts "", "test links done for #{invalid.size} bads"
         end
         File.open('./log/invalud_photo.log', 'w+'){|f| invalid.each{|s| f.puts s } }
       end
