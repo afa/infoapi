@@ -185,7 +185,7 @@ module SimpleApi
 
       def sm_mark_empty
         Sentimeta.env   = CONFIG["fapi_stage"] || :production # :production is default
-        rule.references_dataset.where(is_empty: nil, sitemap_session_id: sitemap_session.pk).order(:id).all.each do |obj|
+        rule.references_dataset.where(root_id: root.pk, is_empty: nil, sitemap_session_id: sitemap_session.pk).order(:id).all.each do |obj|
           puts "rework empty #{rule.pk}:#{obj.pk}" if obj.pk % 100 == 0
           param = json_load(obj.json, {})
           # Sentimeta.lang  = rule.lang.to_sym
@@ -221,26 +221,33 @@ module SimpleApi
       end
 
       def sm_merge_forwardable
-        rule.indexes_dataset.where(leaf: true, root_id: root.pk).all.map(&:parent).compact.uniq.each do |idx|
-          if idx.children.all?(&:empty)
+        rule.indexes_dataset.use_cursor.distinct(:parent_id).where(leaf: true, root_id: root.pk).select(:parent_id).group(:parent_id).order(:parent_id).map(&:parent).each do |idx|
+          print '.' if idx.try(:pk) % 100 == 0
+        # rule.indexes_dataset.where(leaf: true, root_id: root.pk).all.map(&:parent).compact.uniq.each do |idx|
+          if idx.children_dataset.where{ Sequel.|({empty: false}, {empty: nil})}.empty?
             idx.update(empty: true)
           end
         end
         curr = []
-        par = rule.indexes_dataset.where(empty: true, root_id: root.pk).all
+        prev = []
+        par = rule.indexes_dataset.use_cursor.where(empty: true, root_id: root.pk).exclude(leaf: true).all
+        puts "propagate empty #{par.size}"
         loop do
           curr = par.compact.uniq
           par = []
           break if curr.empty?
-          curr.each do |ix|
-            par << ix.parent.update(empty: true) if ix.parent && ix.parent.children.all?(&:empty)
+          break if curr.map(&:pk).sort == prev
+          prev = curr.map(&:pk).sort
+          curr.map(&:parent).compact.uniq.each do |ix|
+            print '.' if ix.try(:pk) % 100 == 0
+            par << ix.update(empty: true) if (ix && !ix.empty) && ix.children_dataset.where{ Sequel.|({empty: false}, {empty: nil})}.empty?
           end
         end
-        puts "todo: #{SimpleApi::Sitemap::Index.forwardable_indexes_dataset(root_id: root_id, rule_id: rule.pk).count}"
+        puts "todo: #{SimpleApi::Sitemap::Index.forwardable_indexes_dataset(root_id: root_id, rule_id: rule_id).count}"
         prev = []
         loop do
-          break if SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk).empty?
-          if prev.sort_by{|o| o[:id] } == SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk).sort_by{|o| o[:id] }
+          break if SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root_id, rule_id: rule_id).empty?
+          if prev.sort_by{|o| o[:id] } == SimpleApi::Sitemap::Index.forwardable_indexes_dataset(root_id: root.pk, rule_id: rule.pk).order(:id).all
             puts "cicle #{pk.to_s}"
             break
           end
