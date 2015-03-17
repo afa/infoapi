@@ -246,19 +246,21 @@ module SimpleApi
         puts "todo: #{SimpleApi::Sitemap::Index.forwardable_indexes_dataset(root_id: root_id, rule_id: rule_id).count}"
         prev = []
         loop do
-          break if SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root_id, rule_id: rule_id).empty?
-          if prev.sort_by{|o| o[:id] } == SimpleApi::Sitemap::Index.forwardable_indexes_dataset(root_id: root.pk, rule_id: rule.pk).order(:id).all
-            puts "cicle #{pk.to_s}"
+          ds = SimpleApi::Sitemap::Index.forwardable_indexes_dataset(root_id: root_id, rule_id: rule_id)
+          break if ds.empty?
+          if prev.sort_by{|o| o[:id] } == ds.order(:id).all
+            puts "cycle #{pk.to_s}"
             break
           end
           prev = SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk)
-          SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk).each do |fwd_idx|
+          SimpleApi::Sitemap::Index.forwardable_indexes(root_id: root.pk, rule_id: rule.pk).each_with_index do |fwd_idx, i|
+            print '.' if i % 100 == 0
             fwd = SimpleApi::Sitemap::Index[fwd_idx[:id]]
             next unless fwd
             parent = fwd.parent
-            p 'fwd-par', fwd, parent
+            # p 'fwd-par', fwd, parent
             next unless parent
-            p 'upd-fwd', fwd.update({parent_id: parent.parent_id, root_id: parent.root_id, rule_id: parent.rule_id}.merge(make_merged_values(parent, fwd)))
+            fwd.update({parent_id: parent.parent_id, root_id: parent.root_id, rule_id: parent.rule_id}.merge(make_merged_values(parent, fwd)))
             parent.delete
           end
         end
@@ -287,7 +289,7 @@ module SimpleApi
         val = json_load(left.value, left.value)
         flt = [flt] unless flt.is_a?(::Array)
         val = [val] unless val.is_a?(::Array)
-        {filter: JSON.dump(flt + [json_load(right.filter, right.filter)].flatten), value: JSON.dump(val + [json_load(right.value,right.value)].flatten), label: [left.label, right.label].join(',')}.tap{|x| p 'prep', left, right, x }
+        {filter: JSON.dump(flt + [json_load(right.filter, right.filter)].flatten), value: JSON.dump(val + [json_load(right.value,right.value)].flatten), label: [left.label, right.label].join(',')} #.tap{|x| p 'prep', left, right, x }
       end
 
       def fire_prepare_links
@@ -345,7 +347,7 @@ module SimpleApi
         end
         rule.indexes_dataset.where(leaf: true, root_id: root.pk).all.each do |idx|
           unless idx.references_dataset.empty?
-            idx.references.each{|r| r.update(photo: idx.objects.first.try(:photo), crypto_hash: idx.objects.first.try(:crypto_hash), index_id: idx.parent_id, label: idx.objects.first.try(:label)) } #, label: idx.label
+            idx.references.each{|r| r.update(photo: idx.objects.first().try(:photo), crypto_hash: idx.objects.first.try(:crypto_hash), index_id: idx.parent_id, label: idx.objects.first.try(:label)) } #, label: idx.label
           end
           idx.delete
         end
