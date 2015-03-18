@@ -5,6 +5,7 @@
 # p require 'simple_api'
 # require 'rails_helpers'
 require 'sentimeta'
+Sentimeta.logger.level = Logger::WARN
 # require 'simple_api_tester'
 # p require 'simple_api/rules'
 require 'pp'
