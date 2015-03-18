@@ -1,5 +1,6 @@
 require 'pp'
 require 'sentimeta'
+Sentimeta.logger.level = Logger::WARN
 module SimpleApi
   # require 'simple_api'
   # require 'simple_api/rule'

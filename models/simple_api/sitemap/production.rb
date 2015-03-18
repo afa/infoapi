@@ -301,7 +301,7 @@ module SimpleApi
         # Sentimeta.lang  = rule.lang.to_sym
         # Sentimeta.sphere = rule.sphere
         router = SimpleApiRouter.new(rule.lang, rule.sphere)
-        leafs = leafs = SimpleApi::Sitemap::Index.select(:indexes__id).join(:refs, index_id: :id).where(indexes__rule_id: rule.pk, refs__is_empty: false, indexes__root_id: root.pk).order(:index_id).distinct(:indexes__id).map(&:reload)
+        leafs = leafs = SimpleApi::Sitemap::Index.select(:indexes__id).join(:refs, index_id: :id).where(indexes__rule_id: rule.pk, refs__is_empty: false, indexes__root_id: root.pk).order(:indexes__id).distinct(:indexes__id).map(&:reload)
         # leafs = rule.references_dataset.where(is_empty: false, root_id: root.pk).order(:index_id).all.map(&:index).uniq.compact
         parents = []
         puts "links todo leafs #{leafs.size}"
