@@ -24,9 +24,27 @@ module SimpleApi
         state :merged_forwardables
         state :linked
         state :link_tested
+
+        state :junked
+        state :junk_emptied
+        state :junk_doubled
+
         state :stopped
         state :failed
         state :ready
+
+        event :build_junk do
+          transition rule_prepared: :junked
+        end
+        before_transition rule_prepared: :junked, do: :sm_build_junk
+        after_transition rule_prepared: :junked, do: :fire_empty_junk
+
+        event :empty_junk do
+          transition junked: :junk_emptied
+        end
+        before_transition junked: :junk_emptied, do: :sm_empty_junk
+        after_transition junked: :junk_emptied, do: :fire_finish
+
 
         event :start do
           transition new_session: :caches_ready, if: lambda { DB[:criteria].count == 0 || DB[:catalogs].count == 0 }
@@ -101,17 +119,77 @@ module SimpleApi
           transition root_prepared: :ready, if: :root_ready?
           transition root_prepared: :root_prepared
           transition link_tested: :ready
+          transition junk_emptied: :ready
         end
+        before_transition link_tested: :ready, do: :sm_finish
+        after_transition link_tested: :ready, do: :fire_parent_rule_finish
         before_transition link_tested: :ready, do: :sm_finish
         after_transition link_tested: :ready, do: :fire_parent_rule_finish
         after_transition rule_prepared: :ready, do: :fire_parent_root_finish
         before_transition root_prepared: :ready, do: :sm_parent_root_finish
         before_transition rule_prepared: :ready, do: :sm_parent_rule_finish
+        before_transition junk_emptied: :ready, do: :sm_junk_doubles
+        after_transition junk_emptied: :ready, do: :fire_parent_rule_finish
 
         event :stop do
           transition any - [:failed] => :stopped
         end
       end
+
+      def sm_build_junk
+        junk = []
+        ars = []
+        filtre = rule.filters
+        order = json_load(filtre.traversal_order, filtre.traversal_order)
+        order.each do |flt|
+          flt = 'catalog' if flt == 'path'
+          rdef = filtre[flt]
+          rdef = filtre['path'] if flt == 'catalog' && filtre['path']
+          values = rdef.fetch_list(rule)
+          keyz = [flt] * values.size
+          ars << keyz.zip(values).map{|a| Hash[*a] }
+        end
+        return [] if ars.empty? 
+        junk += ars.shift
+        while ars.present?
+          junk = junk.product(ars.shift).map(&:flatten)
+        end
+        rslt = junk.map do |ah|
+          ah.inject({}){|r, h| r.merge(h.is_a?(Hash) ? h : Hash[*h]) }
+        end
+        rslt.each{|h| rule.write_ref(OpenStruct.new(sitemap_session_id: sitemap_session ? sitemap_session.pk : nil), h, nil) }
+
+      end
+
+      def fire_empty_junk
+        WorkerEmptyJunk.perform_async(pk)
+      end
+
+      def sm_empty_junk
+          Sentimeta.env   = CONFIG["fapi_stage"] || :production # :production is default
+          rule.references_dataset.where(root_id: root.pk, is_empty: nil, sitemap_session_id: sitemap_session.pk).order(:id).all.each do |obj|
+            puts "rework empty #{rule.pk}:#{obj.pk}" if obj.pk % 100 == 0
+            param = json_load(obj.json, {})
+            # Sentimeta.lang  = rule.lang.to_sym
+            # Sentimeta.sphere = rule.sphere
+            path = param.delete('catalog').to_s.split(',') if param.has_key?('catalog')
+            path = param.delete("path").to_s.split(',') if param.has_key?('path')
+            empty = (Sentimeta::Client.fetch :objects, {sphere: rule.sphere, lang: rule.lang.to_sym, "is_empty" => 4}.merge("criteria" => [param.delete('criteria')].compact, "filters" => param.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)})) rescue OpenStruct.new(body: {})).body["is_empty"]
+            obj.update(:is_empty => empty)
+          end
+      end
+
+      def sm_junk_doubles
+        doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.where(duplicate_id: nil).group([:url]).having('count(*) > 1')
+        #.where(rule_id: rule.pk, root_id: root.pk)
+        doubles.each do |dble|
+          puts "rework double #{dble[:min_id]}"
+          rs = SimpleApi::Sitemap::Reference.where(url: dble.url).order(Sequel.asc(:duplicate_id, nulls: :first), :id).all.select{|h| h.id != dble[:min_id].to_i }
+          # rs = SimpleApi::Sitemap::Reference.order(:id).where(rule_id: rule.pk, root_id: root.pk, url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
+          SimpleApi::Sitemap::Reference.where(:id => rs.map(&:pk)).update(:duplicate_id => dble[:min_id])
+        end
+      end
+
 
       def rule_ready?
         rule && children.all?{|child| child.ready? } 
@@ -160,7 +238,9 @@ module SimpleApi
       end
 
       def fire_build_indexes
-        children.each{|c| WorkerBuildIndexes.perform_async(c.pk) }
+
+        children.select{|c| c.param != 'group' }.each{|c| WorkerBuildJunk.perform_async(c.pk) }
+        children.select{|c| c.param == 'group' }.each{|c| WorkerBuildIndexes.perform_async(c.pk) }
       end
 
       def sm_build_indexes
@@ -297,11 +377,14 @@ module SimpleApi
       end
 
       def sm_prepare_links
+        puts "pl rule #{rule.pk} prod #{pk} start"
         Sentimeta.env = CONFIG["fapi_stage"]
         # Sentimeta.lang  = rule.lang.to_sym
         # Sentimeta.sphere = rule.sphere
         router = SimpleApiRouter.new(rule.lang, rule.sphere)
-        leafs = leafs = SimpleApi::Sitemap::Index.select(:indexes__id).join(:refs, index_id: :id).where(indexes__rule_id: rule.pk, refs__is_empty: false, indexes__root_id: root.pk).order(:id).distinct(:id).map(&:reload)
+        puts "pl stage 1 count leafs"
+        leafs = SimpleApi::Sitemap::Index.select(:indexes__id).join(:refs, index_id: :id).where(indexes__rule_id: rule.pk, refs__is_empty: false, indexes__root_id: root.pk).order(:id).distinct(:id).map(&:reload)
+        puts "pl stage 2 #{leafs.size} leafs"
         # leafs = rule.references_dataset.where(is_empty: false, root_id: root.pk).order(:index_id).all.map(&:index).uniq.compact
         parents = []
         puts "links todo leafs #{leafs.size}"
@@ -332,6 +415,7 @@ module SimpleApi
           end
         end
         until parents.blank?
+          puts "pl stage 3 #{parents.size} parents cycled"
           current = parents.uniq.dup
           parents.clear
           current.each do |index|
@@ -339,19 +423,25 @@ module SimpleApi
             links = index.children.map(&:objects).flatten
             puts "propagate #{index.pk}=#{links.size}"
             links.sample(8).each do |link|
-              index.objects_dataset.insert(index_id: index.pk, url: link.url, photo: link.photo, label: link.label, rule_id: rule.pk, root_id: root.pk)
+              index.objects_dataset.insert(index_id: index.pk, crypto_hash: link.crypto_hash, url: link.url, photo: link.photo, label: link.label, rule_id: rule.pk, root_id: root.pk)
             end
           end
         end
-        rule.objects_dataset.where(root_id: root.pk, rule_id: rule.pk).all.uniq.sample(8).each do |link|
+        puts "pl stage 4 upd root objs from #{rule.objects_dataset.where(root_id: root.pk).count} photos"
+        rule.objects_dataset.where(root_id: root.pk).all.uniq.sample(8).each do |link|
           rule.objects_dataset.insert(url: link.url, rule_id: rule.pk, photo: link.photo, label: link.label, index_id: nil, root_id: root.pk)
         end
-        rule.indexes_dataset.where(leaf: true, root_id: root.pk).all.each do |idx|
+        puts "pl stage 5 for #{rule.indexes_dataset.count}"
+        rule.indexes_dataset.use_cursor.where(leaf: true, root_id: root.pk).each do |idx|
           unless idx.references_dataset.empty?
-            idx.references.each{|r| r.update(photo: idx.objects.first().try(:photo), crypto_hash: idx.objects.first.try(:crypto_hash), index_id: idx.parent_id, label: idx.objects.first.try(:label)) } #, label: idx.label
+            idx.references_dataset.each do |r|
+              ph = idx.objects_dataset.exclude(photo: nil).all.sample
+              r.update(photo: ph.photo, crypto_hash: ph.crypto_hash, index_id: idx.parent_id, label: ph.label) if ph
+            end
           end
           idx.delete
         end
+        puts "pl rule #{rule.pk} prod #{pk} done"
       end
 
       def fire_test_link_avail
