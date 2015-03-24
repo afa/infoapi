@@ -227,6 +227,10 @@ module SimpleApi
       end
 
       def sm_split_rules
+        rl = SimpleApi::Rule.where(sphere: sphere, param: %w(rating rating-annotation)).order(:position)
+        rl.each do |rul|
+          SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, param: rul.param, root_id: root.pk, sphere: sphere, rule_id: rul.pk, parent_id: pk, state: 'rule_prepared')
+        end
         rlist = SimpleApi::Rule.where(sphere: sphere, param: (param || 'group'))
         rlist.each do |rul|
           # pidx = SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: nil, parent_id: nil).first
