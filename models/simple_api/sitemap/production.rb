@@ -246,7 +246,7 @@ module SimpleApi
       end
 
       def sm_split_rules
-        rl = SimpleApi::Rule.where(sphere: sphere, param: %w(rating rating-annotation)).order(:position).select{|r| r.filters.traversal_order && r.filters.traversal_order.present? }
+        rl = SimpleApi::Rule.where(sphere: sphere, param: %w(rating rating-annotation)).order(:position).all.select{|r| r.filters.traversal_order && r.filters.traversal_order.present? }
         rl.each do |rul|
           SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, param: rul.param, root_id: root.pk, sphere: sphere, rule_id: rul.pk, parent_id: pk, state: 'rule_prepared')
         end
