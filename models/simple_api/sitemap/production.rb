@@ -315,12 +315,12 @@ module SimpleApi
           next unless dble.duplicate_id.nil?
           puts "rework double #{dble.pk}"
           ors_1 = SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk).exclude(duplicate_id: nil).order(:id).first
-          unless ors_1
+          if ors_1
           SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_1.duplicate_id)
           next
           end
           ors_2 = SimpleApi::Sitemap::Reference.where(url: dble.url, duplicate_id: nil, root_id: root.pk).exclude(rule_id: rule.pk).order(:id).first
-          unless ors_2
+          if ors_2
           SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_2.pk)
           next
           end
