@@ -140,7 +140,8 @@ module SimpleApi
         junk = []
         ars = []
         filtre = rule.filters
-        order = json_load(filtre.traversal_order, filtre.traversal_order)
+        order = filtre.traversal_order || []
+        # order = json_load(filtre.traversal_order, filtre.traversal_order)
         order.each do |flt|
           flt = 'catalog' if flt == 'path'
           rdef = filtre[flt]
