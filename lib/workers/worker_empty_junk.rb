@@ -1,4 +1,4 @@
-class WorkerBuildJunk
+class WorkerEmptyJunk
   include Sidekiq::Worker
   def perform(production_id)
     logger.info "start empty refs for prduction #{production_id}"
