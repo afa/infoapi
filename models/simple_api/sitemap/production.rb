@@ -188,18 +188,18 @@ module SimpleApi
           dble.reload
           next unless dble.duplicate_id.nil?
           puts "rework double #{dble.pk}"
-          ors_1 = SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk).except(duplicate_id: nil).order(:id).first
+          ors_1 = SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk).exclude(duplicate_id: nil).order(:id).first
           unless ors_1
           SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_1.duplicate_id)
           next
           end
-          ors_2 = SimpleApi::Sitemap::Reference.where(url: dble.url, duplicate_id: nil, root_id: root.pk).except(rule_id: rule.pk).order(:id).first
+          ors_2 = SimpleApi::Sitemap::Reference.where(url: dble.url, duplicate_id: nil, root_id: root.pk).exclude(rule_id: rule.pk).order(:id).first
           unless ors_2
           SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_2.pk)
           next
           end
           next if SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk, duplicate_id: nil).count < 2
-          dble.update(duplicate_id: SimpleApi::Sitemap::Reference.where(root_id: root.pk, url: dble.url, duplicate_id: nil).except(id: dble.pk))
+          dble.update(duplicate_id: SimpleApi::Sitemap::Reference.where(root_id: root.pk, url: dble.url, duplicate_id: nil).exclude(id: dble.pk))
 
           # rs = SimpleApi::Sitemap::Reference.where(url: dble.url).order(Sequel.asc(:duplicate_id, nulls: :first), :id).all
           # rs = SimpleApi::Sitemap::Reference.where(url: dble.url).except(id: dble.pk).order(Sequel.asc(:duplicate_id, nulls: :first), :id).all
@@ -313,18 +313,18 @@ module SimpleApi
           dble.reload
           next unless dble.duplicate_id.nil?
           puts "rework double #{dble.pk}"
-          ors_1 = SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk).except(duplicate_id: nil).order(:id).first
+          ors_1 = SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk).exclude(duplicate_id: nil).order(:id).first
           unless ors_1
           SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_1.duplicate_id)
           next
           end
-          ors_2 = SimpleApi::Sitemap::Reference.where(url: dble.url, duplicate_id: nil, root_id: root.pk).except(rule_id: rule.pk).order(:id).first
+          ors_2 = SimpleApi::Sitemap::Reference.where(url: dble.url, duplicate_id: nil, root_id: root.pk).exclude(rule_id: rule.pk).order(:id).first
           unless ors_2
           SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_2.pk)
           next
           end
           next if SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk, duplicate_id: nil).count < 2
-          dble.update(duplicate_id: SimpleApi::Sitemap::Reference.where(root_id: root.pk, url: dble.url, duplicate_id: nil).except(id: dble.pk))
+          dble.update(duplicate_id: SimpleApi::Sitemap::Reference.where(root_id: root.pk, url: dble.url, duplicate_id: nil).exclude(id: dble.pk))
 
         end
       end
