@@ -180,13 +180,31 @@ module SimpleApi
       end
 
       def sm_junk_doubles
-        doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.where(duplicate_id: nil).group([:url]).having('count(*) > 1')
+        doubles = SimpleApi::Sitemap::Reference.from(:refs___rleft).join(:refs___rright, rleft__url: :rright__url).select(:rleft__id).where(rleft__duplicate_id: nil, rleft__rule_id: rule.pk, rleft__root_id: root.pk, rleft__is_empty: false)
+        # doubles = SimpleApi::Sitemap::Reference.as(:rleft).join(:refs.as(:rright), rleft__url: :rright__url).select(:rleft__id).where(rleft__duplicate_id: nil, rleft__rule_id: rule.pk, rleft__root_id: root.pk)
+        # doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.where(duplicate_id: nil).group([:url]).having('count(*) > 1')
         #.where(rule_id: rule.pk, root_id: root.pk)
         doubles.each do |dble|
-          puts "rework double #{dble[:min_id]}"
-          rs = SimpleApi::Sitemap::Reference.where(url: dble.url).order(Sequel.asc(:duplicate_id, nulls: :first), :id).all.select{|h| h.id != dble[:min_id].to_i }
+          dble.reload
+          next unless dble.duplicate_id.nil?
+          puts "rework double #{dble.pk}"
+          ors_1 = SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk).except(duplicate_id: nil).order(:id).first
+          unless ors_1
+          SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_1.duplicate_id)
+          next
+          end
+          ors_2 = SimpleApi::Sitemap::Reference.where(url: dble.url, duplicate_id: nil, root_id: root.pk).except(rule_id: rule.pk).order(:id).first
+          unless ors_2
+          SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_2.pk)
+          next
+          end
+          next if SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk, duplicate_id: nil).count < 2
+          dble.update(duplicate_id: SimpleApi::Sitemap::Reference.where(root_id: root.pk, url: dble.url, duplicate_id: nil).except(id: dble.pk))
+
+          # rs = SimpleApi::Sitemap::Reference.where(url: dble.url).order(Sequel.asc(:duplicate_id, nulls: :first), :id).all
+          # rs = SimpleApi::Sitemap::Reference.where(url: dble.url).except(id: dble.pk).order(Sequel.asc(:duplicate_id, nulls: :first), :id).all
           # rs = SimpleApi::Sitemap::Reference.order(:id).where(rule_id: rule.pk, root_id: root.pk, url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
-          SimpleApi::Sitemap::Reference.where(:id => rs.map(&:pk)).update(:duplicate_id => dble[:min_id])
+          # SimpleApi::Sitemap::Reference.where(:id => rs.map(&:pk)).update(:duplicate_id => dble.pk)
         end
       end
 
@@ -290,13 +308,24 @@ module SimpleApi
       end
 
       def sm_mark_duplicates
-        doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.where(duplicate_id: nil).group([:url]).having('count(*) > 1')
-        #.where(rule_id: rule.pk, root_id: root.pk)
+        doubles = SimpleApi::Sitemap::Reference.from(:refs___rleft).join(:refs___rright, rleft__url: :rright__url).select(:rleft__id).where(rleft__duplicate_id: nil, rleft__rule_id: rule.pk, rleft__root_id: root.pk, rleft__is_empty: false)
         doubles.each do |dble|
-          puts "rework double #{dble[:min_id]}"
-          rs = SimpleApi::Sitemap::Reference.where(url: dble.url).order(Sequel.asc(:duplicate_id, nulls: :first), :id).all.select{|h| h.id != dble[:min_id].to_i }
-          # rs = SimpleApi::Sitemap::Reference.order(:id).where(rule_id: rule.pk, root_id: root.pk, url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
-          SimpleApi::Sitemap::Reference.where(:id => rs.map(&:pk)).update(:duplicate_id => dble[:min_id])
+          dble.reload
+          next unless dble.duplicate_id.nil?
+          puts "rework double #{dble.pk}"
+          ors_1 = SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk).except(duplicate_id: nil).order(:id).first
+          unless ors_1
+          SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_1.duplicate_id)
+          next
+          end
+          ors_2 = SimpleApi::Sitemap::Reference.where(url: dble.url, duplicate_id: nil, root_id: root.pk).except(rule_id: rule.pk).order(:id).first
+          unless ors_2
+          SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_2.pk)
+          next
+          end
+          next if SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk, duplicate_id: nil).count < 2
+          dble.update(duplicate_id: SimpleApi::Sitemap::Reference.where(root_id: root.pk, url: dble.url, duplicate_id: nil).except(id: dble.pk))
+
         end
       end
 
@@ -305,6 +334,7 @@ module SimpleApi
       end
 
       def sm_merge_forwardable
+        puts "mf stage 1 "
         rule.indexes_dataset.use_cursor.distinct(:parent_id).where(leaf: true, root_id: root.pk).select(:parent_id).group(:parent_id).order(:parent_id).map(&:parent).each do |idx|
           print '.' if idx.try(:pk) % 100 == 0
         # rule.indexes_dataset.where(leaf: true, root_id: root.pk).all.map(&:parent).compact.uniq.each do |idx|
