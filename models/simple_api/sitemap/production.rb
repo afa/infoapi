@@ -200,7 +200,7 @@ module SimpleApi
           next
           end
           next if SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk, duplicate_id: nil).count < 2
-          dble.update(duplicate_id: SimpleApi::Sitemap::Reference.where(root_id: root.pk, url: dble.url, duplicate_id: nil).exclude(id: dble.pk).first)
+          dble.update(duplicate_id: SimpleApi::Sitemap::Reference.where(root_id: root.pk, url: dble.url, duplicate_id: nil).exclude(id: dble.pk).first.pk)
 
           # rs = SimpleApi::Sitemap::Reference.where(url: dble.url).order(Sequel.asc(:duplicate_id, nulls: :first), :id).all
           # rs = SimpleApi::Sitemap::Reference.where(url: dble.url).except(id: dble.pk).order(Sequel.asc(:duplicate_id, nulls: :first), :id).all
@@ -325,7 +325,7 @@ module SimpleApi
           next
           end
           next if SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk, duplicate_id: nil).count < 2
-          dble.update(duplicate_id: SimpleApi::Sitemap::Reference.where(root_id: root.pk, url: dble.url, duplicate_id: nil).exclude(id: dble.pk).first)
+          dble.update(duplicate_id: SimpleApi::Sitemap::Reference.where(root_id: root.pk, url: dble.url, duplicate_id: nil).exclude(id: dble.pk).first.pk)
 
         end
       end
