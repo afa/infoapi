@@ -168,6 +168,7 @@ module SimpleApi
 
       def sm_empty_junk
           Sentimeta.env   = CONFIG["fapi_stage"] || :production # :production is default
+          puts "junking rule #{rule.pk} for #{rule.references_dataset.where(root_id: root.pk, is_empty: nil, sitemap_session_id: sitemap_session.pk).count} refs"
           rule.references_dataset.where(root_id: root.pk, is_empty: nil, sitemap_session_id: sitemap_session.pk).order(:id).all.each do |obj|
             puts "rework empty #{rule.pk}:#{obj.pk}" if obj.pk % 100 == 0
             param = json_load(obj.json, {})
