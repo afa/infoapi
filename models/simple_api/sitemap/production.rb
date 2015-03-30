@@ -300,7 +300,7 @@ module SimpleApi
         end
         puts 'mark indexes'
         rule.references_dataset.where(sitemap_session_id: sitemap_session.pk, root_id: root.pk).order(:id).all.each do |obj|
-          obj.index.update(empty: obj.is_empty)
+          obj.index.try(:update, {empty: obj.is_empty})
         end
       end
 
