@@ -158,7 +158,7 @@ module SimpleApi
         rslt = junk.map do |ah|
           ah.inject({}){|r, h| r.merge(h.is_a?(Hash) ? h : Hash[*h]) }
         end
-        rslt.each{|h| rule.write_ref(OpenStruct.new(sitemap_session_id: sitemap_session ? sitemap_session.pk : nil), h, nil) }
+        rslt.each{|h| rule.write_ref(OpenStruct.new(root_id: root ? root.pk : nil, sitemap_session_id: sitemap_session ? sitemap_session.pk : nil), h, nil) }
 
       end
 

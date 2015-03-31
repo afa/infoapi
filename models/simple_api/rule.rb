@@ -130,6 +130,7 @@ module SimpleApi
 
     def breadcrumbs
       root = SimpleApi::Sitemap::Root.where(sphere: sphere).reverse_order(:id).first
+      p 'bc-root', root
       (root ? root.breadcrumbs : []) + [
         {
         label: json_load(content, {})['index'] || name,
