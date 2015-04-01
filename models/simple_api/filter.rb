@@ -1,9 +1,9 @@
 module SimpleApi
   class Filter
     attr_accessor :rules, :traversal_order
-    def initialize(*data)
+    def initialize(data)
       self.rules = {}
-      hash = Hash[*data]
+      hash = data.is_a?(Hash) ? data : Hash[*data]
       hash.each do |k, v|
         rules.merge!(k => SimpleApi::RuleDefs.from_name(k).load_rule(k, v))
       end
