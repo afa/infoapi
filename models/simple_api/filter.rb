@@ -62,9 +62,7 @@ module SimpleApi
         tr_o = rule.filters.traversal_order
         sel = tr_o.first(hsh.size).map{|n| n == 'path' ? 'catalog' : n }
         h = hsh.dup
-        # p 'ri', sel, h
         h.delete_if{|k, v| !sel.include?(k) } #!!
-        # p h
         ix = SimpleApi::Sitemap::Index.insert(json: JSON.dump(h), rule_id: rule.pk, root_id: root.pk, parent_id: parent, filter: flt, value: val, url: route.route_to("index/#{[rule.param, rule.name, sel.blank? ? nil : sel].compact.join(',')}", h), label: "#{flt}:#{val}", leaf: leaf)
         leafs += recurse_index(wlst, hsh, root, ix, rule)
       end

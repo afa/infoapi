@@ -32,7 +32,7 @@ class SimpleApiRouter
           end
         end
       end
-    end.join('/')
+    end.compact.join('/')
 
   end
 
