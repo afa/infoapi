@@ -276,8 +276,8 @@ module SimpleApi
       end
 
       def sm_build_references
-        rule.indexes_dataset.where(leaf: true, root_id: root.pk).all.each do |idx|
-          rule.write_ref(root, json_load(idx.json), idx.id)
+        rule.indexes_dataset.where(leaf: true, root_id: root.pk).each do |idx|
+          rule.write_ref(root, json_load(idx.json), idx.pk)
           # idx.delete
         end
         # rule.build_index(root)

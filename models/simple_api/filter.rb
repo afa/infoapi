@@ -39,6 +39,8 @@ module SimpleApi
       rule.write_ref(root, hash, index)
     end
 
+    # def 
+
     def recurse_index(flst, cur_hash, root, parent, rule)
       whash = cur_hash.dup
       whash.merge!('catalog' => whash.delete('path')) if whash.has_key?('path')
@@ -57,38 +59,17 @@ module SimpleApi
       values.each do |val|
         leaf = wlst.empty?
         hsh = whash.merge(flt => val)
-        sel = rule.filters.traversal_order[0..(-hsh.size + 1)].map{|n| n == 'path' ? 'catalog' : n }
+        tr_o = rule.filters.traversal_order
+        sel = tr_o.first(hsh.size).map{|n| n == 'path' ? 'catalog' : n }
         h = hsh.dup
+        # p 'ri', sel, h
         h.delete_if{|k, v| !sel.include?(k) } #!!
+        # p h
         ix = SimpleApi::Sitemap::Index.insert(json: JSON.dump(h), rule_id: rule.pk, root_id: root.pk, parent_id: parent, filter: flt, value: val, url: route.route_to("index/#{[rule.param, rule.name, sel.blank? ? nil : sel].compact.join(',')}", h), label: "#{flt}:#{val}", leaf: leaf)
-        # ix = SimpleApi::Sitemap::Index.insert(json: JSON.dump(hsh), rule_id: rule.pk, root_id: root.pk, parent_id: parent, filter: flt, value: val, url: route.route_to("index/#{[rule.param, rule.name, sel.blank? ? nil : sel].compact.join(',')}", hsh), label: "#{flt}:#{val}")
         leafs += recurse_index(wlst, hsh, root, ix, rule)
       end
       leafs
     end
-
-    # def build_junk(rule)
-    #   junk = []
-    #   ars = []
-    #   order = json_load(traversal_order, traversal_order)
-    #   order.each do |flt|
-    #     flt = 'catalog' if flt == 'path'
-    #     rdef = self[flt]
-    #     rdef = self['path'] if flt == 'catalog' && self['path']
-    #     values = rdef.fetch_list(rule)
-    #     keyz = [flt] * values.size
-    #     ars << keyz.zip(values).map{|a| Hash[*a] }
-    #   end
-    #   return [] if ars.empty? 
-    #   junk += ars.shift
-    #   while ars.present?
-    #     junk = junk.product(ars.shift).map(&:flatten)
-    #   end
-    #   rslt = junk.map do |ah|
-    #     ah.inject({}){|r, h| r.merge(h.is_a?(Hash) ? h : Hash[*h]) }
-    #   end
-    #   rslt.each{|h| write_ref(rule, OpenStruct.new(sitemap_session_id: nil), h, nil) }
-    # end
 
     def build_index(root, rule)
       parent = SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: rule.pk, url:"/en/#{root.sphere}/index/#{root.param},#{rule.name}").first

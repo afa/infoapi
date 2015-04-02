@@ -2,6 +2,7 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
   set_dataset :vocabulary
 
   def self.fresh?(sphere, lang, attribute)
+    !where(lang: lang.to_s, sphere: sphere, kind: attribute).empty? && where(lang: lang.to_s, sphere: sphere, kind: attribute).order(created_at: :desc).first.created_at > 1.week.ago
   end
 
   def self.take(sphere, lang, attribute)
@@ -17,7 +18,8 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
       rslt += data['values']
       offset += data['values'].size
     end
-    rslt
+    p rslt.size
+    # rslt
   end
 
   def self.spec_load_criteria(sphere, lang)

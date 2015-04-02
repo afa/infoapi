@@ -117,6 +117,7 @@ module SimpleApi
     def write_ref(root, hash, index_id)
       hsh = hash.dup
       hsh.merge!('catalog' => hsh.delete('path')) if hash.has_key?('path')
+      puts "wr: rule:#{pk}, idx: #{index_id}, hash: #{hash.inspect}"
       route = SimpleApiRouter.new(lang, sphere)
       SimpleApi::Sitemap::Reference.insert(
         rule_id: pk,
@@ -130,7 +131,6 @@ module SimpleApi
 
     def breadcrumbs
       root = SimpleApi::Sitemap::Root.where(sphere: sphere).reverse_order(:id).first
-      p 'bc-root', root
       (root ? root.breadcrumbs : []) + [
         {
         label: json_load(content, {})['index'] || name,
