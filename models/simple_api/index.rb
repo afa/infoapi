@@ -57,16 +57,24 @@ module SimpleApi
         JSON.dump(
           {
             breadcrumbs: root.breadcrumbs,
-            next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| json_load(r.traversal_order, []).present? }.map do |r|
-              content = json_load(r.content, {})
+            next: SimpleApi::Sitemap::Index.where(root_id: root.pk, parent_id: nil).map do |idx|
               {
-                name: r.name,
-                label: (content['index'] || content['h1'] || r.name),
-                url:"/en/#{sphere}/index/#{param.to_s},#{r.name}",
-                links: r.objects_dataset.where(index_id: nil).all.map{|o| {name: o.label, url: o.url, photo: o.photo} }.uniq.sample(4).shuffle
+                name: idx.name,
+                label: idx.label,
+                url: idx.url,
+                links: next_links(idx)
               }
-            end
-          }.tap{|x| x[:total] = x[:next].size }
+            # next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| json_load(r.traversal_order, []).present? }.map do |r|
+            #   content = json_load(r.content, {})
+            #   {
+            #     name: r.name,
+            #     label: (content['index'] || content['h1'] || r.name),
+            #     url:"/en/#{sphere}/index/#{param.to_s},#{r.name}",
+            #     links: r.objects_dataset.where(index_id: nil).all.map{|o| {name: o.label, url: o.url, photo: o.photo} }.uniq.sample(4).shuffle
+            #   }
+            end,
+            total: SimpleApi::Sitemap::Index.where(root_id: root.pk, parent_id: nil).count
+          } #.tap{|x| x[:total] = x[:next].size }
         )
       end
 
