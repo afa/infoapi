@@ -166,7 +166,7 @@ module SimpleApi
         curr = SimpleApi::Sitemap::Index.where(url: ccr).first
         rsp = {}
         p 'curr-err?', curr
-        return '[]' unless curr
+        return '{}' unless curr
         # return rules(sphere, root.param, rule, range, r_range) unless curr
         nxt_size = curr.children_dataset.select(:indexes__id).join(:object_data_items, index_id: :id).distinct(:indexes__id).count
         nxt = curr.children_dataset.select(:indexes__id).join(:object_data_items, index_id: :id).distinct(:indexes__id).offset(range.first).limit(range.size).map(&:reload)
