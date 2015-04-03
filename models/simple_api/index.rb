@@ -126,7 +126,7 @@ module SimpleApi
           return curr.references_dataset.offset(range.first).limit(range.size).all.map do |ref|
             {
               label: ref.label,
-              photo: ref.crypto_hash ? "/api/v1/picture/#{ref.crypto_hash}" : ref.photo,
+              photo: ref.crypto_hash ? "/api/v1/picture?hash=#{ref.crypto_hash}" : ref.photo,
               url: ref.url
             }
           end
@@ -134,7 +134,7 @@ module SimpleApi
         chld.map do |ref|
           {
             label: ref.label,
-            photo: ref.crypto_hash ? "/api/v1/picture/#{ref.crypto_hash}" : ref.photo,
+            photo: ref.crypto_hash ? "/api/v1/picture?hash=#{ref.crypto_hash}" : ref.photo,
             url: ref.url
           }
         end
