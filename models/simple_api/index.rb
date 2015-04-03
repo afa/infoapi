@@ -104,7 +104,7 @@ module SimpleApi
         fields = selector || []
         # return rules(sphere, rat, rule, range, r_range) if fields.empty?
         leaf_page(root, rule, name, selector, params, rat)
-       end
+      end
 
 
       def index_links(curr, route, param, rule, range)
@@ -115,15 +115,12 @@ module SimpleApi
         # if curr[:id]
         p 'indexlinks'
         if curr && curr.children_dataset.count > 0
-        cnt = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: curr.try(:pk)).count
-        p 'icnt', cnt
-        chld = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__label, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: curr.try(:pk)).offset(range.first).limit(range.size).all
+          cnt = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: curr.try(:pk)).count
+          p 'icnt', cnt
+          chld = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__label, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: curr.try(:pk)).offset(range.first).limit(range.size).all
         else
           cnt = 0
           chld = []
-        # cnt = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: nil, refs__rule_id: rule.try(:pk)).count
-        # p 'icnt', cnt
-        # chld = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__label, :object_data_items__crypto_hash, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: nil, refs__rule_id: rule.try(:pk)).offset(range.first).limit(range.size).all
         end
         if chld.empty? && curr
           return curr.references_dataset.offset(range.first).limit(range.size).all.map do |ref|
@@ -135,29 +132,11 @@ module SimpleApi
           end
         end
         chld.map do |ref|
-          # links = SimpleApi::Sitemap::Reference.where(super_index_id: curr[:id], is_empty: false).all
-
-        # else
-        #   links = SimpleApi::Sitemap::Reference.where(super_index_id: nil, rule_id: rul.pk, is_empty: false).all
-        # end
-        # url = route.route_to(param, sel.inject({}){|r, h| r.merge(h) })
-        # if links.present?
-        #   links.select{|r| !r.index.try(:objects_dataset).try(:empty?) }.map do |ref|
-            # photo = ref.index.objects.sample.try(:photo) #check for null obj
-            # if photo
-              # lbl = tr_h1_params(json_load(ref.rule.content, {})['h1'], json_load(ref.json, {}))
-              {
-                label: ref.label,
-                photo: ref.crypto_hash ? "/api/v1/picture/#{ref.crypto_hash}" : ref.photo,
-                url: ref.url
-              }
-            # else
-            #   {}
-            # end
-          # end
-        # else
-          # []
-        # end
+          {
+            label: ref.label,
+            photo: ref.crypto_hash ? "/api/v1/picture/#{ref.crypto_hash}" : ref.photo,
+            url: ref.url
+          }
         end
       end
 
@@ -185,68 +164,19 @@ module SimpleApi
         ccr = route.route_to((["index/#{param}", rule.name] + selector).join(','), hash)
         p ccr
         curr = SimpleApi::Sitemap::Index.where(url: ccr).first
-        # bcr = []
-        # cselector = selector.dup
-        # loop do
-        #   break if cselector.blank?
-        #   fname = cselector.shift
-        #   fname = 'catalog' if fname == 'path'
-        #   parent = curr
-        #   flt = SimpleApi::RuleDefs.from_name(fname).load_rule(fname, hash[fname])
-        #   curr = rule.indexes_dataset.where(root_id: root.pk, parent_id: parent[:id], filter: fname, value: flt.convolution(hash[fname]).to_s).first
-        #   unless curr
-        #     if cselector.present?
-        #       puts "skipable #{fname}-#{hash[fname]}"
-        #       pfname = [fname]
-        #       pval = [flt.convolution(hash[fname])]
-        #       cname = []
-        #       cval = []
-        #       cselector.each do |nm|
-        #         nm = 'catalog' if nm == 'path'
-        #         cname << nm
-        #         f = SimpleApi::RuleDefs.from_name(nm).load_rule(nm, hash[nm])
-        #         cval << f.convolution(hash[nm])
-        #         curr = rule.indexes_dataset.where(root_id: root.pk, parent_id: parent[:id], filter: JSON.dump(pfname + cname), value: JSON.dump(pval + cval)).first
-        #         break if curr
-        #       end
-        #       cselector.shift(cname.size) if curr
-        #     end
-        #     break unless curr
-        #   end
-        #   bcr << {json_load(curr.filter, curr.filter) => json_load(curr.value, curr.value)}
-        # end
         rsp = {}
         p 'curr-err?', curr
-        return rules(sphere, root.param, rule, range, r_range) unless curr
-          # rtngs = index_links({id: nil, rule_id: rule.pk}, route, 'rating')
-          # rsp['ratings'] = rtngs[r_range]
-          # rsp['total_ratings'] = rtngs.size
-          # return JSON.dump({'ratings' => rtngs[r_range], 'total_ratings' => rtngs.size})
-        # end
-        # nxt = rule.indexes_dataset.where(root_id: root.pk, parent_id: curr[:id]).all.select{|n| next_links(n).present? }
-        # nxt = curr.children.select{|n| next_links(n).present? }
-        # nxt = curr.children_dataset.select(:id.distinct).join(:object_data_items, index_id: :id).all.map(&:reload) #select{|n| next_links(n).present? }
+        return '[]' unless curr
+        # return rules(sphere, root.param, rule, range, r_range) unless curr
         nxt_size = curr.children_dataset.select(:indexes__id).join(:object_data_items, index_id: :id).distinct(:indexes__id).count
         nxt = curr.children_dataset.select(:indexes__id).join(:object_data_items, index_id: :id).distinct(:indexes__id).offset(range.first).limit(range.size).map(&:reload)
         p 'leaf', nxt_size, nxt.first
-        # nxt = curr.children_dataset.join(:object_data_items, index_id: :id).map{|m| SimpleApi::Sitemap::Index[m[:index_id]] }.uniq
         if nxt.present?
           rsp['next'] = nxt.map do |item|
-            # sel = []
-            # (bcr + [{json_load(item.filter, item.filter) => json_load(item.value, item.value)}]).map do |i|
-            #   if i.keys.first.is_a? ::Array
-            #     i.keys.first.zip(i.values.first)
-            #   else
-            #     [i.keys.first, i.values.first]
-            #   end
-            # end.flatten.each_slice(2){|a, b| sel << Hash[a, b] }
-            # spath = sel.map{|i| i.keys.first }.join(',')
-            # parm = route.route_to("index/#{[rule.param, name, sel.blank? ? nil : sel.map{|i| i.keys.first }].compact.join(',')}", sel.inject({}){|r, i| r.merge(i) })
             {
               'label' => item.label,
               'name' => item.filter,
               'url' => item.url,
-              # 'url' => parm,
               'links' => next_links(item)
             }
           end
