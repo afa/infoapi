@@ -59,7 +59,7 @@ module SimpleApi
             breadcrumbs: root.breadcrumbs,
             next: SimpleApi::Sitemap::Index.where(root_id: root.pk, parent_id: nil).map do |idx|
               {
-                name: idx.name,
+                # name: idx.name,
                 label: idx.label,
                 url: idx.url,
                 links: next_links(idx)
