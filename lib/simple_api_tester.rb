@@ -8,7 +8,7 @@ require_relative 'routes/rules'
 class SimpleApiTester < Sinatra::Base
   register Sinatra::Namespace
 
-  configure :staging, :production, :development do
+  configure :staging, :production, :development, :test do
     enable :logging
     set :config, CONFIG
     SimpleApi::Rules.init(settings.config)

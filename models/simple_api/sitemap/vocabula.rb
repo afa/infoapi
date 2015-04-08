@@ -1,6 +1,12 @@
 class SimpleApi::Sitemap::Vocabula < Sequel::Model
   set_dataset :vocabulary
 
+  VOCABULAS = {
+    'hotels' => %w(location country admin1 city amenities),
+    'movies' => %w(genres countries directors actors producers writers),
+    'companies' => %w(top industries)
+  }
+
   def self.fresh?(sphere, lang, attribute)
     !where(lang: lang.to_s, sphere: sphere, kind: attribute).empty? && where(lang: lang.to_s, sphere: sphere, kind: attribute).order(created_at: :desc).first.created_at > 1.week.ago
   end
@@ -22,19 +28,34 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
     # rslt
   end
 
-  def self.spec_load_criteria(sphere, lang)
+  def self.cleanup(sphere, lang, attribute)
+    where(sphere: sphere, lang: lang, kind: attribute).delete
   end
-  def preload_criteria
+
+  def self.spec_load_criteria(sphere, lang)
+    tm = Time.now
     Sentimeta.env = CONFIG["fapi_stage"] || :production
-    sp_list = ((Sentimeta::Client.spheres rescue []) || []).map{|s| s["name"] }
-    DB[:criteria].delete
-    (SimpleApi::Rule.all.map(&:sphere).uniq & sp_list).each do |sphere|
-      # Sentimeta.lang = :en
-      # Sentimeta.sphere = sphere
-      DB[:criteria].multi_insert(((Sentimeta::Client.criteria(:subcriteria => true, sphere: sphere, lang: :en) rescue []) || []).map{|h| h.has_key?('subcriteria') ? h['subcriteria'] : [h] }.flatten.map{|h| {label: h["label"], name: h["name"], sphere: sphere} })
-    end
+    multi_insert(((Sentimeta::Client.criteria(:subcriteria => true, sphere: sphere, lang: lang) rescue []) || []).map{|h| h.has_key?('subcriteria') ? h['subcriteria'] : [h] }.flatten.map{|h| {label: h["label"], name: h["name"], sphere: sphere, lang: lang, created_at: tm} })
   end
 
   def self.spec_load_catalog(sphere, lang)
+    ctime = Time.now
+    Sentimeta.env = CONFIG['fapi_stage']
+    rslt = ['']
+    crnt = rslt.dup
+    4.times.each do
+      crnt = crnt.map do |item|
+        cat = Sentimeta::Client.catalog(sphere: 'hotels', path: item, limit: 10000, lang: lang) rescue []
+        cat.present? ? cat.map{|i| [ item.blank? ? nil : item, i['name'] ].compact.join(',') } : nil
+      end
+      .compact
+      .flatten
+      rslt += crnt
+    end
+    rslt.delete_if(&:blank?)
+    rslt.each_slice(1000) do |items|
+      multi_insert(items.map{|i| {name: i[:name], label: i[:label], sphere: sphere, lang: lang, kind: 'catalog', created_at: ctime} })
+    end
+
   end
 end

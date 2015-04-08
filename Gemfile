@@ -22,10 +22,13 @@ group :development do
   gem "capistrano-thin"
 end
 group *%i(development test) do
+  gem 'factory_girl'
   gem "rspec"
+  gem 'database_cleaner'
 end
 
 group :test do
   gem 'fakeweb', require: 'fakeweb/safe'
   gem 'simplecov', require: false
+  gem 'faker'
 end

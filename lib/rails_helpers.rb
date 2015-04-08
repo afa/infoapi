@@ -12,7 +12,7 @@ def json_load(string, default = nil)
   end
 end
 
-def tr_h1_params(str, hash)
+def tr_h1_params(str, hash, sphere)
   subs = {}
   subs.merge!('location' => hash['path'].strip.split(',').last) if hash.has_key?('path')
   subs.merge!('location' => hash['catalog'].strip.split(',').last) if hash.has_key?('catalog')
@@ -26,7 +26,7 @@ def tr_h1_params(str, hash)
   rslt = str.dup
   str.scan(/(<%(.+?)%>)/) do |ar|
     key = ar.last.strip
-    rslt.gsub!(ar.first, subs[key].to_s)
+    rslt.gsub!(ar.first, SImpleApi::Sitemap::Vocabula.where(name: subs[key].to_s, kind: key, sphere: sphere))
   end
   rslt
 end

@@ -14,8 +14,8 @@ module SimpleApi
 
       state_machine :state, initial: :new_session do
         state :new_session
-        state :caches_ready
         state :root_prepared
+        state :caches_ready
         state :rule_prepared
         state :indexed
         state :refered
@@ -33,6 +33,25 @@ module SimpleApi
         state :failed
         state :ready
 
+        event :start do
+          # transition new_session: :caches_ready, if: lambda { DB[:criteria].count == 0 || DB[:catalogs].count == 0 }
+          transition new_session: :root_prepared
+        end
+        before_transition :new_session => :root_prepared, do: :sm_split_roots
+        after_transition :new_session => :root_prepared, do: :fire_renew_caches
+
+        event :renew_caches do
+          transition : root_prepared: :caches_ready
+        end
+        before_transition root_prepared: :caches_ready, do: :sm_renew_caches
+        after_transition root_prepared: :caches_ready, do: :fire_split_rules
+
+        event :split_rules do
+          transition root_prepared: :rule_prepared
+        end
+        before_transition caches_ready: :rule_prepared, do: :sm_split_rules
+        after_transition caches_ready: :rule_prepared, do: :fire_build_indexes
+
         event :build_junk do
           transition rule_prepared: :junked
         end
@@ -44,26 +63,6 @@ module SimpleApi
         end
         before_transition junked: :junk_emptied, do: :sm_empty_junk
         after_transition junked: :junk_emptied, do: :fire_finish
-
-
-        event :start do
-          transition new_session: :caches_ready, if: lambda { DB[:criteria].count == 0 || DB[:catalogs].count == 0 }
-          transition new_session: :root_prepared
-        end
-        before_transition new_session: :caches_ready, do: :sm_renew_caches
-        after_transition new_session: :caches_ready, do: :fire_split_roots
-
-        event :split_roots do
-          transition caches_ready: :root_prepared
-        end
-        before_transition [:caches_ready, :new_session] => :root_prepared, do: :sm_split_roots
-        after_transition [:caches_ready, :new_session] => :root_prepared, do: :fire_split_rules
-
-        event :split_rules do
-          transition root_prepared: :rule_prepared
-        end
-        before_transition root_prepared: :rule_prepared, do: :sm_split_rules
-        after_transition root_prepared: :rule_prepared, do: :fire_build_indexes
 
         event :build_indexes do
           transition rule_prepared: :indexed
@@ -183,9 +182,6 @@ module SimpleApi
 
       def sm_junk_doubles
         doubles = SimpleApi::Sitemap::Reference.from(:refs___rleft).join(:refs___rright, rleft__url: :rright__url).select(:rleft__id).where(rleft__duplicate_id: nil, rleft__rule_id: rule.pk, rleft__root_id: root.pk, rleft__is_empty: false)
-        # doubles = SimpleApi::Sitemap::Reference.as(:rleft).join(:refs.as(:rright), rleft__url: :rright__url).select(:rleft__id).where(rleft__duplicate_id: nil, rleft__rule_id: rule.pk, rleft__root_id: root.pk)
-        # doubles = SimpleApi::Sitemap::Reference.select{[min(id).as(:min_id), url]}.where(duplicate_id: nil).group([:url]).having('count(*) > 1')
-        #.where(rule_id: rule.pk, root_id: root.pk)
         doubles.each do |dble|
           dble.reload
           next unless dble.duplicate_id.nil?
@@ -202,11 +198,6 @@ module SimpleApi
           end
           next if SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk, duplicate_id: nil).count < 2
           dble.update(duplicate_id: SimpleApi::Sitemap::Reference.where(root_id: root.pk, url: dble.url, duplicate_id: nil).exclude(id: dble.pk).first.pk)
-
-          # rs = SimpleApi::Sitemap::Reference.where(url: dble.url).order(Sequel.asc(:duplicate_id, nulls: :first), :id).all
-          # rs = SimpleApi::Sitemap::Reference.where(url: dble.url).except(id: dble.pk).order(Sequel.asc(:duplicate_id, nulls: :first), :id).all
-          # rs = SimpleApi::Sitemap::Reference.order(:id).where(rule_id: rule.pk, root_id: root.pk, url: dble.url).all.select{|h| h.id != dble[:min_id].to_i }
-          # SimpleApi::Sitemap::Reference.where(:id => rs.map(&:pk)).update(:duplicate_id => dble.pk)
         end
       end
 
@@ -220,11 +211,13 @@ module SimpleApi
       end
 
       def sm_renew_caches
-        DB[:criteria].where(1 => 1).delete
-        DB[:catalogs].where(1 => 1).delete
-        SimpleApi::Sitemap.preload_criteria
-        f = SimpleApi::RuleDefs.from_name('path').load_rule('path', 'any')
-        f.class.prepare_list
+        SimpleApi::Sitemap::Vocabula::VOCABULAS[root.sphere].each do |attr|
+          SimpleApi::Sitemap::Vocabula.take(root.sphere, root.lang, attr) unless SimpleApi::Sitemap::Vocabula.fresh?(root.sphere, root.lang, attr)
+        end
+      end
+
+      def fire_renew_caches
+        WorkerRenewCaches.perform_async(ppkk)
       end
 
       def fire_split_roots
@@ -429,7 +422,7 @@ module SimpleApi
           parm = json_load(index.json)
           refs_param = json_load(refs.first.json, {}).delete_if{|k, v| k == 'rule' || k == 'rule_id' }
           url = router.route_to('rating', refs_param.dup)
-          label = tr_h1_params(json_load(rule.content)['h1'], refs_param.dup)
+          label = tr_h1_params(json_load(rule.content)['h1'], refs_param.dup, sphere)
           path = parm.delete('catalog').to_s.split(',') if parm.has_key?('catalog')
           path ||= parm.delete("path").to_s.split(',') if parm.has_key?('path')
           data = Sentimeta::Client.objects({lang: rule.lang.to_sym, sphere: rule.sphere, 'fields' => {'limit_objects' => '100'}}.merge("criteria" => [parm.delete('criteria')].compact, "filters" => parm.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)}))) rescue []
