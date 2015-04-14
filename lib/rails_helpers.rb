@@ -33,7 +33,7 @@ def tr_h1_params(str, hash, sphere, lang)
   rslt = str.dup
   str.scan(/(<%(.+?)%>)/) do |ar|
     key = ar.last.strip
-    rslt.gsub!(ar.first, (SImpleApi::Sitemap::Vocabula.where(name: subs[key].to_s, kind: key, sphere: sphere, lang: lang).first.try(:label) || subs[key].to_s))
+    rslt.gsub!(ar.first, (SimpleApi::Sitemap::Vocabula.where(name: subs[key].to_s, kind: key, sphere: sphere, lang: lang).first.try(:label) || subs[key].to_s))
   end
   rslt
 end
