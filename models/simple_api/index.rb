@@ -59,19 +59,10 @@ module SimpleApi
             breadcrumbs: root.breadcrumbs,
             next: SimpleApi::Sitemap::Index.where(root_id: root.pk, parent_id: nil).map do |idx|
               {
-                # name: idx.name,
                 label: idx.label,
                 url: idx.url,
                 links: next_links(idx)
               }
-            # next: SimpleApi::Rule.where(sphere: sphere, param: param).where('traversal_order is not null').order(:position).all.select{|r| json_load(r.traversal_order, []).present? }.map do |r|
-            #   content = json_load(r.content, {})
-            #   {
-            #     name: r.name,
-            #     label: (content['index'] || content['h1'] || r.name),
-            #     url:"/en/#{sphere}/index/#{param.to_s},#{r.name}",
-            #     links: r.objects_dataset.where(index_id: nil).all.map{|o| {name: o.label, url: o.url, photo: o.photo} }.uniq.sample(4).shuffle
-            #   }
             end,
             total: SimpleApi::Sitemap::Index.where(root_id: root.pk, parent_id: nil).count
           } #.tap{|x| x[:total] = x[:next].size }
@@ -79,11 +70,12 @@ module SimpleApi
       end
 
       def tree(sphere, rule_selector, rule_params, params)
+        p sphere, rule_selector, params
         range = 0..99
         r_range = 0..99
         p params['p']
-        lded = json_load(params['p'])
-        lded ||= {}
+        lded = json_load(params['p'], {})
+        # lded ||= {}
         hash = {}
         range = lded['offset']..(lded['offset'] + range.last - range.first) if lded['offset']
         range = range.first..(lded['limit'] - 1 + range.first) if lded['limit']
@@ -98,21 +90,15 @@ module SimpleApi
         end
         lang = "en"
         name = selector.shift
-        # return roots(sphere, rat) unless name.present?
-        # return roots(sphere, rat) unless rule = SimpleApi::Rule.where(name: name, param: rat, sphere: sphere).first
+        p 'selshft', name
         rule = SimpleApi::Rule.where(name: name, param: rat, sphere: sphere).first
+        p rule
         fields = selector || []
-        # return rules(sphere, rat, rule, range, r_range) if fields.empty?
         leaf_page(root, rule, name, selector, params, rat)
       end
 
 
       def index_links(curr, route, param, rule, range)
-        # sel = bcr # + [{item[:filter] => item[:value]}]
-        # rul = curr.rule
-        # rul = SimpleApi::Rule[curr[:rule_id]]
-        # index_ids = SimpleApi::Sitemap::Index.where(parent_id: curr[:id]).all.map(&:pk)
-        # if curr[:id]
         p 'indexlinks'
         if curr && curr.children_dataset.count > 0
           cnt = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: curr.try(:pk)).count
@@ -123,7 +109,7 @@ module SimpleApi
           chld = []
         end
         if chld.empty? && curr
-          return curr.references_dataset.offset(range.first).limit(range.size).all.map do |ref|
+          return curr.references_dataset.count, curr.references_dataset.offset(range.first).limit(range.size).all.map do |ref|
             {
               label: ref.label,
               photo: ref.crypto_hash ? "/api/v1/picture?hash=#{ref.crypto_hash}" : ref.photo,
@@ -160,17 +146,13 @@ module SimpleApi
         hash.merge!('catalog' => hash.delete("path")) if hash.has_key?('path')
         # curr = {id: nil, rule_id: rule.pk}
 
-        p selector
         ccr = route.route_to((["index/#{param}", rule.name] + selector).join(','), hash)
-        p ccr
         curr = SimpleApi::Sitemap::Index.where(url: ccr).first
         rsp = {}
-        p 'curr-err?', curr
         return '{}' unless curr
         # return rules(sphere, root.param, rule, range, r_range) unless curr
         nxt_size = curr.children_dataset.select(:indexes__id).join(:object_data_items, index_id: :id).distinct(:indexes__id).count
         nxt = curr.children_dataset.select(:indexes__id).join(:object_data_items, index_id: :id).distinct(:indexes__id).offset(range.first).limit(range.size).map(&:reload)
-        p 'leaf', nxt_size, nxt.first
         if nxt.present?
           rsp['next'] = nxt.map do |item|
             {
@@ -182,14 +164,13 @@ module SimpleApi
           end
           rsp['total'] = nxt_size
         end
-        rtngs = index_links(curr, route, 'rating', curr.rule, r_range)
-        p 'rtngs', rtngs
+        r_cnt, rtngs = index_links(curr, route, 'rating', curr.rule, r_range)
         rsp['ratings'] = rtngs #[r_range]
         rsp.delete('ratings') unless rsp['ratings'].present?
         if rsp['ratings'].present?
           rsp.delete('next')
           rsp.delete('total')
-          rsp['total_ratings'] = rtngs.size
+          rsp['total_ratings'] = r_cnt
         end
         rsp['breadcrumbs'] = curr.try(:breadcrumbs)
         JSON.dump(rsp)

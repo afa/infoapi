@@ -8,24 +8,28 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
   }
 
   def self.fresh?(sphere, lang, attribute)
-    !where(lang: lang.to_s, sphere: sphere, kind: attribute).empty? && where(lang: lang.to_s, sphere: sphere, kind: attribute).order(created_at: :desc).first.created_at > 1.week.ago
+    ((where(lang: lang.to_s, sphere: sphere, kind: attribute).empty? && where(lang: lang.to_s, sphere: sphere, kind: attribute).reverse_order(:id).first.try(:created_at) || Time.new(0)) > (Time.now - (7*86400))).tap{|x| p x }
   end
 
   def self.take(sphere, lang, attribute)
+    tm = Time.now
     return spec_load_criteria(sphere, lang) if attribute == 'criteria'
     return spec_load_catalog(sphere, lang) if attribute == 'catalog' && sphere == 'hotels'
     rslt = []
     offset = 0
     loop do
       data = Sentimeta::Client.fetch :attributes, {id: attribute, limit_values: 10000, offset_values: offset, sphere: sphere, lang: lang}
-      p data['values'].size
+      puts "#{offset}:#{data['values'].size}"
 
       break if !data.ok? || data['values'].blank?
       rslt += data['values']
       offset += data['values'].size
     end
-    p rslt.size
-    # rslt
+    rslt.each_slice(10000) do |bundl|
+      print '.'
+      multi_insert(bundl.map{|h| {name: h['name'], label: h['label'], created_at: tm, sphere: sphere, lang: lang.to_s, kind: attribute} })
+    end
+    puts "", "done #{attribute} #{rslt.size}"
   end
 
   def self.cleanup(sphere, lang, attribute)

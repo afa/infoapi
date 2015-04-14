@@ -3,6 +3,7 @@ module SimpleApi
     attr_accessor :rules, :traversal_order
     def initialize(data)
       self.rules = {}
+      p 'dta', data
       hash = data.is_a?(Hash) ? data : Hash[*data]
       hash.each do |k, v|
         rules.merge!(k => SimpleApi::RuleDefs.from_name(k).load_rule(k, v))

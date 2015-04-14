@@ -15,7 +15,7 @@ class SimpleApiTester < Sinatra::Base
   end
 
   error do
-    env['sinatra.error'].name
+    logger.info env['sinatra.error'].name
   end
 
   register Sinatra::Custom::Routing::Indexator

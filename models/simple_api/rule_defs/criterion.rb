@@ -11,7 +11,7 @@ module SimpleApi
         return self.array unless array.blank?
         return [self.string] unless self.string.blank?
         return [nil] if config == 'empty'
-        list = DB[:criteria].select(:name).where(sphere: rule.sphere).all.map{|i| i[:name] }
+        list = SimpleApi::Sitemap::Vocabula.where(sphere: rule.sphere, kind: 'criteria', lang: rule.lang).map(&:name)
         list << nil if config == 'any'
         list
       end

@@ -41,7 +41,7 @@ module SimpleApi
         after_transition :new_session => :root_prepared, do: :fire_renew_caches
 
         event :renew_caches do
-          transition : root_prepared: :caches_ready
+          transition root_prepared: :caches_ready
         end
         before_transition root_prepared: :caches_ready, do: :sm_renew_caches
         after_transition root_prepared: :caches_ready, do: :fire_split_rules
@@ -212,7 +212,8 @@ module SimpleApi
 
       def sm_renew_caches
         SimpleApi::Sitemap::Vocabula::VOCABULAS[root.sphere].each do |attr|
-          SimpleApi::Sitemap::Vocabula.take(root.sphere, root.lang, attr) unless SimpleApi::Sitemap::Vocabula.fresh?(root.sphere, root.lang, attr)
+          p attr
+          SimpleApi::Sitemap::Vocabula.take(root.sphere, rule.lang, attr) unless SimpleApi::Sitemap::Vocabula.fresh?(root.sphere, rule.lang, attr)
         end
       end
 
@@ -225,7 +226,7 @@ module SimpleApi
       end
 
       def sm_split_roots
-        slist = json_load(step_params, {})['spheres'] || []
+        slist = json_load(step_params, {'spheres' => []})['spheres']
         slist.each do |sp|
           rt = SimpleApi::Sitemap::Root.create(sitemap_session_id: sitemap_session.pk, param: param, sphere: sp, name: sp, active: false)
           # SimpleApi::Sitemap::Index.create(root_id: rt.pk, rule_id: nil, label: sp, filter: '[]', value: '[]', url: "/en/#{sp}/index/#{rt.param}", json: '{}', parent_id: nil)

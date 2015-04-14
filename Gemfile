@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'colored'
-gem 'sentimeta', "~> 0.1.3"
+gem 'sentimeta', "~> 0.1.10"
 
 gem "bundler", "~> 1.6"
 gem "rake", "~> 10.0"
@@ -31,4 +31,5 @@ group :test do
   gem 'fakeweb', require: 'fakeweb/safe'
   gem 'simplecov', require: false
   gem 'faker'
+  gem 'rack-test'
 end

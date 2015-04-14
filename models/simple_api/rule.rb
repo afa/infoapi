@@ -6,7 +6,7 @@ module SimpleApi
   class Rule < Sequel::Model
     plugin :after_initialize
     SERIALIZED = %w(stars criteria genres path).map(&:to_sym)
-    attr :filter
+    # attr :filter
     attr :filters
 
     one_to_many :objects, class: 'SimpleApi::Sitemap::ObjectData'
@@ -30,13 +30,13 @@ module SimpleApi
       @filters = hsh
     end
 
-    def filter
-      values[:filter]
-    end
+    # def filter
+    #   values[:filter]
+    # end
 
-    def filter=(hsh)
-      values[:filter] = hsh
-    end
+    # def filter=(hsh)
+    #   values[:filter] = hsh
+    # end
 
     def self.map_param(param)
       return 'rating' if param == 'rating-annotation'
@@ -49,12 +49,13 @@ module SimpleApi
       # @@param_map[sphere].try(:[], map_param(param))
     end
 
-    def initialize(hash)
+    def initialize(hash = {})
       hash.delete_if{|k, v| k == :id }
       super
     end
 
     def deserialize
+      p 'f', self, self.filter
       self.filters = Filter.new(json_load(self.filter, {}))
       self.filters.postprocess_init
       self.filters.traversal_order = self.traversal_order

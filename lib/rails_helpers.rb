@@ -12,21 +12,28 @@ def json_load(string, default = nil)
   end
 end
 
-def tr_h1_params(str, hash, sphere)
+def tr_h1_params(str, hash, sphere, lang)
   subs = {}
   subs.merge!('location' => hash['path'].strip.split(',').last) if hash.has_key?('path')
   subs.merge!('location' => hash['catalog'].strip.split(',').last) if hash.has_key?('catalog')
   subs.merge!('stars' => hash['stars']) if hash.has_key?('stars')
   subs.merge!('price-range' => hash['price_range']) if hash.has_key?('price_range')
+  subs.merge!('amenities' => hash['amenity']) if hash.has_key?('amenity')
+
   subs.merge!('criterion' => hash['criteria']) if hash.has_key?('criteria')
+  
   subs.merge!('genre' => hash['genres']) if hash.has_key?('genres')
   subs.merge!('actor' => hash['actors']) if hash.has_key?('actors')
+  subs.merge!('country' => hash['countries']) if hash.has_key?('countries')
+  subs.merge!('director' => hash['directors']) if hash.has_key?('directors')
+  subs.merge!('producer' => hash['producers']) if hash.has_key?('producers')
+  subs.merge!('writer' => hash['writers']) if hash.has_key?('writers')
   subs.merge!('year' => hash['years']) if hash.has_key?('years')
 
   rslt = str.dup
   str.scan(/(<%(.+?)%>)/) do |ar|
     key = ar.last.strip
-    rslt.gsub!(ar.first, SImpleApi::Sitemap::Vocabula.where(name: subs[key].to_s, kind: key, sphere: sphere))
+    rslt.gsub!(ar.first, (SImpleApi::Sitemap::Vocabula.where(name: subs[key].to_s, kind: key, sphere: sphere, lang: lang).first.try(:label) || subs[key].to_s))
   end
   rslt
 end
