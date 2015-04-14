@@ -211,6 +211,8 @@ module SimpleApi
       # end
 
       def sm_renew_caches
+        p root
+        p root.try(:sphere)
         SimpleApi::Sitemap::Vocabula::VOCABULAS[root.sphere].each do |attr|
           p attr
           SimpleApi::Sitemap::Vocabula.take(root.sphere, rule.lang, attr) unless SimpleApi::Sitemap::Vocabula.fresh?(root.sphere, rule.lang, attr)
