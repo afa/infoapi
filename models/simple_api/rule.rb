@@ -55,7 +55,6 @@ module SimpleApi
     end
 
     def deserialize
-      p 'f', self, self.filter
       self.filters = Filter.new(json_load(self.filter, {}))
       self.filters.postprocess_init
       self.filters.traversal_order = self.traversal_order

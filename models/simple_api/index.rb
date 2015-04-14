@@ -19,9 +19,6 @@ module SimpleApi
       def rules(sphere, param, rule, rng, r_rng)
         root = SimpleApi::Sitemap::Root.reverse_order(:id).where(sphere: sphere).first
         nxt = rule.indexes_dataset.where(parent_id: nil, root_id: root.pk).offset(rng.first).limit(rng.size).all
-        p 'rules'
-        p nxt.size
-        p nxt.first
         # refactor for range limiting
         route = SimpleApiRouter.new('en', sphere)
         rtngs = index_links(nil, route, 'rating', rule, r_rng)
@@ -39,7 +36,6 @@ module SimpleApi
             }
           end
         }.tap{|x| x[:total] = x[:next].size }
-        p 'rtngs', rtngs
         rsp['ratings'] = rtngs #[r_range]
         rsp.delete('ratings') unless rsp['ratings'].present?
         if rsp['ratings'].present?
@@ -70,10 +66,8 @@ module SimpleApi
       end
 
       def tree(sphere, rule_selector, rule_params, params)
-        p sphere, rule_selector, params
         range = 0..99
         r_range = 0..99
-        p params['p']
         lded = json_load(params['p'], {})
         # lded ||= {}
         hash = {}
@@ -90,19 +84,15 @@ module SimpleApi
         end
         lang = "en"
         name = selector.shift
-        p 'selshft', name
         rule = SimpleApi::Rule.where(name: name, param: rat, sphere: sphere).first
-        p rule
         fields = selector || []
         leaf_page(root, rule, name, selector, params, rat)
       end
 
 
       def index_links(curr, route, param, rule, range)
-        p 'indexlinks'
         if curr && curr.children_dataset.count > 0
           cnt = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: curr.try(:pk)).count
-          p 'icnt', cnt
           chld = SimpleApi::Sitemap::ObjectData.select(:object_data_items__id, :object_data_items__label, :object_data_items__index_id, Sequel.function(:random).as(:random), :object_data_items__photo, :refs__url, :refs__rule_id, :refs__json).distinct(:object_data_items__index_id).join(:indexes, indexes__id: :object_data_items__index_id).join(:refs, indexes__id: :refs__index_id).where(refs__is_empty: false, refs__index_id: curr.try(:pk)).offset(range.first).limit(range.size).all
         else
           cnt = 0
