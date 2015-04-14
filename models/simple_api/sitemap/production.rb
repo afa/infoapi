@@ -218,7 +218,7 @@ module SimpleApi
       end
 
       def fire_renew_caches
-        WorkerRenewCaches.perform_async(ppkk)
+        WorkerRenewCaches.perform_async(pk)
       end
 
       def fire_split_roots
