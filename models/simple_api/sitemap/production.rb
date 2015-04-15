@@ -206,7 +206,8 @@ module SimpleApi
       end
 
       def fire_renew_caches
-        children.each{|c| WorkerRenewCaches.perform_async(c.pk) }
+        WorkerRenewCaches.perform_async(c.pk)
+        # children.each{|c| WorkerRenewCaches.perform_async(c.pk) }
       end
 
       def rule_ready?
@@ -237,7 +238,7 @@ module SimpleApi
       # todo add root_id to all sitemap models
 
       def fire_split_rules
-        WorkerSplitRules.perform_async(pk)
+        children.each{|c| WorkerSplitRules.perform_async(c.pk) }
       end
 
       def sm_split_rules
