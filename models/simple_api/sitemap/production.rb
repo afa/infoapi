@@ -34,7 +34,6 @@ module SimpleApi
         state :ready
 
         event :start do
-          # transition new_session: :caches_ready, if: lambda { DB[:criteria].count == 0 || DB[:catalogs].count == 0 }
           transition new_session: :root_prepared
         end
         before_transition :new_session => :root_prepared, do: :sm_split_roots
@@ -202,6 +201,15 @@ module SimpleApi
       end
 
 
+      def fire_renew_caches
+        WorkerRenewCaches.perform_async(pk)
+        # children.each{|c| WorkerRenewCaches.perform_async(c.pk) }
+      end
+
+      def fire_split_roots
+        WorkerSplitRoots.perform_async(pk)
+      end
+
       def rule_ready?
         rule && children.all?{|child| child.ready? } 
       end
@@ -216,14 +224,6 @@ module SimpleApi
             SimpleApi::Sitemap::Vocabula.take(root.sphere, lang, attr) unless SimpleApi::Sitemap::Vocabula.fresh?(root.sphere, lang, attr)
           end
         end
-      end
-
-      def fire_renew_caches
-        children.each{|c| WorkerRenewCaches.perform_async(c.pk) }
-      end
-
-      def fire_split_roots
-        WorkerSplitRoots.perform_async(pk)
       end
 
       def sm_split_roots
