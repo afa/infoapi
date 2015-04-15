@@ -19,9 +19,8 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
     offset = 0
     loop do
       data = Sentimeta::Client.fetch :attributes, {id: attribute, limit_values: 10000, offset_values: offset, sphere: sphere, lang: lang}
-      puts "#{offset}:#{data['values'].size}"
-
       break if !data.ok? || data['values'].blank?
+      puts "#{offset}:#{data['values'].size}"
       rslt += data['values']
       offset += data['values'].size
     end

@@ -202,13 +202,13 @@ module SimpleApi
       end
 
 
-      # def rule_ready?
-      #   rule && children.all?{|child| child.ready? } 
-      # end
+      def rule_ready?
+        rule && children.all?{|child| child.ready? } 
+      end
 
-      # def root_ready?
-      #   root && children.all?{|child| child.ready? } 
-      # end
+      def root_ready?
+        root && children.all?{|child| child.ready? } 
+      end
 
       def sm_renew_caches
         p root
