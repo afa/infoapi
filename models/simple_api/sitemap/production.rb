@@ -426,7 +426,7 @@ module SimpleApi
           parm = json_load(index.json)
           refs_param = json_load(refs.first.json, {}).delete_if{|k, v| k == 'rule' || k == 'rule_id' }
           url = router.route_to('rating', refs_param.dup)
-          label = tr_h1_params(json_load(rule.content)['h1'], refs_param.dup, sphere)
+          label = tr_h1_params(json_load(rule.content)['h1'], refs_param.dup, sphere, rule.lang)
           path = parm.delete('catalog').to_s.split(',') if parm.has_key?('catalog')
           path ||= parm.delete("path").to_s.split(',') if parm.has_key?('path')
           data = Sentimeta::Client.objects({lang: rule.lang.to_sym, sphere: rule.sphere, 'fields' => {'limit_objects' => '100'}}.merge("criteria" => [parm.delete('criteria')].compact, "filters" => parm.delete_if{|k, v| k == 'rule' }.merge(path.empty? ? {} : {"catalog" => path + (['']*3).drop(path.size)}))) rescue []
