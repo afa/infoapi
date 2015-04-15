@@ -201,13 +201,12 @@ module SimpleApi
       end
 
 
-      def fire_renew_caches
-        WorkerRenewCaches.perform_async(pk)
-        # children.each{|c| WorkerRenewCaches.perform_async(c.pk) }
-      end
-
       def fire_split_roots
         WorkerSplitRoots.perform_async(pk)
+      end
+
+      def fire_renew_caches
+        children.each{|c| WorkerRenewCaches.perform_async(c.pk) }
       end
 
       def rule_ready?
