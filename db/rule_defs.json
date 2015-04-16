@@ -30,7 +30,10 @@
     "max": 2015
   },
   "actors": {
-    "kind": "string"
+    "kind": "string",
+    "list": "actors",
+    "fetch_list": "attributes",
+    "parameter": "s=actors"
   },
   "country": {
     "kind": "string",

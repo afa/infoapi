@@ -13,12 +13,30 @@ def json_load(string, default = nil)
 end
 
 def tr_h1_params(str, hash, sphere, lang)
-  subs = {}
+  idents = {
+  'location' => 'path',
+  'location' => 'catalog',
+  'stars' => 'stars',
+  'price-range' => 'price_range',
+  'amenity' => 'amenities',
+
+  'criterion' => 'criteria',
+  
+  'genre' => 'genres',
+  'actor' => 'actors',
+  'country' => 'countries',
+  'director' => 'directors',
+  'producer' => 'producers',
+  'writer' => 'writers',
+  'year' => 'years'
+  }
+
+subs = {}
   subs.merge!('location' => hash['path'].strip.split(',').last) if hash.has_key?('path')
   subs.merge!('location' => hash['catalog'].strip.split(',').last) if hash.has_key?('catalog')
   subs.merge!('stars' => hash['stars']) if hash.has_key?('stars')
   subs.merge!('price-range' => hash['price_range']) if hash.has_key?('price_range')
-  subs.merge!('amenities' => hash['amenity']) if hash.has_key?('amenity')
+  subs.merge!('amenity' => hash['amenities']) if hash.has_key?('amenity')
 
   subs.merge!('criterion' => hash['criteria']) if hash.has_key?('criteria')
   
@@ -33,7 +51,7 @@ def tr_h1_params(str, hash, sphere, lang)
   rslt = str.dup
   str.scan(/(<%(.+?)%>)/) do |ar|
     key = ar.last.strip
-    rslt.gsub!(ar.first, (SimpleApi::Sitemap::Vocabula.where(name: subs[key].to_s, kind: key, sphere: sphere, lang: lang).first.try(:label) || subs[key].to_s))
+    rslt.gsub!(ar.first, (SimpleApi::Sitemap::Vocabula.where(name: subs[key].to_s, kind: idents[key], sphere: sphere, lang: lang).first.try(:label) || subs[key].to_s))
   end
   rslt
 end
