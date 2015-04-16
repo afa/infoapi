@@ -224,6 +224,7 @@ module SimpleApi
             SimpleApi::Sitemap::Vocabula.take(root.sphere, lang, attr) unless SimpleApi::Sitemap::Vocabula.fresh?(root.sphere, lang, attr)
           end
         end
+        sleep 5
       end
 
       def sm_split_roots
@@ -233,6 +234,7 @@ module SimpleApi
           # SimpleApi::Sitemap::Index.create(root_id: rt.pk, rule_id: nil, label: sp, filter: '[]', value: '[]', url: "/en/#{sp}/index/#{rt.param}", json: '{}', parent_id: nil)
           child = SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, param: param, root_id: rt.pk, sphere: sp, parent_id: pk, state: 'root_prepared')
         end
+        sleep 5
       end
 
       # todo add root_id to all sitemap models
@@ -256,6 +258,7 @@ module SimpleApi
           p idx
           SimpleApi::Sitemap::Production.create(sitemap_session_id: sitemap_session.pk, param: param, root_id: root.pk, sphere: sphere, rule_id: rul.pk, parent_id: pk, state: 'rule_prepared')
         end
+        sleep 5
       end
 
       def fire_build_indexes
