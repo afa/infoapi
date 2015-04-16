@@ -187,13 +187,13 @@ module SimpleApi
           puts "rejunk double #{dble.pk}"
           ors_1 = SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk).exclude(duplicate_id: nil).order(:id).first
           if ors_1
-          SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_1.duplicate_id)
-          next
+            SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_1.duplicate_id)
+            next
           end
           ors_2 = SimpleApi::Sitemap::Reference.where(url: dble.url, duplicate_id: nil, root_id: root.pk).exclude(rule_id: rule.pk).order(:id).first
           if ors_2
-          SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_2.pk)
-          next
+            SimpleApi::Sitemap::Reference.where(:id => dble.pk).update(:duplicate_id => ors_2.pk)
+            next
           end
           next if SimpleApi::Sitemap::Reference.where(url: dble.url, root_id: root.pk, duplicate_id: nil).count < 2
           dble.update(duplicate_id: SimpleApi::Sitemap::Reference.where(root_id: root.pk, url: dble.url, duplicate_id: nil).exclude(id: dble.pk).first.pk)
@@ -205,17 +205,17 @@ module SimpleApi
         WorkerSplitRoots.perform_async(pk)
       end
 
-      def fire_renew_caches
-        # WorkerRenewCaches.perform_async(pk)
-        children.each{|c| WorkerRenewCaches.perform_async(c.pk) }
-      end
-
       def rule_ready?
         rule && children.all?{|child| child.ready? } 
       end
 
       def root_ready?
         root && children.all?{|child| child.ready? } 
+      end
+
+      def fire_renew_caches
+        # WorkerRenewCaches.perform_async(pk)
+        children.each{|c| WorkerRenewCaches.perform_async(c.pk) }
       end
 
       def sm_renew_caches
@@ -238,7 +238,9 @@ module SimpleApi
       # todo add root_id to all sitemap models
 
       def fire_split_rules
-        children.each{|c| WorkerSplitRules.perform_async(c.pk) }
+        p children
+        WorkerSplitRules.perform_async(pk)
+        # children.each{|c| WorkerSplitRules.perform_async(c.pk) }
       end
 
       def sm_split_rules
