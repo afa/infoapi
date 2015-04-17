@@ -67,26 +67,6 @@ module SimpleApi
         content = found.kind_of?(Array) ? found.try(:first).try(:content) : found.try(:content)
       end
 
-      def make_index(sphere, param, name = nil, sitemap_id = nil)
-        raise 'Need sphere to process' unless sphere
-        name = sphere unless name
-        root_id = SimpleApi::Sitemap::Root.insert(sphere: sphere, sitemap_session_id: sitemap_id, name: name, param: param)
-        SimpleApi::Rule.where(param: param, sphere: sphere).where('traversal_order is not null').order(:position).all.map{|item| SimpleApi::Rule.from_param(item.sphere, item.param)[item.pk] }.select{|rul| t = json_load(rul.traversal_order, []); t.is_a?(::Array) && t.present? }.each do |rule|
-          rule.build_index(SimpleApi::Sitemap::Root[root_id])
-        end
-        # rework(index_id: DB[:indexes].where(root_id: root).map{|i| i[:id] })
-        root_ids = SimpleApi::Sitemap::Root.where(sphere: sphere, param: param).exclude(id: root_id).all.map(&:pk)
-        index_ids = SimpleApi::Sitemap::Index.where(root_id: root_ids).all.map(&:pk)
-        SimpleApi::Sitemap::Reference.where(index_id: index_ids).delete
-        SimpleApi::Sitemap::Index.where(root_id: root_ids).delete
-        SimpleApi::Sitemap::Root.where(sphere: sphere, param: param).exclude(id: root_id).delete
-      end
-
-      def rework(scope)
-        SimpleApi::Sitemap.rework_doubles(scope)
-        SimpleApi::Sitemap.rework_empty(scope)
-        SimpleApi::Sitemap.rework_links(scope)
-      end
     end
   end
 end

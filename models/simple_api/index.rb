@@ -102,7 +102,8 @@ module SimpleApi
           return curr.references_dataset.count, curr.references_dataset.offset(range.first).limit(range.size).all.map do |ref|
             {
               label: ref.label,
-              photo: ref.crypto_hash ? "/api/v1/picture?hash=#{ref.crypto_hash}" : ref.photo,
+              photo: ref.crypto_hash ? "/api/v1/picture?hash=#{ref.crypto_hash}" : nil,
+              # photo: ref.crypto_hash ? "/api/v1/picture?hash=#{ref.crypto_hash}" : ref.photo,
               url: ref.url
             }
           end
@@ -110,7 +111,7 @@ module SimpleApi
         chld.map do |ref|
           {
             label: ref.label,
-            photo: ref.crypto_hash ? "/api/v1/picture?hash=#{ref.crypto_hash}" : ref.photo,
+            photo: ref.crypto_hash ? "/api/v1/picture?hash=#{ref.crypto_hash}" : nil,
             url: ref.url
           }
         end
