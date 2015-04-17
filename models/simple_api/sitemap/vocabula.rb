@@ -38,7 +38,8 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
   def self.spec_load_criteria(sphere, lang)
     tm = Time.now
     Sentimeta.env = CONFIG["fapi_stage"] || :production
-    multi_insert(((Sentimeta::Client.criteria(:subcriteria => true, sphere: sphere, lang: lang) rescue []) || []).map{|h| h.has_key?('subcriteria') ? h['subcriteria'] : [h] }.flatten.map{|h| {label: h["label"], name: h["name"], sphere: sphere, lang: lang, created_at: tm} })
+    criteria = Sentimeta::Client.criteria(:subcriteria => true, sphere: sphere, lang: lang) rescue []
+    multi_insert(((criteria) || []).map{|h| h.has_key?('subcriteria') ? h['subcriteria'] : [h] }.flatten.map{|h| {label: h["label"], name: h["name"], sphere: sphere, lang: lang, created_at: tm, kind: 'criteria'} })
   end
 
   def self.spec_load_catalog(sphere, lang)
