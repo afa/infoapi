@@ -14,7 +14,7 @@ end
 
 def tr_h1_params(str, hash, sphere, lang)
   idents = {
-  'location' => 'path',
+  # 'location' => 'path',
   'location' => 'catalog',
   'stars' => 'stars',
   'price-range' => 'price_range',

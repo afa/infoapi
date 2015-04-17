@@ -2,9 +2,9 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
   set_dataset :vocabulary
 
   VOCABULAS = {
-    'hotels' => %w(location country admin1 city amenities),
-    'movies' => %w(genres countries directors actors producers writers),
-    'companies' => %w(top industries)
+    'hotels' => %w(location country admin1 city amenities criteria),
+    'movies' => %w(genres countries directors actors producers writers criteria),
+    'companies' => %w(top industries criteria)
   }
 
   def self.fresh?(sphere, lang, attribute)
@@ -14,7 +14,7 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
   def self.take(sphere, lang, attribute)
     tm = Time.now
     return spec_load_criteria(sphere, lang) if attribute == 'criteria'
-    return spec_load_catalog(sphere, lang) if attribute == 'catalog' && sphere == 'hotels'
+    return spec_load_catalog(sphere, lang) if (attribute == 'catalog' || attribute == 'location') && sphere == 'hotels'
     rslt = []
     offset = 0
     loop do
@@ -39,7 +39,7 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
     tm = Time.now
     Sentimeta.env = CONFIG["fapi_stage"] || :production
     criteria = Sentimeta::Client.criteria(:subcriteria => true, sphere: sphere, lang: lang) rescue []
-    multi_insert(((criteria) || []).map{|h| h.has_key?('subcriteria') ? h['subcriteria'] : [h] }.flatten.map{|h| {label: h["label"], name: h["name"], sphere: sphere, lang: lang, created_at: tm, kind: 'criteria'} })
+    multi_insert((criteria || []).map{|h| h.has_key?('subcriteria') ? h['subcriteria'] : [h] }.flatten.map{|h| {label: h["label"], name: h["name"], sphere: sphere, lang: lang, created_at: tm, kind: 'criteria'} })
   end
 
   def self.spec_load_catalog(sphere, lang)
