@@ -8,7 +8,7 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
   }
 
   def self.fresh?(sphere, lang, attribute)
-    ((where(lang: lang.to_s, sphere: sphere, kind: attribute).empty? && where(lang: lang.to_s, sphere: sphere, kind: attribute).reverse_order(:id).first.try(:created_at) || Time.new(0)) > (Time.now - (7*86400))).tap{|x| p x }
+    ((where(lang: lang.to_s, sphere: sphere, kind: attribute).empty? || where(lang: lang.to_s, sphere: sphere, kind: attribute).reverse_order(:id).first.try(:created_at) || Time.new(0)) > (Time.now - (7*86400))).tap{|x| p x }
   end
 
   def self.take(sphere, lang, attribute)
@@ -50,7 +50,7 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
     4.times.each do
       crnt = crnt.map do |item|
         cat = Sentimeta::Client.catalog(sphere: 'hotels', path: item, limit: 10000, lang: lang) rescue []
-        cat.present? ? cat.map{|i| [ item.blank? ? nil : item, i['name'] ].compact.join(',') } : nil
+        cat.present? ? cat.map{|i| { name: [ item.blank? ? nil : item, i['name'] ].compact.join(','), label: [ item.blank? ? nil : item, i['label'] ].compact.join(',') } : nil
       end
       .compact
       .flatten
