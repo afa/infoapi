@@ -8,7 +8,17 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
   }
 
   def self.fresh?(sphere, lang, attribute)
-    ((where(lang: lang.to_s, sphere: sphere, kind: attribute).empty? || where(lang: lang.to_s, sphere: sphere, kind: attribute).reverse_order(:id).first.try(:created_at) || Time.new(0)) > (Time.now - (7*86400))).tap{|x| p x }
+    (
+      where(lang: lang.to_s, sphere: sphere, kind: attribute).empty?
+      || (
+        (
+          where(lang: lang.to_s, sphere: sphere, kind: attribute).reverse_order(:id).first.try(:created_at)
+          || Time.new(0)
+        ) > (
+          Time.now - (7*86400)
+        )
+      )
+    ).tap{|x| p x }
   end
 
   def self.take(sphere, lang, attribute)
