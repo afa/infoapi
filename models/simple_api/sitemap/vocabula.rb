@@ -50,7 +50,7 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
     4.times.each do
       crnt = crnt.map do |item|
         cat = Sentimeta::Client.catalog(sphere: 'hotels', path: item, limit: 10000, lang: lang) rescue []
-        cat.present? ? cat.map{|i| { name: [ item.blank? ? nil : item, i['name'] ].compact.join(','), label: [ item.blank? ? nil : item, i['label'] ].compact.join(',') } : nil
+        cat.present? ? cat.map{|i| { name: [ item.blank? ? nil : item, i['name'] ].compact.join(','), label: [ item.blank? ? nil : item, i['label'] ].compact.join(',') } } : nil
       end
       .compact
       .flatten
