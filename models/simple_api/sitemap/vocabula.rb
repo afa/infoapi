@@ -8,16 +8,7 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
   }
 
   def self.fresh?(sphere, lang, attribute)
-    (
-      where(lang: lang.to_s, sphere: sphere, kind: attribute).empty? ||
-      (
-        (
-          where(lang: lang.to_s, sphere: sphere, kind: attribute).reverse_order(:id).first.try(:created_at) || Time.new(0)
-        ) > (
-          Time.now - (7*86400)
-        )
-      )
-    ).tap{|x| p x }
+    ( where(lang: lang.to_s, sphere: sphere, kind: attribute).empty? || ( ( where(lang: lang.to_s, sphere: sphere, kind: attribute).reverse_order(:id).first.try(:created_at) || Time.new(0)) > ( Time.now - (7*86400)))).tap{|x| p x }
   end
 
   def self.take(sphere, lang, attribute)
@@ -52,23 +43,28 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
   end
 
   def self.spec_load_catalog(sphere, lang)
+    p 'ld cat'
     ctime = Time.now
     Sentimeta.env = CONFIG['fapi_stage']
     rslt = ['']
     crnt = rslt.dup
     4.times.each do
       crnt = crnt.map do |item|
-        cat = Sentimeta::Client.catalog(sphere: 'hotels', path: item, limit: 10000, lang: lang) rescue []
-        cat.present? ? cat.map{|i| { name: [ item.blank? ? nil : item, i['name'] ].compact.join(','), label: [ item.blank? ? nil : item, i['label'] ].compact.join(',') } } : nil
+        p item
+        cat = Sentimeta::Client.catalog(sphere: 'hotels', path: item.blank? ? '' : item[:name], limit: 10000, lang: lang) rescue []
+        cat.present? ? cat.map{|i| { name: [ item.blank? ? nil : item[:name], i['name'] ].compact.join(','), label: [ item.blank? ? nil : item[:label], i['label'] ].compact.join(',') } } : nil
       end
       .compact
       .flatten
       rslt += crnt
+      PP.pp crnt
     end
     rslt.delete_if(&:blank?)
     rslt.each_slice(1000) do |items|
+      print '.'
       multi_insert(items.map{|i| {name: i[:name], label: i[:label], sphere: sphere, lang: lang, kind: 'catalog', created_at: ctime} })
     end
+    puts " done catalog: #{rslt.size}"
 
   end
 end
