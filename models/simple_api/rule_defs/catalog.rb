@@ -11,7 +11,6 @@ module SimpleApi
         return self.array unless array.blank?
         return [self.string] unless self.string.blank?
         return [nil] if config == 'empty'
-        p 'cnt fetch'
         list = SimpleApi::Sitemap::Vocabula.where(kind: 'catalog', lang: rule.lang, sphere: rule.sphere).all.map(&:name)
         list << nil if config == 'any'
         return list

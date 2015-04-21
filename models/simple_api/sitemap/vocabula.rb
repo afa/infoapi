@@ -44,12 +44,12 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
   end
 
   def self.spec_load_catalog(sphere, lang)
-    p 'ld cat'
     ctime = Time.now
     Sentimeta.env = CONFIG['fapi_stage']
     rslt = ['']
     crnt = rslt.dup
-    4.times.each do
+    4.times.each do |lv|
+      puts "catalog fetch step #{lv}"
       crnt = crnt.map do |item|
         p item
         cat = Sentimeta::Client.catalog(sphere: 'hotels', path: item.blank? ? '' : item[:name], limit: 10000, lang: lang) rescue []
@@ -58,7 +58,6 @@ class SimpleApi::Sitemap::Vocabula < Sequel::Model
       .compact
       .flatten
       rslt += crnt
-      PP.pp crnt
     end
     rslt.delete_if(&:blank?)
     rslt.each_slice(1000) do |items|
