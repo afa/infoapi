@@ -44,6 +44,7 @@ module SimpleApi
     def recurse_index(flst, cur_hash, root, parent, rule)
       whash = cur_hash.dup
       whash.merge!('catalog' => whash.delete('path')) if whash.has_key?('path')
+      whash.merge!('catalog' => whash.delete('location')) if whash.has_key?('location')
       leafs = []
       if flst.blank?
         # write_ref(rule, root, whash, parent)
@@ -51,10 +52,12 @@ module SimpleApi
       end
       wlst = flst.dup
       flt = wlst.shift
-      flt = 'catalog' if flt == 'path'
+      flt = 'catalog' if %w(path location).include?(flt)
+      # p 'wlst flt', wlst, flt
       rdef = self[flt]
       rdef = self['path'] if flt == 'catalog' && self['path']
       values = rdef.fetch_list(rule)
+      # p 'size vals', values.size
       route = SimpleApiRouter.new(rule.lang, rule.sphere)
       values.each do |val|
         leaf = wlst.empty?
@@ -71,7 +74,9 @@ module SimpleApi
 
     def build_index(root, rule)
       parent = SimpleApi::Sitemap::Index.where(root_id: root.pk, rule_id: rule.pk, url:"/en/#{root.sphere}/index/#{root.param},#{rule.name}").first
+      # p 'parent index', parent
       filter_list = traversal_order || []
+      # p 'fltlist', filter_list
       recurse_index(filter_list, {}, root, parent.pk, rule)
     end
 

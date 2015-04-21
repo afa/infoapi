@@ -11,10 +11,10 @@ module SimpleApi
         return self.array unless array.blank?
         return [self.string] unless self.string.blank?
         return [nil] if config == 'empty'
-        list = SimpleApi::Sitemap::Vocabula.where(kind: 'catalog', lang: rule.lang, sphere: 'hotels').map(&:name)
+        p 'cnt fetch'
+        list = SimpleApi::Sitemap::Vocabula.where(kind: 'catalog', lang: rule.lang, sphere: rule.sphere).all.map(&:name)
         list << nil if config == 'any'
         return list
-        # return (array.empty? ? [string] : array) unless s[:meta]
         return [nil]
       end
 
