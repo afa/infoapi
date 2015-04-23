@@ -93,8 +93,6 @@ module SimpleApi
             class_variable_set :@@param_map, {}
           end
           class_variable_get(:@@param_map)[rcrd['param']] ||= rcrd['klass'].constantize
-          # class_variable_get(:@@param_map).merge!(rcrd['sphere'] => {}) unless class_variable_get(:@@param_map)[rcrd['sphere']]
-          # class_variable_get(:@@param_map)[rcrd['sphere']][rcrd['param']] ||= rcrd['klass'].constantize
         end
       end
     end
@@ -106,6 +104,7 @@ module SimpleApi
     def self.find_rule(sphere, params, rules)
       klass = from_param(sphere, params.param)
       located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(map_param(params.param), {}).fetch(params.lang, {})
+      located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(map_param(params.param), {}).fetch('un', {}) unless located.present? && params.lang && params.lang == 'un'
       klass.clarify(located, params)
     end
 
@@ -116,7 +115,6 @@ module SimpleApi
     def write_ref(root, hash, index_id)
       hsh = hash.dup
       hsh.merge!('catalog' => hsh.delete('path')) if hash.has_key?('path')
-      # puts "wr: rule:#{pk}, idx: #{index_id}, hash: #{hash.inspect}"
       route = SimpleApiRouter.new(lang, sphere)
       SimpleApi::Sitemap::Reference.insert(
         rule_id: pk,
@@ -136,11 +134,6 @@ module SimpleApi
         url: "/en/#{sphere}/index/#{param},#{name}"
       }]
     end
-
-    # def generate(sitemap = nil, root)
-    #   prod = build_index(root)
-    #   prod
-    # end
 
     def export_data
       deletable = %i(stars path path.level criteria genres extended_types order_traversal)

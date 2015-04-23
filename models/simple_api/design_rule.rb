@@ -1,7 +1,7 @@
 module SimpleApi
   class DesignRule < Rule
     def self.clarify(located, params)
-      located[params.design]
+      located[params.design] || located['std']
     end
 
     def rule_path
