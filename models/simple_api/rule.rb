@@ -104,7 +104,9 @@ module SimpleApi
     def self.find_rule(sphere, params, rules)
       klass = from_param(sphere, params.param)
       located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(map_param(params.param), {}).fetch(params.lang, {})
-      located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(map_param(params.param), {}).fetch('un', {}) unless located.present? && params.lang && params.lang == 'un'
+      if located.empty?
+        located = rules.fetch(sphere, {}).fetch('infotext', {}).fetch(map_param(params.param), {}).fetch('un', {}) unless params.lang && params.lang == 'un'
+      end
       klass.clarify(located, params)
     end
 
