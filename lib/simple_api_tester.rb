@@ -67,12 +67,6 @@ class SimpleApiTester < Sinatra::Base
     end
   end
 
-  namespace '/sitemap' do
-    # get '/' do
-    # end
-  end
-
-
   get '/*' do
     p params
     content_type :json, charset: 'utf-8'

@@ -65,6 +65,12 @@ module SimpleApi
         found = Rule.find_rule(sphere, params, @rules)
         logger.info "for sphere #{sphere} with params #{params.inspect} selected rule #{found.is_a?(Array) ? found.first.try(:id) : found.try(:id)} #{found.is_a?(Array) ? found.first.try(:name) : found.try(:name)}."
         content = found.kind_of?(Array) ? found.try(:first).try(:content) : found.try(:content)
+        data = json_load(content, {})
+        subs = data.delete('substitutions')
+        if subs.present? && subs[param.lang].present?
+          data.merge!(subs)
+        end
+        JSON.dump(data)
       end
 
     end
